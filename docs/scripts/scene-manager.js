@@ -1,3 +1,3 @@
 function switchScene(sceneName) {
-    window.location.href = targetPath;
+    window.location.href = sceneName;
 }
