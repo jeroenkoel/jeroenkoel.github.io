@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/index.css">
+    <script src="../scripts/index.js" defer></script>
+    <script src="../scripts/scene-manager.js" defer></script>
+    <title>theory of mind</title>
+</head>
+<body>
+    <header>
+        <button onclick="switchScene('home.html')">Back to Home</button>
+    </header>
+
+    <h1>Quiz & Geluidsopname test</h1>
+
+    <div class="card">
+        <h2>1. Geluidsopname</h2>
+        <p>Status: <span id="recordStatus">Inactief</span></p>
+        <button id="startStop">Begin met opnemen</button>
+
+        <div class="audio-container">
+            <audio id="audioPlayback" controls></audio>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>2. Quiz vragen</h2>
+        <p id="QuestionText">Hoe veel vingers steek ik op?</p>
+        <div>
+            <button class="answerBtn" data-answer="3">3</button>
+            <button class="answerBtn" data-answer="4">4</button>
+            <button class="answerBtn" data-answer="5">5</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>3. Game data opnemen</h2>
+        <pre id="logOutput">// sessie data verschijnt hier</pre>
+    </div>
+</body>
+</html>

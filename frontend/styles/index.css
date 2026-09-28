@@ -1,0 +1,698 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --cream: #f6e8a8;
+    --brown: #643c20;
+    --green: #bdf39e;
+    --film: #302d2d;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 0;
+    line-height: 1.5;
+    color: #24201d;
+    background: #f3f1ec;
+}
+
+button {
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 8px;
+    margin-top: 8px;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.recording {
+    color: red;
+    font-weight: bold;
+}
+
+pre {
+    background: #f4f4f4;
+    padding: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.audio-container {
+    margin-top: 15px;
+}
+
+body:not(.room-page):not(.prototype-page) {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.prototype-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+.prototype-card {
+    width: min(600px, calc(100% - 40px));
+    padding: 30px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.prototype-card h1 {
+    margin-top: 0;
+}
+
+/* Level selection room */
+.room-page {
+    min-height: 100vh;
+    overflow: hidden;
+    background: #efe9d9;
+}
+
+.room-header {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 0 24px;
+    background: #fffaf0;
+    border-bottom: 1px solid #d4c6a5;
+}
+
+.room-header button {
+    margin: 0;
+}
+
+.room-header h1 {
+    margin: 0;
+    font-size: clamp(1.25rem, 2.2vw, 2rem);
+}
+
+.room-stage {
+    position: relative;
+    width: min(calc((100vh - 96px) * 1.4), calc(100vw - 40px));
+    aspect-ratio: 1.4 / 1;
+    margin: 12px auto;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgb(0 0 0 / 16%);
+    background: #dcc08c;
+}
+
+.room-background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    pointer-events: none;
+}
+
+.film-roll {
+    position: absolute;
+    width: 7.5%;
+    aspect-ratio: 1;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 3%);
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+}
+
+.film-roll::before {
+    content: "";
+    position: absolute;
+    inset: 12%;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    transition: .15s ease;
+}
+
+.film-roll:hover::before, .film-roll:focus-visible::before {
+    border-color: #f8df69;
+    background: rgb(255 239 140 / 20%);
+    box-shadow: 0 0 20px rgb(255 224 90 / 80%);
+}
+
+.film-roll span {
+    position: absolute;
+    left: 50%;
+    top: -12px;
+    transform: translateX(-50%);
+    min-width: 24px;
+    padding: 2px 6px;
+    border-radius: 12px;
+    background: rgb(45 35 24 / 78%);
+    color: white;
+    font-size: 12px;
+    opacity: 0;
+    transition: .15s;
+}
+
+.film-roll:hover span, .film-roll:focus-visible span {
+    opacity: 1;
+}
+
+.film-roll.completed::after {
+    content: "✓";
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #bdf39e;
+    color: #18320e;
+    font-weight: 900;
+}
+
+.roll-1 {
+    left: 27.5%;
+    top: 61%;
+}
+
+.roll-2 {
+    left: 49.5%;
+    top: 42.5%;
+}
+
+.roll-3 {
+    left: 85.5%;
+    top: 16%;
+}
+
+.roll-4 {
+    left: 69%;
+    top: 71%;
+}
+
+.roll-5 {
+    left: 50.5%;
+    top: 84%;
+}
+
+.roll-6 {
+    left: 89%;
+    top: 86%;
+}
+
+/* Level modal */
+body.level-open {
+    overflow: hidden;
+}
+
+.level-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    padding: clamp(8px, 1.5vh, 18px);
+}
+
+.level-modal.is-open {
+    display: grid;
+    place-items: center;
+}
+
+.level-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 62%);
+    backdrop-filter: blur(1px);
+}
+
+.level-window {
+    position: relative;
+    width: min(1480px, 96vw);
+    height: min(900px, 96vh);
+    overflow: hidden;
+    padding: clamp(10px, 1.5vh, 22px) clamp(14px, 1.8vw, 30px) clamp(12px, 1.5vh, 24px);
+    display: grid;
+    grid-template-rows: minmax(120px, 28%) auto minmax(0, 1fr);
+    gap: clamp(6px, 1vh, 12px);
+    background: var(--cream);
+    border: 2px solid #fff4c9;
+    box-shadow: 0 22px 70px rgb(0 0 0 / 35%);
+}
+
+.level-title {
+    margin: 0;
+    text-align: center;
+    font-size: clamp(1.35rem, 3vh, 2.55rem);
+    line-height: 1.1;
+}
+
+.film-strip {
+    position: relative;
+    min-height: 0;
+    height: 100%;
+    padding: clamp(16px, 2.2vh, 24px) 6%;
+    overflow: hidden;
+    background: var(--film);
+}
+
+.keyframe-row {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5%;
+    align-items: stretch;
+}
+
+.keyframe {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    border: clamp(3px, .45vw, 7px) solid #ddd;
+    background: #e8e8e8;
+    display: grid;
+    place-items: center;
+    color: #777;
+    font-weight: 700;
+}
+
+.keyframe img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.film-holes {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 14px;
+    opacity: .98;
+    background: repeating-linear-gradient(90deg, transparent 0 14px, white 14px 29px, transparent 29px 43px);
+}
+
+.film-holes-top {
+    top: 6px;
+}
+
+.film-holes-bottom {
+    bottom: 6px;
+}
+
+.ending-workspace {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 2.15fr) minmax(245px, .85fr);
+    gap: 0;
+    padding: clamp(8px, 1vh, 16px);
+    background: var(--brown);
+    overflow: hidden;
+}
+
+.scene-panel {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+    background: var(--brown);
+    overflow: hidden;
+}
+
+.level-scene {
+    --scene-ratio: 1672 / 941;
+    position: relative;
+    width: min(100%, calc(100vh * 1672 / 941));
+    height: auto;
+    max-height: 100%;
+    aspect-ratio: var(--scene-ratio);
+    overflow: hidden;
+    background: #eee;
+    user-select: none;
+}
+
+.scene-background, .scene-layers {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.scene-background {
+    object-fit: fill;
+    z-index: 0;
+}
+
+.scene-layers {
+    z-index: 1;
+    pointer-events: none;
+}
+
+.scene-object {
+    position: absolute;
+    height: auto;
+    display: block;
+    pointer-events: none;
+}
+
+.control-panel {
+    min-width: 0;
+    min-height: 0;
+    padding: 4px 12px 0 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.level-controls {
+    min-height: 0;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 2px;
+}
+
+.object-control {
+    display: grid;
+    grid-template-columns: 42px minmax(70px, 1fr) 42px;
+    align-items: center;
+    gap: 4px;
+    min-height: 0;
+}
+
+.control-arrow {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: #7bd6d8;
+    font-size: clamp(2.3rem, 5vh, 3.7rem);
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+    text-shadow: 0 3px 0 #1b1b1b;
+}
+
+.control-middle {
+    min-width: 0;
+    text-align: center;
+    color: white;
+}
+
+.control-icon-box {
+    height: clamp(45px, 8vh, 82px);
+    display: grid;
+    place-items: center;
+}
+
+.control-icon {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 25%));
+}
+
+.control-name {
+    display: block;
+    font-size: clamp(.7rem, 1.4vh, .9rem);
+    font-weight: 700;
+    opacity: .9;
+}
+
+.control-state {
+    display: block;
+    margin-top: 0;
+    font-size: clamp(.9rem, 2vh, 1.15rem);
+    font-weight: 900;
+    letter-spacing: .1em;
+}
+
+.state-dot {
+    color: white;
+    opacity: .95;
+}
+
+.state-dot.active {
+    color: #bdf39e;
+    font-size: 1.28em;
+}
+
+.submit-area {
+    flex: 0 0 auto;
+    margin-top: 4px;
+    text-align: center;
+}
+
+.level-status {
+    display: block;
+    min-height: 0;
+    color: white;
+    font-size: .8rem;
+}
+
+.submit-button {
+    margin: 4px 0 2px;
+    border: 3px solid #16100d;
+    border-radius: 20px;
+    padding: clamp(7px, 1vh, 12px) clamp(15px, 2vw, 24px);
+    background: var(--green);
+    color: #111;
+    font-size: clamp(.9rem, 2vh, 1.15rem);
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #16100d;
+}
+
+.submit-button:disabled {
+    opacity: .5;
+    cursor: default;
+}
+
+.visually-hidden {
+    position: fixed !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 850px) {
+    .level-window {
+        width: 98vw;
+        height: 98vh;
+        grid-template-rows: minmax(90px, 22%) auto minmax(0, 1fr);
+        padding: 8px;
+    }
+
+    .film-strip {
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+
+    .keyframe-row {
+        gap: 3%;
+    }
+
+    .ending-workspace {
+        grid-template-columns: minmax(0, 1.75fr) minmax(190px, .8fr);
+        padding: 6px;
+    }
+
+    .control-panel {
+        padding-left: 8px;
+        padding-right: 4px;
+    }
+
+    .object-control {
+        grid-template-columns: 30px minmax(50px, 1fr) 30px;
+    }
+}
+
+/* Refined room rolls and compact level controls */
+.film-roll {
+    width: 8.5%;
+    aspect-ratio: 1;
+    background: transparent;
+    border-radius: 0;
+    transition: transform .16s ease;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.film-roll::before {
+    display: none;
+}
+
+.film-roll:hover, .film-roll:focus-visible {
+    transform: translate(-50%, -50%) scale(1.12);
+}
+
+.film-roll img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+}
+
+.film-roll span {
+    top: -16px;
+}
+
+.control-panel {
+    padding-left: 14px;
+    padding-right: 8px;
+}
+
+.object-control {
+    grid-template-columns: 34px minmax(58px, 1fr) 34px;
+    gap: 2px;
+}
+
+.control-arrow {
+    font-size: clamp(1.8rem, 3.8vh, 2.8rem);
+}
+
+.control-icon-box {
+    height: clamp(34px, 5.6vh, 56px);
+}
+
+.control-icon {
+    max-width: 72px;
+    max-height: 56px;
+}
+
+.control-name {
+    font-size: clamp(.62rem, 1.15vh, .78rem);
+}
+
+.control-state {
+    font-size: clamp(.78rem, 1.55vh, 1rem);
+}
+
+/* Completed-film storage box */
+.film-box {
+    position: absolute;
+    right: 18%;
+    bottom: 2.5%;
+    width: 14%;
+    height: 13%;
+    z-index: 8;
+    pointer-events: none;
+}
+
+/* Open box: rear wall sits behind stored rolls; front wall hides their lower edges. */
+.film-box-back {
+    position: absolute;
+    left: 7%;
+    right: 7%;
+    top: 18%;
+    height: 55%;
+    background: #8f592f;
+    border: 2px solid #432817;
+    box-shadow: inset 0 0 0 3px #aa7041;
+    z-index: 1;
+}
+
+.film-box-front {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 54%;
+    background: #a96d3d;
+    border: 2px solid #432817;
+    box-shadow: inset 0 0 0 3px #bc7c49;
+    z-index: 4;
+}
+
+.film-box-label {
+    position: absolute;
+    left: 50%;
+    bottom: 13%;
+    transform: translateX(-50%);
+    padding: 2% 9%;
+    background: #ead8b8;
+    border: 1px solid #4a3020;
+    color: #332116;
+    font: 700 clamp(8px, .8vw, 14px)/1 sans-serif;
+    z-index: 5;
+}
+
+.stored-rolls {
+    position: absolute;
+    left: 9%;
+    right: 9%;
+    top: 24%;
+    height: 42%;
+    z-index: 3;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0;
+    overflow: visible;
+}
+
+.stored-roll {
+    flex: 0 0 16.6667%;
+    width: 16.6667%;
+    max-height: 100%;
+    object-fit: contain;
+    margin: 0;
+    filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 30%));
+}
+
+.film-roll.completed {
+    display: none;
+}
+
+/* Film playback → verbal reflection → configurable ending. */
+.level-window.phase-video, .level-window.phase-reflection, .level-window.phase-configuration {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    background: #f9edb4;
+}
+.video-stage, .film-strip, .reflection-stage, .configuration-stage { display: none; }
+.phase-video .video-stage { display: flex; }
+.phase-reflection .film-strip, .phase-configuration .film-strip { display: block; }
+.phase-reflection .reflection-stage { display: flex; }
+.phase-configuration .configuration-stage { display: flex; }
+.video-stage { position: relative; flex: 1; min-height: 0; flex-direction: column; justify-content: center; padding: 24px 0; background: #302d2d; }
+.video-frame { position: relative; width: 100%; min-height: 0; flex: 1; display: grid; place-items: center; background: #000; overflow: hidden; }
+.video-frame video { display: block; height: 100%; width: 100%; object-fit: contain; background: #000; }
+.video-countdown { position: absolute; inset: 0; display: grid; place-items: center; color: white; font-size: clamp(5rem, 16vh, 11rem); font-weight: 800; pointer-events: none; }
+.video-message { position: absolute; left: 5%; right: 5%; bottom: 5%; text-align: center; color: white; background: #222c; font-size: clamp(1rem, 2vh, 1.4rem); }
+.video-stage .film-holes { z-index: 2; height: 17px; }
+.phase-reflection .film-strip, .phase-configuration .film-strip { flex: 0 0 33%; height: 33%; }
+.reflection-stage { flex: 1; min-height: 0; flex-direction: column; justify-content: space-around; padding: clamp(16px, 4%, 48px) 8%; }
+.reflection-stage h2 { font-size: clamp(1.5rem, 4vh, 3rem); text-align: center; margin: 0; line-height: 1.3; }
+.reflection-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.reflection-microphone { display: flex; align-items: center; gap: clamp(15px, 3vw, 40px); }
+.microphone-button { padding: 0; border: 0; background: transparent; font-size: clamp(3.5rem, 9vh, 7rem); line-height: 1; margin: 0; }
+.microphone-button.is-recording { filter: drop-shadow(0 0 8px #bf352f); }
+.recording-wave { font-size: clamp(1.3rem, 3vh, 2.5rem); letter-spacing: .08em; }
+.reflection-microphone p { font-size: clamp(.9rem, 1.7vh, 1.1rem); font-weight: 600; }
+.reflection-next { display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; }
+.reflection-countdown { font-size: clamp(1rem, 2vh, 1.3rem); color: #b06515; font-weight: 700; }
+.reflection-next .submit-button { min-width: 130px; }
+.configuration-stage { flex: 1; min-height: 0; flex-direction: column; gap: 8px; padding: 8px clamp(8px, 1.8vw, 30px) clamp(8px, 1.3vh, 20px); }
+.configuration-stage .ending-workspace { flex: 1; min-height: 0; }
+/* Keep 16:9 scene undistorted inside its workspace. */
+.level-scene { width: 100%; max-height: 100%; aspect-ratio: var(--scene-ratio); height: auto; }
+@media (max-width: 700px) { .reflection-bottom { align-items: flex-start; flex-direction: column; } .reflection-stage { padding: 20px; } }
+
+/* Size the 16:9 stage from the actual available panel height. */
+.scene-panel { container-type: size; }
+.level-scene { width: min(100%, calc(100cqh * 1672 / 941)); aspect-ratio: 1672 / 941; height: auto; }

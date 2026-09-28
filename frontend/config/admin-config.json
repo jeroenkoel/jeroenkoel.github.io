@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "name": "Painting level - three controls",
+  "levels": {
+    "intention-01": {
+      "controls": [
+        {
+          "id": "woman-control",
+          "label": "Vrouw",
+          "states": [
+            {
+              "id": "sitting",
+              "elements": {
+                "womanBroom": "sitting"
+              }
+            },
+            {
+              "id": "sweeping",
+              "elements": {
+                "womanBroom": "sweeping"
+              }
+            },
+            {
+              "id": "hanging",
+              "elements": {
+                "womanBroom": "hanging"
+              }
+            }
+          ],
+          "correctState": "hanging",
+          "iconElement": "womanBroom"
+        },
+        {
+          "id": "chair-control",
+          "label": "Stoel",
+          "states": [
+            {
+              "id": "table",
+              "elements": {
+                "chair": "table"
+              }
+            },
+            {
+              "id": "wall",
+              "elements": {
+                "chair": "wall"
+              }
+            }
+          ],
+          "correctState": "wall",
+          "iconElement": "chair"
+        },
+        {
+          "id": "painting-control",
+          "label": "Schilderij",
+          "states": [
+            {
+              "id": "ground",
+              "elements": {
+                "painting": "ground"
+              }
+            },
+            {
+              "id": "wall",
+              "elements": {
+                "painting": "wall"
+              }
+            }
+          ],
+          "correctState": "wall",
+          "iconElement": "painting"
+        }
+      ],
+      "fixedElements": {}
+    }
+  }
+}
