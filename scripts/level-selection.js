@@ -17,6 +17,9 @@ let audioChunks = [], reflectionStart = null;
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const REFLECTION_SECONDS = 5;
 
+// Progress bar stuff
+const progressBar = $("topBar");
+
 function setPhase(phase) {
     windowElement.classList.remove("phase-video", "phase-reflection", "phase-configuration");
     windowElement.classList.add(`phase-${phase}`);
@@ -184,10 +187,14 @@ continueButton.addEventListener("click", async () => {
     setPhase("configuration");
     engine.startedAt = performance.now(); // Time only the configurable answer stage.
     submitButton.focus();
+
+    // start 30-second progess bar count down
+    progressBar.start(30000);
 });
 
 function closeLevel() {
     ++runToken;
+    progressBar.stop();
     video.pause(); video.removeAttribute("src"); video.load();
     finishRecording();
     modal.classList.remove("is-open");
@@ -197,6 +204,10 @@ function closeLevel() {
 rolls.forEach(roll => roll.addEventListener("click", () => openLevel(roll)));
 submitButton.addEventListener("click", async () => {
     if (!engine || submitButton.disabled || !windowElement.classList.contains("phase-configuration")) return;
+    
+    //Stop and hide the progressbar
+    progressBar.stop();
+    
     const result = engine.submit();
     result.userId = sessionId;
     result.sessionId = sessionId;
