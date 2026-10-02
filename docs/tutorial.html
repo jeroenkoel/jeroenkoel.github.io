@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/index.css">
+    <script type="module" src="./scripts/ui-settings.js"></script>
+    <script src="./scripts/scene-manager.js" defer></script>
+    <title></title>
+</head>
+<body class="standard-page" data-i18n-document-title="meta.tutorialTitle">
+    <header class="page-header">
+        <button class="secondary-button" type="button" onclick="switchScene('index.html')" data-icon="←" data-i18n="common.backHome" data-i18n-aria-label="common.backHome"></button>
+    </header>
+
+    <main class="page-content">
+        <h1 data-i18n="tutorial.title"></h1>
+        <section class="card instruction-card">
+            <h2 data-i18n="tutorial.sceneTitle"></h2>
+            <p data-i18n="tutorial.sceneText"></p>
+            <h2 data-i18n="tutorial.gameTitle"></h2>
+            <ol class="instruction-list">
+                <li data-i18n="tutorial.step1"></li>
+                <li data-i18n="tutorial.step2"></li>
+                <li data-i18n="tutorial.step3"></li>
+                <li data-i18n="tutorial.step4"></li>
+            </ol>
+        </section>
+        <button class="primary-button" type="button" onclick="switchScene('level-selection.html')" data-icon="▶" data-i18n="tutorial.startGame" data-i18n-aria-label="tutorial.startGame"></button>
+    </main>
+</body>
+</html>

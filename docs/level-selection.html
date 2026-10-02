@@ -5,77 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles/index.css">
     <script src="./scripts/scene-manager.js" defer></script>
+    <script type="module" src="./scripts/ui-settings.js"></script>
     <script type="module" src="./scripts/level-selection.js"></script>
     <script src="./scripts/progress-bar/progress-bar.js" defer></script>
-    <title>The Film Box – Filmrol kiezen</title>
+    <title></title>
 </head>
-<body class="room-page">
+<body class="room-page" data-i18n-document-title="meta.levelSelectionTitle">
     <timer-progress-bar id="topBar"></timer-progress-bar>
     <header class="room-header">
-        <button onclick="switchScene('index.html')">Terug naar start</button>
-        <h1>Kies een filmrol</h1>
+        <button class="secondary-button" type="button" onclick="switchScene('index.html')" data-icon="←" data-i18n="common.backHome" data-i18n-aria-label="common.backHome"></button>
+        <h1 data-i18n="selection.title"></h1>
     </header>
 
-    <main class="room-stage" aria-label="Woonkamer met zes filmrollen">
-        <img class="room-background" src="./assets/rooms/living-room.png" alt="Woonkamer">
-        <button class="film-roll roll-1" data-level="intention-01" aria-label="Open filmrol 1"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-2" data-level="intention-01" aria-label="Open filmrol 2"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-3" data-level="intention-01" aria-label="Open filmrol 3"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-4" data-level="intention-01" aria-label="Open filmrol 4"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-5" data-level="intention-01" aria-label="Open filmrol 5"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-6" data-level="intention-01" aria-label="Open filmrol 6"><img src="./assets/rooms/film-roll.png" alt=""></button>
+    <main class="room-stage couch-room-stage" data-i18n-aria-label="selection.roomAria">
+        <img class="room-background" src="./assets/rooms/couch-room/couch-scene-back.png" alt="" aria-hidden="true">
 
-        <div class="film-box" aria-label="Doos voor voltooide filmrollen">
+        <button class="film-roll roll-4" data-level="intention-01" data-roll-number="4"><img src="./assets/rooms/couch-room/Rolls/roll-6.png" alt=""></button>
+        <img class="room-overlay overlay-couch" src="../assets/rooms/couch-room/couch-scene-couch.png" alt="" aria-hidden="true">
+
+        <button class="film-roll roll-1" data-level="intention-01" data-roll-number="1"><img src="./assets/rooms/couch-room/Rolls/roll-1.png" alt=""></button>
+        <button class="film-roll roll-2" data-level="intention-01" data-roll-number="2"><img src="./assets/rooms/couch-room/Rolls/roll-7.png" alt=""></button>
+        <button class="film-roll roll-3" data-level="intention-01" data-roll-number="3"><img src="./assets/rooms/couch-room/Rolls/roll-4.png" alt=""></button>
+        <img class="room-overlay overlay-pillow" src="./assets/rooms/couch-room/couch-scene-pillow.png" alt="" aria-hidden="true">
+
+        <button class="film-roll roll-5" data-level="intention-01" data-roll-number="5"><img src="./assets/rooms/couch-room/Rolls/roll-5.png" alt=""></button>
+        <img class="room-overlay overlay-carpet" src="./assets/rooms/couch-room/couch-scene-carpet.png" alt="" aria-hidden="true">
+
+        <button class="film-roll roll-6" data-level="intention-01" data-roll-number="6"><img src="./assets/rooms/couch-room/Rolls/roll-3.png" alt=""></button>
+
+        <div class="film-box" data-i18n-aria-label="selection.filmBoxAria">
             <div class="film-box-back"></div>
             <div id="storedRolls" class="stored-rolls"></div>
             <div class="film-box-front"></div>
-            <div class="film-box-label">FILMS</div>
+            <div class="film-box-label" data-i18n="selection.filmBoxLabel"></div>
         </div>
     </main>
 
     <div id="levelModal" class="level-modal" aria-hidden="true">
         <div class="level-backdrop"></div>
-        <section id="levelWindow" class="level-window phase-video" role="dialog" aria-modal="true" aria-label="Filmfragment bekijken en verhaal afmaken">
-            <div id="videoStage" class="video-stage" aria-label="Bekijk het filmfragment">
+        <section id="levelWindow" class="level-window phase-video" role="dialog" aria-modal="true" data-i18n-aria-label="level.dialogAria">
+            <div id="videoStage" class="video-stage" data-i18n-aria-label="level.videoStageAria">
                 <div class="film-holes film-holes-top" aria-hidden="true"></div>
                 <div class="video-frame">
-                    <video id="levelVideo" playsinline preload="auto" aria-label="Filmfragment van het verhaal"></video>
+                    <video id="levelVideo" playsinline preload="auto" data-i18n-aria-label="level.videoAria"></video>
                     <div id="videoCountdown" class="video-countdown" aria-live="assertive"></div>
                     <div id="videoMessage" class="video-message" role="status"></div>
+                    <button id="skipVideo" class="skip-video-button" type="button" hidden data-icon="⏭" data-i18n="video.skip" data-i18n-aria-label="video.skipAria"></button>
                 </div>
                 <div class="film-holes film-holes-bottom" aria-hidden="true"></div>
             </div>
-            <div id="keyframeStrip" class="film-strip" aria-label="Drie belangrijke momenten uit de film">
+
+            <div id="keyframeStrip" class="film-strip keyframe-strip" data-i18n-aria-label="level.keyframesAria">
                 <div class="film-holes film-holes-top" aria-hidden="true"></div>
                 <div class="keyframe-row"></div>
                 <div class="film-holes film-holes-bottom" aria-hidden="true"></div>
             </div>
-            <div id="reflectionStage" class="reflection-stage" aria-label="Vertel wat er volgens u gaat gebeuren">
-                <h2>Kunt u omschrijven wat u denkt dat er nu gaat gebeuren?</h2>
+
+            <div id="reflectionStage" class="reflection-stage" data-i18n-aria-label="level.reflectionAria">
+                <h2 data-i18n="level.reflectionPrompt"></h2>
                 <div class="reflection-bottom">
                     <div class="reflection-microphone">
-                        <button id="microphoneButton" class="microphone-button" type="button" aria-label="Start geluidsopname" title="Klik om een geluidsopname te starten of stoppen">🎙</button>
-                        <div><span id="recordingWave" class="recording-wave" aria-hidden="true">▂▅▃▇▂▆▃▅</span>
-                        <p id="microphoneStatus" role="status">Klik op de microfoon om uw antwoord op te nemen.</p></div>
+                        <button id="microphoneButton" class="microphone-button" type="button" data-i18n-aria-label="microphone.startAria" data-i18n-title="microphone.title">
+                            <svg class="microphone-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                                <rect x="22" y="8" width="20" height="32" rx="10"></rect>
+                                <path d="M16 31v3c0 9 7 16 16 16s16-7 16-16v-3"></path>
+                                <path d="M32 50v8"></path>
+                                <path d="M24 58h16"></path>
+                            </svg>
+                            <span class="microphone-stop-icon" aria-hidden="true"></span>
+                        </button>
+                        <span id="recordingWave" class="recording-wave" aria-hidden="true">▂▅▃▇▂▆▃▅</span>
+                        <p id="microphoneStatus" role="status"></p>
                     </div>
                     <div class="reflection-next">
-                        <span id="reflectionCountdown" class="reflection-countdown" aria-live="polite"></span>
-                        <button id="continueToLevel" class="submit-button" type="button" disabled>Verder</button>
+                        <button id="continueToLevel" class="primary-button reflection-confirm-button" type="button" hidden data-icon="✓" data-i18n="common.confirmAndContinue" data-i18n-aria-label="common.confirmAndContinue"></button>
                     </div>
                 </div>
             </div>
-            <div id="configurationStage" class="configuration-stage">
-                <h2 class="level-title">Maak het verhaal af</h2>
-                <div class="ending-workspace">
-                    <div class="scene-panel"><div id="levelScene" class="level-scene" aria-label="Configureer het einde van het verhaal"></div></div>
-                    <aside class="control-panel" aria-label="Verander de voorwerpen">
-                        <div id="levelControls" class="level-controls"></div>
-                        <div class="submit-area">
-                            <span id="levelStatus" class="level-status" aria-live="polite"></span>
-                            <button id="submitAnswer" class="submit-button" type="button" disabled>Bevestigen</button>
-                        </div>
-                    </aside>
+
+            <div id="answerStage" class="answer-stage" data-i18n-aria-label="level.answerStageAria">
+                <h2 class="level-title" data-i18n="level.answerTitle"></h2>
+                <div id="answerGrid" class="answer-grid"></div>
+                <div id="singleAnswerView" class="single-answer-view" hidden>
+                    <div class="single-answer-row">
+                        <button id="previousAnswer" class="answer-arrow" type="button" data-i18n-aria-label="level.previousAnswerAria">‹</button>
+                        <div id="singleAnswerFrame" class="single-answer-frame"></div>
+                        <button id="nextAnswer" class="answer-arrow" type="button" data-i18n-aria-label="level.nextAnswerAria">›</button>
+                    </div>
                 </div>
+                <div class="answer-confirm-row">
+                    <button id="submitAnswer" class="primary-button" type="button" disabled data-icon="✓" data-i18n="common.confirm" data-i18n-aria-label="common.confirm"></button>
+                </div>
+                <span id="levelStatus" class="level-status" aria-live="polite"></span>
             </div>
         </section>
     </div>

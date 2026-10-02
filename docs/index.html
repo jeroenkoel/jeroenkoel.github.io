@@ -4,18 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles/index.css">
+    <script type="module" src="./scripts/ui-settings.js"></script>
     <script src="./scripts/scene-manager.js" defer></script>
-    <title>Theory Of Mind</title>
+    <title></title>
 </head>
-<body>
-    <header class="top-bar">
-        <span></span>
-        <span></span>
-    </header>
-    <main class="prototype-card">
-        <h1>Home Screen</h1>
-        <button onclick="switchScene('test.html')">Go to Test page</button>
-        <button onclick="switchScene('level-selection.html')">Go to Level Selection</button>
+<body class="standard-page home-page" data-i18n-document-title="meta.homeTitle">
+    <main class="home-content">
+        <p class="title-text" data-i18n="home.title"></p>
+        <button class="primary-button home-start" type="button" onclick="switchScene('tutorial.html')" data-icon="▶" data-i18n="common.start" data-i18n-aria-label="common.start"></button>
     </main>
 </body>
 </html>

@@ -4,40 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles/index.css">
-    <script src="./scripts/index.js" defer></script>
+    <script src="./scripts/progress-bar/circle-bar.js" defer></script>
+    <script type="module" src="./scripts/index.js"></script>
+    <script type="module" src="./scripts/ui-settings.js"></script>
     <script src="./scripts/scene-manager.js" defer></script>
-    <title>theory of mind</title>
+    <title></title>
 </head>
-<body>
-    <header>
-        <button onclick="switchScene('index.html')">Back to Home</button>
+<body class="standard-page" data-i18n-document-title="meta.testTitle">
+    <timer-circular-progress id="circle"></timer-circular-progress>
+    <header class="page-header">
+        <button id="back" class="secondary-button" type="button" onclick="switchScene('index.html')" data-icon="←" data-i18n="common.backHome" data-i18n-aria-label="common.backHome"></button>
     </header>
 
-    <h1>Quiz & Geluidsopname test</h1>
+    <main class="page-content">
+        <h1 data-i18n="test.heading"></h1>
 
-    <div class="card">
-        <h2>1. Geluidsopname</h2>
-        <p>Status: <span id="recordStatus">Inactief</span></p>
-        <button id="startStop">Begin met opnemen</button>
+        <section class="card">
+            <h2 data-i18n="test.audioTitle"></h2>
+            <p><span data-i18n="test.statusLabel"></span> <span id="recordStatus" data-i18n="test.statusInactive"></span></p>
+            <button id="startStop" class="primary-button" type="button" data-icon="🎙" data-i18n="test.recordStart" data-i18n-aria-label="test.recordStart"></button>
+            <div class="audio-container"><audio id="audioPlayback" controls></audio></div>
+        </section>
 
-        <div class="audio-container">
-            <audio id="audioPlayback" controls></audio>
-        </div>
-    </div>
+        <section class="card">
+            <h2 data-i18n="test.quizTitle"></h2>
+            <p id="QuestionText" data-i18n="test.question"></p>
+            <div class="button-row">
+                <button class="answerBtn secondary-button" data-answer="3">3</button>
+                <button class="answerBtn secondary-button" data-answer="4">4</button>
+                <button class="answerBtn secondary-button" data-answer="5">5</button>
+            </div>
+        </section>
 
-    <div class="card">
-        <h2>2. Quiz vragen</h2>
-        <p id="QuestionText">Hoe veel vingers steek ik op?</p>
-        <div>
-            <button class="answerBtn" data-answer="3">3</button>
-            <button class="answerBtn" data-answer="4">4</button>
-            <button class="answerBtn" data-answer="5">5</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>3. Game data opnemen</h2>
-        <pre id="logOutput">// sessie data verschijnt hier</pre>
-    </div>
+        <section class="card">
+            <h2 data-i18n="test.dataTitle"></h2>
+            <pre id="logOutput" data-i18n="test.logPlaceholder"></pre>
+        </section>
+    </main>
 </body>
 </html>

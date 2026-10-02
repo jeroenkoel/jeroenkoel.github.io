@@ -1,0 +1,39 @@
+ :host {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 9999; 
+    pointer-events: none; 
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+    --blink-speed: 1s;
+}
+
+:host(.visible) {
+    opacity: 1;
+    visibility: visible;
+}
+
+.bar {
+    height: 100%;
+    width: 0%;
+    background-color: #7fbd67;
+    transition: width linear;
+}
+
+.bar.full {
+    animation: glow var(--blink-speed) infinite alternate ease-in-out;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 2px #7fbd67, 0 0 5px #70ad59;
+    }
+    100% {
+        box-shadow: 0 0 10px #7fbd67, 0 0 20px #7fbd67, 0 0 30px #7fbd67;
+    }
+}

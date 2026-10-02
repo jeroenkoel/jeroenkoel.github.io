@@ -20,6 +20,7 @@ class ProgressBar extends HTMLElement {
                 opacity: 0;
                 visibility: hidden;
                 transition: opacity 0.2s ease-in-out;
+                --blink-speed: 1s;
             }
 
             :host(.visible) {
@@ -30,16 +31,31 @@ class ProgressBar extends HTMLElement {
             .bar {
                 height: 100%;
                 width: 0%;
-                background-color: #3b82f6;
+                background-color: var(--primary, #7fbd67);
                 transition: width linear;
             }
+
+            .bar.full {
+                animation: glow var(--blink-speed) infinite alternate ease-in-out;
+            }
+
+            @keyframes glow {
+                0% {
+                    box-shadow: 0 0 2px var(--primary, #7fbd67), 0 0 5px var(--primary, #7fbd67);
+                }
+                100% {
+                    box-shadow: 0 0 5px var(--primary, #7fbd67), 0 0 10px var(--primary, #7fbd67), 0 0 15px var(--primary, #7fbd67);
+                }
+            }
         </style>
-        <div class = "bar"></div>
-        `;
+        <div class = "bar"></div>`;
     }
 
-    start(duration) {
+    start(duration, blinkSpeed) {
         const dur = duration || parseInt(this.getAttribute("duration"), 10) || 30000;
+        const speed = blinkSpeed || this.getAttribute("blink-speed") || "1s";
+
+        this.style.setProperty("--blink-speed", typeof speed == "number" ? `${speed}ms` : speed);
         const bar = this.shadowRoot.querySelector(".bar");
 
         this.stop();
@@ -53,6 +69,7 @@ class ProgressBar extends HTMLElement {
         });
 
         this.timer = setTimeout(() => {
+            bar.classList.add("full");
             this.dispatchEvent(new CustomEvent("timer-complete", { bubbles: true, composed: true }));
         }, dur);
     }
@@ -67,6 +84,7 @@ class ProgressBar extends HTMLElement {
 
         const bar = this.shadowRoot.querySelector(".bar");
         if (bar) {
+            bar.classList.remove("full");
             bar.style.transition = "none";
             bar.style.width = "0%";
         }

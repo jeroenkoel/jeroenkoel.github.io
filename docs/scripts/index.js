@@ -1,69 +1,81 @@
+import { getLanguage, initI18n, onLanguageChange, t } from "/scripts/i18n.js";
+
+await initI18n();
+
 let mediaRecorder;
-let audioChucks = [];
+let audioChunks = [];
 let recordedAudioBlob = null;
-
-const startStop = document.getElementById('startStop');
-const recordStatus = document.getElementById('recordStatus');
-const audioPlayback = document.getElementById('audioPlayback');
-
 let listening = false;
+let statusKey = "test.statusInactive";
 
-// Checking for compatible types
-let mimeType = 'audio/webm';
+const startStop = document.getElementById("startStop");
+const recordStatus = document.getElementById("recordStatus");
+const logOutput = document.getElementById("logOutput");
 
-if (MediaRecorder.isTypeSupported('audio/wav')) {
-    mimeType = 'audio/wav';
-} else if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-    mimeType = 'audio/webm;codecs=opus';
+function renderRecordingState() {
+    const buttonKey = listening ? "test.recordStop" : "test.recordStart";
+    recordStatus.textContent = t(statusKey);
+    startStop.textContent = t(buttonKey);
+    startStop.dataset.icon = listening ? "■" : "🎙";
+    startStop.setAttribute("aria-label", t(buttonKey));
+    recordStatus.className = listening ? "recording" : "";
 }
 
-startStop.addEventListener('click', async () => {
+onLanguageChange(renderRecordingState);
+renderRecordingState();
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await customElements.whenDefined("timer-circular-progress");
+    document.getElementById("circle")?.start(1000, 4, "0.5s");
+});
+
+let mimeType = "audio/webm";
+if (MediaRecorder.isTypeSupported("audio/wav")) {
+    mimeType = "audio/wav";
+} else if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+    mimeType = "audio/webm;codecs=opus";
+}
+
+startStop.addEventListener("click", async () => {
     if (listening) {
         if (mediaRecorder && mediaRecorder.state !== "inactive") {
             mediaRecorder.stop();
             mediaRecorder.stream.getTracks().forEach(track => track.stop());
-            recordStatus.textContent = "Finished";
-            recordStatus.className = "";
+            statusKey = "test.statusFinished";
             listening = false;
-            startStop.textContent = "Begin met opnemen";
+            renderRecordingState();
         }
-    } else {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true});
-            mediaRecorder = new MediaRecorder(stream);
-            audioChucks = [];
+        return;
+    }
 
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    audioChucks.push(event.data);
-                }
-            };
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
 
-            mediaRecorder.onstop = async () => {
-                recordedAudioBlob = new Blob(audioChucks, { type: 'audio/webm' });
+        mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) audioChunks.push(event.data);
+        };
 
-                //const audioUrl = URL.createObjectURL(recordedAudioBlob);
-                //audioPlayback.src = audioUrl;
+        mediaRecorder.onstop = async () => {
+            recordedAudioBlob = new Blob(audioChunks, { type: "audio/webm" });
+            await sendAudioData();
+        };
 
-                await sendAudioData();
-            };
-
-            mediaRecorder.start();
-            recordStatus.textContent = "Recording...";
-            recordStatus.className = "recording";
-            listening = true;
-            startStop.textContent = "Stop met opnemen";
-        } catch (err) {
-            alert("Microphone access denied or not supported");
-            console.error(err);
-        }
+        mediaRecorder.start();
+        statusKey = "test.statusRecording";
+        listening = true;
+        renderRecordingState();
+    } catch (error) {
+        alert(t("test.microphoneError"));
+        console.error(error);
     }
 });
 
-let tabSessionId = sessionStorage.getItem('sessionId');
+let tabSessionId = sessionStorage.getItem("sessionId");
 if (!tabSessionId) {
-    tabSessionId = "session_" + Date.now() + "_" + Math.random().toString(36).substring(2, 9);
-    sessionStorage.setItem('sessionId', tabSessionId);
+    tabSessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    sessionStorage.setItem("sessionId", tabSessionId);
 }
 
 let questionStartTime = Date.now();
@@ -72,80 +84,44 @@ const gameDataLog = {
     answers: []
 };
 
-const answerButtons = document.querySelectorAll('.answerBtn');
-const logOutput = document.getElementById('logOutput');
-
-answerButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const chosenAnswer = e.target.getAttribute('data-answer');
+document.querySelectorAll(".answerBtn").forEach(button => {
+    button.addEventListener("click", event => {
+        const chosenAnswer = event.target.getAttribute("data-answer");
         const timeTakenMs = Date.now() - questionStartTime;
-
         const entry = {
-            question: document.getElementById('QuestionText').textContent,
-            chosenAnswer: chosenAnswer,
-            timeTakenMs: timeTakenMs,
+            question: document.getElementById("QuestionText").textContent,
+            chosenAnswer,
+            timeTakenMs,
             timeTakenSeconds: (timeTakenMs / 1000).toFixed(2),
             timestamp: new Date().toISOString()
         };
 
         gameDataLog.answers.push(entry);
         logOutput.textContent = JSON.stringify(gameDataLog, null, 2);
-
         questionStartTime = Date.now();
     });
 });
 
-async function sendDataToBackend() {
-    const formData = new FormData();
-    // check if .wav is supported and use that if it is
-    const extension = mimeType.includes('wav') ? 'recording.wav' : 'recording.webm';
-    formData.append('audio', recordedAudioBlob, extension);
-    formData.append('gameData', JSON.stringify(gameDataLog));
-
-    try {
-        const response = await fetch('http://localhost:3000/api/save-session', {
-            method: 'POST',
-            body: formData
-        });
-        const result = await response.json();
-        console.log('Server response:', result);
-
-        if (result.data && result.data.transcription) {
-            console.log('Transcription:', result.data.transcription);
-            gameDataLog.answers.push(result);
-            logOutput.textContent = JSON.stringify(gameDataLog, null, 2);
-        }
-    } catch (err) {
-        console.error('Error sending data to server:', err);
-    }
-}
-
-
-// Just a test sender. Will be removed later since this frontend page will be done anyway
 async function sendAudioData() {
     if (!recordedAudioBlob) return;
 
     const formData = new FormData();
-    const extension = mimeType.includes('wav') ? '.wav' : '.webm';
-
+    const extension = mimeType.includes("wav") ? ".wav" : ".webm";
     const metadata = {
         userId: "test_user",
         sessionId: tabSessionId,
-        questionId: "test_q1"
+        questionId: "test_q1",
+        language: getLanguage()
     };
 
-    formData.append(`metadata`, JSON.stringify(metadata));
-    formData.append('audio', recordedAudioBlob, `recording${extension}`);
+    formData.append("metadata", JSON.stringify(metadata));
+    formData.append("audio", recordedAudioBlob, `recording${extension}`);
 
     try {
-        const response = await fetch('http://localhost:3000/api/submit-audio', {
-            method: 'POST',
-            body: formData
-        });
-
+        const response = await fetch("/api/submit-audio", { method: "POST", body: formData });
         const result = await response.json();
-        console.log('Server response:', result.message);
-    } catch (err) {
-        console.error('Error sending audio data to server:', err);
+        console.log("Server response:", result.message);
+    } catch (error) {
+        console.error("Error sending audio data to server:", error);
     }
 }
