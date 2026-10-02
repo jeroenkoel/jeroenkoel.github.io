@@ -419,82 +419,67 @@ pre {
 }
 
 
-.room-overlay {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: fill;
-    pointer-events: none;
-    user-select: none;
-}
-
-.overlay-couch { z-index: 4; }
-.overlay-pillow { z-index: 6; }
-.overlay-carpet { z-index: 6; }
-
 .couch-room-stage .layer-painting {
-    left: 3%;
-    top: 0.5%;
-    width: 46%;
+    left: 2%;
+    top: 2%;
+    width: 39.5%;
     z-index: 1;
 }
 
 .couch-room-stage .layer-door-frame {
-    left: 46.8%;
-    top: 0.2%;
-    width: 23.5%;
+    left: 12%;
+    top: -15%;
+    width: 70%;
     z-index: 1;
 }
 
 .couch-room-stage .layer-light-switch {
-    left: 41%;
-    top: 9.5%;
-    width: 12%;
+    left: 22%;
+    top: 7%;
+    width: 25%;
     z-index: 1;
 }
 
 .couch-room-stage .layer-small-table {
-    right: 4.5%;
-    top: 33.5%;
-    width: 23.5%;
+    right: 18%;
+    top: 17%;
+    width: 54%;
     z-index: 2;
 }
 
 .couch-room-stage .layer-couch {
-    left: -1.5%;
-    top: 27.3%;
-    width: 82.5%;
+    left: -10%;
+    top: 19%;
+    width: 75%;
     z-index: 4;
 }
 
 .couch-room-stage .layer-armrest {
-    left: -2.5%;
-    top: 31.4%;
-    width: 15.5%;
-    z-index: 8;
+    left: -15.5%;
+    top: 37%;
+    width: 35%;
+    z-index: 5;
 }
 
 .couch-room-stage .layer-pillow {
-    left: 39.8%;
-    top: 27.6%;
-    width: 31%;
-    z-index: 7;
+    left: 25%;
+    top: 36%;
+    width: 27.7%;
+    z-index: 6;
 }
 
 .couch-room-stage .layer-small-table-decoration {
-    right: 6.1%;
-    top: 20.3%;
-    width: 24.5%;
-    z-index: 6;
+    right: 18%;
+    top: 18.7%;
+    width: 25%;
+    z-index: 3;
 }
 
 .couch-room-stage .layer-carpet {
-    right: -1.2%;
-    bottom: -0.5%;
-    width: 55%;
-    z-index: 6;
+    right: -5%;
+    bottom: -2%;
+    width: 60%;
+    z-index: 5;
 }
 
 .film-roll {
@@ -528,13 +513,44 @@ pre {
     display: none;
 }
 
-.couch-room-stage .roll-1 { left: 7.6%; top: 41.2%; width: 16%; z-index: 5; }
-.couch-room-stage .roll-2 { left: 45.3%; top: 47.3%; width: 14%; z-index: 5; }
-.couch-room-stage .roll-3 { left: 75.2%; top: 34%; width: 11%; z-index: 7; }
-.couch-room-stage .roll-4 { left: 40.2%; top: 79.5%; width: 13.5%; z-index: 3; }
-.couch-room-stage .roll-5 { left: 56.6%; top: 85.3%; width: 13.2%; z-index: 5; }
-.couch-room-stage .roll-6 { left: 84.2%; top: 72.7%; width: 12.4%; z-index: 7; }
+.couch-room-stage .roll-1 {
+    left: 10%;
+    top: 46.5%;
+    width: 13%;
+    z-index: 4;
+}
 
+.couch-room-stage .roll-2 {
+    left: 35%;
+    top: 47%;
+    width: 11.5%;
+    z-index: 5;
+}
+
+.couch-room-stage .roll-3 {
+    left: 66%;
+    top: 33%;
+    width: 9%;
+    z-index: 4;
+}
+.couch-room-stage .roll-4 {
+    left: 25%;
+    top: 74.5%;
+    width: 11%;
+    z-index: 3;
+}
+.couch-room-stage .roll-5 {
+    left: 54.7%;
+    top: 83.4%;
+    width: 12%;
+    z-index: 6;
+}
+.couch-room-stage .roll-6 {
+    left: 84.2%;
+    top: 72.7%;
+    width: 10%;
+    z-index: 7;
+}
 /* Completed-film storage box */
 .film-box {
     position: absolute;
