@@ -1,0 +1,888 @@
+/* =========================================
+   GENERAL
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background-color: #f4f4f4;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+body.standard-page {
+    padding: 0;
+          
+}
+
+
+/* =========================================
+   ADMIN WINDOW
+========================================= */
+
+/* .admin-container {
+    width: 1072px;
+    min-height: 762px;
+
+    display: grid;
+
+    grid-template-columns: 290px 1fr;
+    grid-template-rows: 100px 1fr;
+
+    background-color: #fff6cc;
+}*/
+.admin-container {
+    width: 100%;
+    min-height: 100dvh;
+    margin: 0;
+    max-width: none;
+
+    display: grid;
+
+    grid-template-columns: 290px 1fr;
+    grid-template-rows: auto 1fr;
+
+    grid-template-areas:
+    "header header"
+    "sidebar content";
+
+    background-color: #fff6cc;
+}
+
+.admin-container > .room-header {
+    grid-area: header;
+}
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.back-button {
+
+
+    width: 74px;
+    height: 70px;
+
+    border: none; 
+
+}
+
+.back-button:hover {
+    background-color: #fff4b8;
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+.sidebar {
+    grid-area: sidebar;
+
+    min-height: 662px;
+    background-color: #b9d0ad;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    padding-top: 0;
+    gap: 0;
+}
+
+/* =========================================
+   SIDEBAR BUTTONS
+========================================= */
+
+.sidebar-button {
+    width: 100%;
+
+    border: none;
+
+    background: transparent;
+
+    padding: 13px 20px;
+
+    font-size: 35px;
+    font-weight: 700;
+
+    color: black;
+
+    cursor: pointer;
+
+    text-align: center;
+}
+
+.sidebar-button:hover {
+    background-color: #e3e8df 
+}
+
+
+/* Selected sidebar button */
+
+
+.sidebar-button.active {
+    background-color: var(--game-background);
+    color: #2f5425;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+
+.admin-content {
+    grid-column: 2;
+    grid-row: 2;
+
+    min-height: 662px;
+
+    background-color: var(--game-background);
+
+    padding: 35px 50px;
+}
+
+
+
+/* =========================================
+   SECTIONS
+
+   All sections are hidden by default.
+   JavaScript adds active-section to show one.
+========================================= */
+
+.admin-section {
+    display: none;
+}
+
+.admin-section.active-section {
+    display: block;
+}
+
+
+/* =========================================
+   GENERAL SECTION TITLE
+========================================= */
+
+.section-title {
+    margin: 0 0 30px 0;
+
+    font-size: 39px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   AUDIO
+========================================= */
+
+.audio-setting {
+    width: 435px;
+
+    margin-bottom: 62px;
+}
+
+.setting-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 21px;
+}
+
+.setting-header h2 {
+    margin: 0;
+
+    font-size: 39px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   VOLUME CONTROL
+========================================= */
+
+.volume-control {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+}
+
+.volume-word {
+    width: 75px;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   VOLUME SLIDER
+========================================= */
+
+.volume-slider {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 355px;
+    height: 7px;
+
+    border-radius: 5px;
+
+    background-color: black;
+
+    cursor: pointer;
+}
+
+
+/* Chrome / Safari */
+
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 23px;
+    height: 23px;
+
+    border-radius: 50%;
+
+    background-color: black;
+
+    cursor: pointer;
+}
+
+
+/* Firefox */
+
+.volume-slider::-moz-range-thumb {
+    width: 23px;
+    height: 23px;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: black;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   ON / OFF SWITCH
+========================================= */
+
+.switch {
+    position: relative;
+
+    display: inline-block;
+
+    width: 80px;
+    height: 38px;
+
+    flex-shrink: 0;
+}
+
+
+/* Hide normal checkbox */
+
+.switch input {
+    opacity: 0;
+
+    width: 0;
+    height: 0;
+}
+
+
+/* Switch background */
+
+.slider {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    background-color: #bdbdbd;
+
+    border: 2px solid #aaa;
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+/* White circle */
+
+.slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+
+    left: 2px;
+    top: 2px;
+
+    background-color: white;
+
+    border-radius: 50%;
+
+    transition: 0.2s;
+}
+
+
+/* OFF text */
+
+.slider::after {
+    content: "OFF";
+
+    position: absolute;
+
+    right: 7px;
+    top: 8px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    color: white;
+}
+
+
+/* Switch ON */
+
+.switch input:checked + .slider {
+    background-color: #2f5425; /*#087bd3;*/
+
+    border-color: #2f5425 /* #087bd3;*/
+}
+
+
+/* Move circle */
+
+.switch input:checked + .slider::before {
+    transform: translateX(40px);
+}
+
+
+/* Change OFF to ON */
+
+.switch input:checked + .slider::after {
+    content: "ON";
+
+    left: 8px;
+    right: auto;
+}
+
+
+
+/* =========================================
+   SCORE PAGE
+========================================= */
+
+#score {
+    width: 100%;
+}
+
+#score .section-title {
+    margin: 0 0 20px 0;
+}
+
+
+/* =========================================
+   SCORE SUMMARY
+========================================= */
+
+.score-summary {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 350px;
+
+    margin-bottom: 25px;
+
+    padding: 22px 30px;
+
+    background-color: #fffdf7;
+
+    border: 1px solid #d8d5cc;
+    border-radius: 16px;
+}
+
+
+/* Participant information */
+
+.participant-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.summary-label {
+    font-size: 16px;
+    color: #707070;
+}
+
+.participant-info h3 {
+    margin: 4px 0 10px;
+
+    font-size: 27px;
+}
+
+.participant-info p {
+    margin: 2px 0;
+
+    font-size: 16px;
+    color: #606060;
+}
+
+
+/* =========================================
+   TOTAL SCORE
+========================================= */
+
+.total-score {
+    border-left: 1px solid #d8d5cc;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.total-score-number {
+    display: flex;
+    align-items: baseline;
+
+    gap: 8px;
+}
+
+.total-score-number strong {
+    font-size: 52px;
+}
+
+.total-score-number span {
+    font-size: 28px;
+    color: #555;
+}
+
+.score-percentage {
+    font-size: 19px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   SCORE CATEGORIES
+========================================= */
+
+.score-categories {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 18px;
+}
+
+
+/* Every category uses this same class */
+
+.score-category {
+    min-width: 0;
+    min-height: 390px;
+
+    padding: 20px;
+
+    background-color: #fffdf7;
+
+    border: 1px solid #d8d5cc;
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.score-category h3 {
+    margin: 0;
+
+    font-size: 24px;
+}
+
+.scenario-count {
+    margin: 3px 0 15px;
+
+    font-size: 15px;
+
+    color: #707070;
+}
+
+.answer-time {
+    font-size: 13px;
+    color: #888;
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+/* =========================================
+   SCENARIO ANSWERS
+========================================= */
+
+.scenario-list {
+    flex-grow: 1;
+
+    border-top: 1px solid #dddddd;
+}
+
+.scenario-row {
+    min-height: 43px;
+    padding: 6px 0;
+    display: grid;
+
+    grid-template-columns: 28px auto 32px auto 1fr;
+
+    align-items: center;
+    gap: 6px;
+
+    border-bottom: 1px solid #e3e3e3;
+
+    font-size: 15px;
+}
+
+.scenario-list-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 0 6px;
+
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+}
+
+.scenario-number {
+    font-weight: bold;
+}
+
+.given-answer {
+    font-weight: 600;
+    color: #333;
+    word-break: break-word;
+}
+
+/* Correct / incorrect icons */
+
+.correct,
+.wrong {
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.correct {
+    background-color: #5cab68;
+}
+
+.wrong {
+    background-color: #ef7777;
+}
+
+
+/* Only displayed when the answer was wrong */
+
+.correct-answer {
+    font-size: 14px;
+    color: #2e7d32;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+
+/* =========================================
+   CATEGORY SCORE
+========================================= */
+
+.category-score {
+    margin-top: 15px;
+
+    padding: 10px;
+
+    background-color: #d8edcf;
+
+    border-radius: 9px;
+
+    text-align: center;
+
+    font-size: 21px;
+    font-weight: 700;
+}
+
+/* =========================================
+   EDIT PARTICIPANT DATA
+========================================= */
+
+.data-form {
+    width: 100%;
+    max-width: 600px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px;
+}
+
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.form-group > label {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   NUMBER INPUTS
+========================================= */
+
+.form-group input[type="number"],
+.form-group select {
+    width: 100%;
+    height: 50px;
+
+    padding: 0 14px;
+
+    border: 1px solid #aaa;
+    border-radius: 10px;
+
+    background-color: white;
+
+    font-family: inherit;
+    font-size: 17px;
+}
+
+
+/* Input focus */
+
+.form-group input[type="number"]:focus,
+.form-group select:focus {
+    outline: 2px solid #b9d0ad;
+    border-color: #7fa171;
+}
+
+
+/* Chrome, Safari, Edge */
+.form-group input[type="number"]::-webkit-inner-spin-button,
+.form-group input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+.form-group input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.input-error {
+    min-height: 18px;
+    margin: 2px 0 0;
+
+    font-size: 14px;
+    color: #b84444;
+}
+
+/* =========================================
+   GENDER SEGMENTED CONTROL
+========================================= */
+
+.gender-selector {
+    width: 100%;
+
+    display: flex;
+
+    border: 1px solid #aaa;
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    background-color: white;
+}
+
+
+/* Hide normal radio buttons */
+
+.gender-selector input {
+    position: absolute;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+/* Visible sections */
+
+.gender-selector label {
+    flex: 1;
+
+    padding: 12px 18px;
+
+    border-right: 1px solid #aaa;
+
+    background-color: white;
+
+    text-align: center;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+
+/* Remove divider from last option */
+
+.gender-selector label:last-of-type {
+    border-right: none;
+}
+
+
+/* Hover */
+
+.gender-selector label:hover {
+    background-color: #eef2eb;
+}
+
+
+/* Selected */
+
+.gender-selector input:checked + label {
+    background-color: #b9d0ad;
+
+    color: #2f5425;
+
+    font-weight: 700;
+}
+
+
+/* Keyboard focus */
+
+.gender-selector input:focus-visible + label {
+    outline: 2px solid #6f9561;
+    outline-offset: -3px;
+}
+
+
+/* =========================================
+   SAVE BUTTON
+========================================= */
+
+.save-button {
+    width: 150px;
+    min-height: 48px;
+
+    margin-top: 8px;
+
+    border: 1px solid #659a51;
+    border-radius: 10px;
+
+    background-color: #b9d0ad;
+
+    color: #2f5425;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background-color: #a9c79c;
+}
+
+
+/* =========================================
+   SAVE MESSAGE
+========================================= */
+
+.save-message {
+    min-height: 24px;
+
+    margin: 0;
+
+    white-space: pre-line;
+    
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.save-message.success {
+    color: #3f7a47;
+}
+
+.save-message.error {
+    color: #b84444;
+}
+
+
+/* =========================================
+   SAVE BUTTON
+========================================= */
+
+.save-button {
+    width: 130px;
+
+    margin-top: 15px;
+
+    padding: 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #f5e6a5;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background-color: #ead78b;
+}
+

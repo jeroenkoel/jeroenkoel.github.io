@@ -3,83 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/base.css">
+    <link rel="stylesheet" href="./styles/room.css?v=room-sequence-2">
+    <link rel="stylesheet" href="./styles/window-room.css">
+    <link rel="stylesheet" href="./styles/tv-room.css">
+    <link rel="stylesheet" href="./styles/level-popup.css">
+    <link rel="stylesheet" href="./styles/film-puzzle.css">
     <script src="./scripts/scene-manager.js" defer></script>
-    <script type="module" src="./scripts/level-selection.js"></script>
+    <script src="./runtime-config.js"></script>
+    <script src="./scripts/audio.js"></script>
+    <script type="module" src="./scripts/ui-settings.js"></script>
+    <script type="module" src="./scripts/level-selection.js?v=room-sequence-2"></script>
     <script src="./scripts/progress-bar/progress-bar.js" defer></script>
-    <title>The Film Box – Filmrol kiezen</title>
+    <title></title>
 </head>
-<body class="room-page">
+<body class="room-page" data-i18n-document-title="meta.levelSelectionTitle">
     <timer-progress-bar id="topBar"></timer-progress-bar>
     <header class="room-header">
-        <button onclick="switchScene('index.html')">Terug naar start</button>
-        <h1>Kies een filmrol</h1>
+        <button class="secondary-button" type="button" onclick="switchScene('index.html')" data-icon="←" data-i18n="common.backHome" data-i18n-aria-label="common.backHome"></button>
+        <h1 data-i18n="selection.title" aria-live="polite"></h1>
     </header>
 
-    <main class="room-stage" aria-label="Woonkamer met zes filmrollen">
-        <img class="room-background" src="./assets/rooms/living-room.png" alt="Woonkamer">
-        <button class="film-roll roll-1" data-level="intention-01" aria-label="Open filmrol 1"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-2" data-level="intention-01" aria-label="Open filmrol 2"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-3" data-level="intention-01" aria-label="Open filmrol 3"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-4" data-level="intention-01" aria-label="Open filmrol 4"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-5" data-level="intention-01" aria-label="Open filmrol 5"><img src="./assets/rooms/film-roll.png" alt=""></button>
-        <button class="film-roll roll-6" data-level="intention-01" aria-label="Open filmrol 6"><img src="./assets/rooms/film-roll.png" alt=""></button>
+    <main class="room-stage couch-room-stage" data-i18n-aria-label="selection.roomAria">
+        <section class="room-scene" data-room="couch" data-room-aria="selection.roomAria">
+            <img class="room-background" src="./assets/rooms/couch-room/couch-background.png" alt="" aria-hidden="true">
 
-        <div class="film-box" aria-label="Doos voor voltooide filmrollen">
+            <img class="room-layer layer-painting" src="./assets/rooms/couch-room/trimmed/painting.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-door-frame" src="./assets/rooms/couch-room/trimmed/door-frame.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-light-switch" src="./assets/rooms/couch-room/trimmed/light-switch.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-small-table" src="./assets/rooms/couch-room/trimmed/small-table.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-small-table-decoration" src="./assets/rooms/couch-room/trimmed/small-table-decoration.png" alt="" aria-hidden="true">
+
+            <button class="film-roll roll-4" data-roll-number="4"><img src="./assets/rooms/couch-room/trimmed/roll-6.png" alt=""></button>
+
+            <img class="room-layer layer-couch" src="./assets/rooms/couch-room/trimmed/couch.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-armrest" src="./assets/rooms/couch-room/trimmed/armrest.png" alt="" aria-hidden="true">
+
+            <button class="film-roll roll-1" data-roll-number="1"><img src="./assets/rooms/couch-room/trimmed/roll-1.png" alt=""></button>
+            <button class="film-roll roll-2" data-roll-number="2"><img src="./assets/rooms/couch-room/trimmed/roll-7.png" alt=""></button>
+            <button class="film-roll roll-3" data-roll-number="3"><img src="./assets/rooms/couch-room/trimmed/roll-4.png" alt=""></button>
+
+            <img class="room-layer layer-pillow" src="./assets/rooms/couch-room/trimmed/pillow.png" alt="" aria-hidden="true">
+
+            <button class="film-roll roll-5" data-roll-number="5"><img src="./assets/rooms/couch-room/trimmed/roll-5.png" alt=""></button>
+
+            <img class="room-layer layer-carpet" src="./assets/rooms/couch-room/trimmed/carpet.png" alt="" aria-hidden="true">
+
+            <button class="film-roll roll-6" data-roll-number="6"><img src="./assets/rooms/couch-room/trimmed/roll-3.png" alt=""></button>
+
+        </section>
+
+        <section class="room-scene" data-room="window" data-room-aria="selection.windowRoomAria" hidden>
+            <img class="room-background" src="./assets/rooms/window-room/window-background.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-outside" src="./assets/rooms/window-room/outside.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-window-frame" src="./assets/rooms/window-room/window-frame.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-beige-curtain-left" src="./assets/rooms/window-room/beige-curtain-left.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-beige-curtain-right" src="./assets/rooms/window-room/beige-curtain-right.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-red-curtain-left" src="./assets/rooms/window-room/red-curtain-left.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-red-curtain-right" src="./assets/rooms/window-room/red-curtain-right.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-hanging-basket-back" src="./assets/rooms/window-room/hanging-basket-back.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-hanging-pot-back" src="./assets/rooms/window-room/hanging-pot-back.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-leaves" src="./assets/rooms/window-room/leaves.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-plant-1" src="./assets/rooms/window-room/plant-1.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-plant-2" src="./assets/rooms/window-room/plant-2.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-basket-back" src="./assets/rooms/window-room/basket-back.png" alt="" aria-hidden="true">
+            <button type="button" class="film-roll roll-1 split-roll" data-roll-number="7"><img src="./assets/rooms/window-room/roll-1.png" alt=""><img class="roll-tail" src="./assets/rooms/window-room/roll-1.png" alt="" aria-hidden="true"></button>
+            <button type="button" class="film-roll roll-2 split-roll" data-roll-number="8"><img src="./assets/rooms/window-room/roll-2.png" alt=""><img class="roll-tail" src="./assets/rooms/window-room/roll-2.png" alt="" aria-hidden="true"></button>
+            <button type="button" class="film-roll roll-3" data-roll-number="9"><img src="./assets/rooms/window-room/roll-3.png" alt=""></button>
+            <button type="button" class="film-roll roll-4" data-roll-number="10"><img src="./assets/rooms/window-room/roll-4.png" alt=""></button>
+            <button type="button" class="film-roll roll-5" data-roll-number="11"><img src="./assets/rooms/window-room/roll-5.png" alt=""></button>
+            <button type="button" class="film-roll roll-6 split-roll" data-roll-number="12"><img src="./assets/rooms/window-room/roll-6.png" alt=""><img class="roll-tail" src="./assets/rooms/window-room/roll-6.png" alt="" aria-hidden="true"></button>
+            <img class="room-layer layer-hanging-basket-front" src="./assets/rooms/window-room/hanging-basket-front.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-hanging-pot-front" src="./assets/rooms/window-room/hanging-pot-front.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-basket-front" src="./assets/rooms/window-room/basket-front.png" alt="" aria-hidden="true">
+        </section>
+
+        <section class="room-scene" data-room="tv" data-room-aria="selection.tvRoomAria" hidden>
+            <img class="room-background" src="./assets/rooms/tv-room/tv-background.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-tv-carpet" src="./assets/rooms/tv-room/tv-carpet.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-big-shelf" src="./assets/rooms/tv-room/big-shelf.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-books" src="./assets/rooms/tv-room/books.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-books-2" src="./assets/rooms/tv-room/books-2.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-small-plant" src="./assets/rooms/tv-room/small-plant.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-book-2" src="./assets/rooms/tv-room/book-2.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-vase" src="./assets/rooms/tv-room/vase.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-basket" src="./assets/rooms/tv-room/basket.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-small-painting" src="./assets/rooms/tv-room/small-painting.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-plant" src="./assets/rooms/tv-room/plant.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-tv-shelf" src="./assets/rooms/tv-room/tv-shelf.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-book" src="./assets/rooms/tv-room/book.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-tv" src="./assets/rooms/tv-room/tv.png" alt="" aria-hidden="true">
+            <img class="room-layer layer-table" src="./assets/rooms/tv-room/table.png" alt="" aria-hidden="true">
+            <button type="button" class="film-roll roll-1" data-roll-number="13"><img src="./assets/rooms/tv-room/roll-2.png" alt=""></button>
+            <button type="button" class="film-roll roll-2" data-roll-number="14"><img src="./assets/rooms/tv-room/roll-3.png" alt=""></button>
+            <button type="button" class="film-roll roll-3" data-roll-number="15"><img src="./assets/rooms/tv-room/roll-5.png" alt=""></button>
+            <button type="button" class="film-roll roll-4" data-roll-number="16"><img src="./assets/rooms/tv-room/roll-1.png" alt=""></button>
+            <button type="button" class="film-roll roll-5" data-roll-number="17"><img src="./assets/rooms/tv-room/roll-4.png" alt=""></button>
+            <button type="button" class="film-roll roll-6" data-roll-number="18"><img src="./assets/rooms/tv-room/roll-6.png" alt=""></button>
+        </section>
+
+        <section class="room-scene" data-room="whole" data-room-aria="selection.emptyRoomAria" hidden>
+            <img class="room-background" src="./assets/rooms/whole-room-empty.png" alt="" aria-hidden="true">
+        </section>
+
+        <div class="film-box" data-i18n-aria-label="selection.filmBoxAria">
             <div class="film-box-back"></div>
             <div id="storedRolls" class="stored-rolls"></div>
             <div class="film-box-front"></div>
-            <div class="film-box-label">FILMS</div>
+            <div class="film-box-label" data-i18n="selection.filmBoxLabel"></div>
         </div>
     </main>
 
-    <div id="levelModal" class="level-modal" aria-hidden="true">
-        <div class="level-backdrop"></div>
-        <section id="levelWindow" class="level-window phase-video" role="dialog" aria-modal="true" aria-label="Filmfragment bekijken en verhaal afmaken">
-            <div id="videoStage" class="video-stage" aria-label="Bekijk het filmfragment">
-                <div class="film-holes film-holes-top" aria-hidden="true"></div>
-                <div class="video-frame">
-                    <video id="levelVideo" playsinline preload="auto" aria-label="Filmfragment van het verhaal"></video>
-                    <div id="videoCountdown" class="video-countdown" aria-live="assertive"></div>
-                    <div id="videoMessage" class="video-message" role="status"></div>
-                </div>
-                <div class="film-holes film-holes-bottom" aria-hidden="true"></div>
-            </div>
-            <div id="keyframeStrip" class="film-strip" aria-label="Drie belangrijke momenten uit de film">
-                <div class="film-holes film-holes-top" aria-hidden="true"></div>
-                <div class="keyframe-row"></div>
-                <div class="film-holes film-holes-bottom" aria-hidden="true"></div>
-            </div>
-            <div id="reflectionStage" class="reflection-stage" aria-label="Vertel wat er volgens u gaat gebeuren">
-                <h2>Kunt u omschrijven wat u denkt dat er nu gaat gebeuren?</h2>
-                <div class="reflection-bottom">
-                    <div class="reflection-microphone">
-                        <button id="microphoneButton" class="microphone-button" type="button" aria-label="Start geluidsopname" title="Klik om een geluidsopname te starten of stoppen">🎙</button>
-                        <div><span id="recordingWave" class="recording-wave" aria-hidden="true">▂▅▃▇▂▆▃▅</span>
-                        <p id="microphoneStatus" role="status">Klik op de microfoon om uw antwoord op te nemen.</p></div>
-                    </div>
-                    <div class="reflection-next">
-                        <span id="reflectionCountdown" class="reflection-countdown" aria-live="polite"></span>
-                        <button id="continueToLevel" class="submit-button" type="button" disabled>Verder</button>
-                    </div>
-                </div>
-            </div>
-            <div id="configurationStage" class="configuration-stage">
-                <h2 class="level-title">Maak het verhaal af</h2>
-                <div class="ending-workspace">
-                    <div class="scene-panel"><div id="levelScene" class="level-scene" aria-label="Configureer het einde van het verhaal"></div></div>
-                    <aside class="control-panel" aria-label="Verander de voorwerpen">
-                        <div id="levelControls" class="level-controls"></div>
-                        <div class="submit-area">
-                            <span id="levelStatus" class="level-status" aria-live="polite"></span>
-                            <button id="submitAnswer" class="submit-button" type="button" disabled>Bevestigen</button>
-                        </div>
-                    </aside>
-                </div>
-            </div>
-        </section>
-    </div>
+    <level-popup></level-popup>
 
-    <pre id="debugOutput" class="visually-hidden" aria-hidden="true"></pre>
 </body>
 </html>

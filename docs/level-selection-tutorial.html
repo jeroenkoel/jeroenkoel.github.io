@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/base.css">
+    <link rel="stylesheet" href="./styles/room.css">
+    <link rel="stylesheet" href="./styles/level-popup.css">
+    <link rel="stylesheet" href="./styles/film-puzzle.css">
+    <script src="./scripts/scene-manager.js" defer></script>
+    <script src="./runtime-config.js"></script>
+    <script src="./scripts/audio.js"></script>
+    <script type="module" src="./scripts/ui-settings.js"></script>
+    <script type="module" src="./scripts/level-selection.js"></script>
+    <script src="./scripts/progress-bar/progress-bar.js" defer></script>
+    <title></title>
+</head>
+<body class="room-page" data-i18n-document-title="meta.levelSelectionTitle">
+    <timer-progress-bar id="topBar"></timer-progress-bar>
+    <header class="room-header">
+        <button class="secondary-button" type="button" onclick="switchScene('index.html')" data-icon="←" data-i18n="common.backHome" data-i18n-aria-label="common.backHome"></button>
+        <h1 data-i18n="selection.title"></h1>
+
+    </header>
+
+    <main class="room-stage couch-room-stage" data-i18n-aria-label="selection.roomAria">
+        <section style="opacity: .34;" disabled>
+        <img class="room-background" src="./assets/rooms/couch-room/couch-background.png" alt="" aria-hidden="true">
+
+        <img class="room-layer layer-painting" src="./assets/rooms/couch-room/trimmed/painting.png" alt="" aria-hidden="true">
+        <img class="room-layer layer-door-frame" src="./assets/rooms/couch-room/trimmed/door-frame.png" alt="" aria-hidden="true">
+        <img class="room-layer layer-light-switch" src="./assets/rooms/couch-room/trimmed/light-switch.png" alt="" aria-hidden="true">
+        <img class="room-layer layer-small-table" src="./assets/rooms/couch-room/trimmed/small-table.png" alt="" aria-hidden="true">
+        <img class="room-layer layer-small-table-decoration" src="./assets/rooms/couch-room/trimmed/small-table-decoration.png" alt="" aria-hidden="true">
+
+        <button class="film-roll roll-4" data-roll-number="4" disabled><img src="./assets/rooms/couch-room/trimmed/roll-6.png" alt=""></button>
+
+        <img class="room-layer layer-couch" src="./assets/rooms/couch-room/trimmed/couch.png" alt="" aria-hidden="true">
+        <img class="room-layer layer-armrest" src="./assets/rooms/couch-room/trimmed/armrest.png" alt="" aria-hidden="true">
+
+        <button class="film-roll roll-2" data-roll-number="2" disabled><img src="./assets/rooms/couch-room/trimmed/roll-7.png" alt=""></button>
+        <button class="film-roll roll-1" data-roll-number="1" disabled><img src="./assets/rooms/couch-room/trimmed/roll-1.png" alt=""></button>
+        <button class="film-roll roll-3" data-roll-number="3" disabled><img src="./assets/rooms/couch-room/trimmed/roll-4.png" alt=""></button>
+
+        <img class="room-layer layer-pillow" src="./assets/rooms/couch-room/trimmed/pillow.png" alt="" aria-hidden="true">
+
+        <button class="film-roll roll-5" data-roll-number="5" disabled><img src="./assets/rooms/couch-room/trimmed/roll-5.png" alt=""></button>
+
+        <img class="room-layer layer-carpet" src="./assets/rooms/couch-room/trimmed/carpet.png" alt="" aria-hidden="true">
+        
+        <div class="film-box" data-i18n-aria-label="selection.filmBoxAria">
+            <div class="film-box-back"></div>
+            <div id="storedRolls" class="stored-rolls"></div>
+            <div class="film-box-front"></div>
+            <div class="film-box-label" data-i18n="selection.filmBoxLabel"></div>
+        </div>
+        </section>
+
+        <button class="film-roll roll-6" data-roll-number="6"><img src="./assets/rooms/couch-room/trimmed/roll-3.png" alt=""></button>
+        <div class="home-content" style="top:5%; margin-left: 20px; margin-right: 20px;">
+            <p id="tutorial-selection-text" class="tutorial-text" data-i18n = "tutorial.selectionRoll"></p>
+            <button id="start-game" class="primary-button" style="display:none" type="button" onclick="switchScene('level-selection.html')" data-icon="▶" data-i18n="tutorial.startGame" data-i18n-aria-label="tutorial.startGame"></button>
+
+        </div>
+    </main>
+
+    <level-popup data-is-tutorial="true"></level-popup>
+
+</body>
+</html>

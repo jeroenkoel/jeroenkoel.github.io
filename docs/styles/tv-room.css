@@ -1,0 +1,147 @@
+.tv-room-stage .layer-tv-carpet {
+    left: 8%;
+    top: 76.8%;
+    width: 75%;
+    z-index: 1;
+}
+
+.tv-room-stage .layer-big-shelf {
+    left: 10.5%;
+    top: 1%;
+    width: 42%;
+    z-index: 2;
+}
+
+.tv-room-stage .layer-books {
+    left: 17.1%;
+    top: 8%;
+    width: 13%;
+    z-index: 3;
+}
+
+.tv-room-stage .layer-books-2 {
+    left: 36.6%;
+    top: 8.7%;
+    width: 11%;
+    z-index: 3;
+}
+
+.tv-room-stage .layer-small-plant {
+    left: 19%;
+    top: 25.5%;
+    width: 11.3%;
+    z-index: 3;
+}
+
+.tv-room-stage .layer-book-2 {
+    left: 29%;
+    top: 37.1%;
+    width: 10.5%;
+    height: 2.5%;
+    z-index: 3;
+}
+
+.tv-room-stage .layer-vase {
+    left: 20.7%;
+    top: 45.8%;
+    width: 7%;
+    z-index: 3;
+}
+
+.tv-room-stage .layer-basket {
+    left: 30.2%;
+    top: 45%;
+    width: 15%;
+    z-index: 3;
+}
+
+.tv-room-stage .layer-small-painting {
+    left: 74%;
+    top: -7%;
+    width: 20.5%;
+    z-index: 2;
+}
+
+.tv-room-stage .layer-plant {
+    left: 51.5%;
+    top: 28.3%;
+    width: 28%;
+    height: 49%;
+    z-index: 3;
+}
+
+.tv-room-stage .layer-tv-shelf {
+    left: 67.5%;
+    top: 56.8%;
+    width: 66%;
+    z-index: 4;
+}
+
+.tv-room-stage .layer-book {
+    left: 76%;
+    top: 67.3%;
+    width: 12%;
+    z-index: 5;
+}
+
+.tv-room-stage .layer-tv {
+    left: 80.5%;
+    top: 14.5%;
+    width: 48%;
+    z-index: 6;
+}
+
+.tv-room-stage .layer-table {
+    left: -28.8%;
+    top: 71.3%;
+    width: 46%;
+    z-index: 8;
+}
+
+.tv-room-stage .roll-1 {
+    left: 30%;
+    top: 15.2%;
+    width: 10.5%;
+    z-index: 4;
+}
+
+.tv-room-stage .roll-2 {
+    left: 35.4%;
+    top: 31.6%;
+    width: 11.5%;
+    z-index: 4;
+}
+
+.tv-room-stage .roll-3 {
+    left: 69.7%;
+    top: 50.3%;
+    width: 11%;
+    z-index: 7;
+}
+
+.tv-room-stage .roll-4 {
+    left: 1%;
+    top: 60.7%;
+    width: 10.5%;
+    z-index: 4;
+}
+
+.tv-room-stage .roll-5 {
+    left: 49.8%;
+    top: 70.5%;
+    width: 12.7%;
+    z-index: 5;
+}
+
+.tv-room-stage .roll-6 {
+    left: 27%;
+    top: 81%;
+    width: 18%;
+    z-index: 6;
+}
+
+.tv-room-stage .film-box {
+    left: 57%;
+    right: auto;
+    top: 6%;
+}

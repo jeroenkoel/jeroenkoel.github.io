@@ -3,19 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/base.css">
+    <link rel="stylesheet" href="./styles/room.css">
+    <link rel="stylesheet" href="./styles/level-popup.css">
+    <link rel="stylesheet" href="./styles/film-puzzle.css">
+    <script src="./runtime-config.js"></script>
+    <script type="module" src="./scripts/ui-settings.js"></script>
     <script src="./scripts/scene-manager.js" defer></script>
-    <title>Theory Of Mind</title>
+    <script src="./scripts/audio.js" defer></script>
+    <script type="module" src="./scripts/ui-settings.js"></script>
+    <title></title>
 </head>
-<body>
-    <header class="top-bar">
-        <span></span>
-        <span></span>
-    </header>
-    <main class="prototype-card">
-        <h1>Home Screen</h1>
-        <button onclick="switchScene('test.html')">Go to Test page</button>
-        <button onclick="switchScene('level-selection.html')">Go to Level Selection</button>
+<body class="standard-page home-page" data-i18n-document-title="meta.homeTitle">
+    <main class="home-content">
+        <p class="title-text" data-i18n="home.title"></p>
+
+        <div style="display: flex; gap: 0.75rem; align-items: center; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+            <input 
+                type="text" 
+                id="participantInput" 
+                placeholder="Enter Participant Number" 
+                style="padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; text-align: center; min-width: 240px;"
+            >
+            <button 
+                class="primary-button home-start" 
+                type="button" 
+                id="startGameBtn"
+                data-icon="▶" 
+                data-i18n="common.start" 
+                data-i18n-aria-label="common.start"
+            >
+                Play Game
+            </button>
+        </div>
+
+        <button class="primary-button home-start" type="button" onclick="switchScene('administrator.html')" data-icon="⚙" data-i18n="common.administrator" data-i18n-aria-label="common.administrator"></button>
     </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const participantInput = document.getElementById("participantInput");
+            const startGameBtn = document.getElementById("startGameBtn");
+
+            // Restore saved ID if already set in session
+            const currentUserId = sessionStorage.getItem("filmBoxUserId");
+            if (currentUserId && participantInput) {
+                participantInput.value = currentUserId;
+            }
+
+            if (startGameBtn) {
+                startGameBtn.addEventListener("click", () => {
+                    const pNumber = participantInput.value.trim();
+
+                    if (!pNumber) {
+                        alert("Warning: Please enter a Participant Number before starting the game.");
+                        participantInput.focus();
+                        return;
+                    }
+
+                    // Save active participant ID for all gameplay submissions
+                    sessionStorage.setItem("filmBoxUserId", pNumber);
+
+                    // Proceed to game
+                    if (typeof switchScene === "function") {
+                        switchScene("tutorial.html");
+                    } else {
+                        window.location.href = "tutorial.html";
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
