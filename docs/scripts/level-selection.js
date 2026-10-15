@@ -1,5 +1,6 @@
 import { initI18n, onLanguageChange, t } from "/scripts/i18n.js";
 import { initLevelPopup, openLevel } from "/scripts/level-popup.js";
+import { tutorialLevel, normalLevels } from "/config/levels.js";
 
 await initI18n();
 
@@ -10,8 +11,10 @@ const stage = document.querySelector(".room-stage");
 const scenes = [...document.querySelectorAll(".room-scene")];
 const title = document.querySelector(".room-header h1");
 const CLEAN_ROOM_HOLD_MS = 3000;
+const isTutorial = Boolean(document.querySelector("level-popup[data-is-tutorial]"));
 
 let sceneIndex = 0;
+let nextLevelIndex = 0;
 
 function showScene(index) {
     sceneIndex = index;
@@ -38,6 +41,12 @@ function updateRollLabels() {
 }
 
 function completeRoll(rollNumber) {
+    if (isTutorial) {
+        const roll = [...rolls].find(candidate => candidate.dataset.rollNumber === String(rollNumber));
+        roll?.classList.add("completed");
+        return;
+    }
+
     const scene = scenes[sceneIndex];
     const roll = [...scene.querySelectorAll(".film-roll")].find(candidate => candidate.dataset.rollNumber === String(rollNumber));
     if (!roll || roll.classList.contains("completed")) return;
@@ -48,6 +57,7 @@ function completeRoll(rollNumber) {
     image.className = "stored-roll";
     storedRolls.appendChild(image);
     roll.classList.add("completed");
+    nextLevelIndex++;
 
     if (!scene.querySelector(".film-roll:not(.completed)")) {
         title.dataset.i18n = "selection.cleanedTitle";
@@ -62,12 +72,14 @@ rolls.forEach(roll => {
     roll.addEventListener("click", () => {
         if (roll.classList.contains("completed")) return;
         playButtonSound();
-        openLevel(roll.dataset.rollNumber);
+        const level = isTutorial ? tutorialLevel : normalLevels[nextLevelIndex];
+        if (level) openLevel(level, roll.dataset.rollNumber);
     });
 });
 
 levelModal.addEventListener("level-complete", event => completeRoll(event.detail.rollNumber));
 onLanguageChange(updateRollLabels);
 
-showScene(0);
+if (isTutorial) updateRollLabels();
+else showScene(0);
 initLevelPopup();

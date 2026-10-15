@@ -1092,3 +1092,12 @@
 .film-puzzle-answer-slot {
     margin-left: calc(var(--film-puzzle-frame-height) * -0.548);
 }
+
+.film-puzzle-answer-video {
+    visibility: hidden;
+    z-index: 3;
+}
+
+.film-puzzle-answer-video.is-playing {
+    visibility: visible;
+}

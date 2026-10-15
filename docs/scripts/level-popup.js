@@ -1,5 +1,4 @@
 import { filmPuzzleAssets } from "/config/film-puzzle.js";
-import { intention01 } from "/levels/intention-01.js";
 import "/components/level-popup.js";
 import { getLanguage, onLanguageChange, t, applyTranslations } from "/scripts/i18n.js";
 import { isDebugMode, onSettingsChange } from "/scripts/ui-settings.js";
@@ -43,11 +42,13 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const VIDEO_END_HOLD_MS = 2800;
 const FILM_INSERT_DURATION_MS = 1650;
 const FILM_INSERT_HOLD_MS = 2800;
+const ANSWER_LOOP_DELAY_MS = 650;
+const FILM_ANSWER_END_HOLD_MS = 1300;
 
-const isTutorial = windowElement.dataset.tutorial === 'true';
 
 
 let activeRollNumber = null;
+let activeLevel = null;
 let runToken = 0;
 let videoSequence = 0;
 let recorder = null;
@@ -59,12 +60,13 @@ let microphoneFallback = false;
 let reflectionAttemptCount = 0;
 let microphoneStateKey = "microphone.idle";
 let videoMessageState = null;
-let assetsReady = false;
+let assetsReadyFor = null;
 let selectedAnswerIndex = 0;
 let answerInteractionCount = 0;
 let answerStartedAt = null;
 let answerSubmitting = false;
 let answerSelectionMade = false;
+const answerPlayback = new WeakMap();
 
 function setPhase(phase) {
     windowElement.classList.remove("phase-video", "phase-reflection", "phase-answer");
@@ -158,7 +160,7 @@ function setVideoMessage(key = null, params = {}) {
 function buildKeyframes() {
     const row = keyframeStrip.querySelector(".keyframe-row");
     row.innerHTML = "";
-    intention01.keyframes.forEach((src, index) => {
+    activeLevel.keyframes.forEach((src, index) => {
         const frame = document.createElement("div");
         frame.className = "keyframe";
         const image = document.createElement("img");
@@ -189,6 +191,34 @@ function makeFilmFrame(answer, index) {
     return frame;
 }
 
+function stopAnswerVideo(video) {
+    clearTimeout(answerPlayback.get(video)?.timer);
+    answerPlayback.delete(video);
+    video.pause();
+    video.classList.remove("is-playing");
+    video.currentTime = 0;
+}
+
+function startAnswerVideo(video) {
+    if (answerPlayback.has(video)) return;
+    const state = { timer: null };
+    answerPlayback.set(video, state);
+    video.currentTime = 0;
+    void video.play().then(() => {
+        if (answerPlayback.get(video) === state) video.classList.add("is-playing");
+    }, () => {
+        if (answerPlayback.get(video) === state) stopAnswerVideo(video);
+    });
+}
+
+function syncAnswerVideo(option) {
+    const video = option.querySelector(".film-puzzle-answer-video");
+    if (!video) return;
+    const isSelected = answerSelectionMade && Number(option.dataset.answerIndex) === selectedAnswerIndex;
+    if (!answerSubmitting && (isSelected || option.matches(":hover"))) startAnswerVideo(video);
+    else stopAnswerVideo(video);
+}
+
 function makePuzzleAnswerCard(answer, index) {
     const card = document.createElement("div");
     card.className = "film-puzzle-answer-card";
@@ -212,7 +242,29 @@ function makePuzzleAnswerCard(answer, index) {
     label.textContent = String.fromCharCode(65 + index);
     label.setAttribute("aria-hidden", "true");
 
-    card.append(frameArt, image, label);
+    card.append(frameArt, image);
+    if (answer.animation) {
+        const clip = document.createElement("video");
+        clip.className = "film-puzzle-answer-image film-puzzle-answer-video";
+        clip.src = answer.animation;
+        clip.defaultMuted = true;
+        clip.muted = true;
+        clip.playsInline = true;
+        clip.preload = "metadata";
+        clip.addEventListener("ended", () => {
+            const state = answerPlayback.get(clip);
+            if (!state) return;
+            state.timer = setTimeout(() => {
+                if (answerPlayback.get(clip) !== state) return;
+                clip.currentTime = 0;
+                void clip.play().catch(() => {
+                    if (answerPlayback.get(clip) === state) stopAnswerVideo(clip);
+                });
+            }, ANSWER_LOOP_DELAY_MS);
+        });
+        card.appendChild(clip);
+    }
+    card.appendChild(label);
     return card;
 }
 
@@ -229,7 +281,7 @@ function buildFilmPuzzleTopInto(keyframeContainer, slotContainer, interactiveSlo
     stripArt.draggable = false;
     keyframeContainer.appendChild(stripArt);
 
-    intention01.keyframes.forEach((src, index) => {
+    activeLevel.keyframes.forEach((src, index) => {
         const image = document.createElement("img");
         image.className = `film-puzzle-keyframe-image film-puzzle-keyframe-${index + 1}`;
         image.src = src;
@@ -276,6 +328,7 @@ function updateFilmSelection() {
         option.classList.toggle("is-dimmed", answerSelectionMade && !isSelected);
         option.setAttribute("aria-pressed", String(isSelected));
         option.disabled = answerSubmitting;
+        syncAnswerVideo(option);
     });
 }
 
@@ -286,9 +339,10 @@ function updateSubmitAvailability() {
 
 function renderFilmPuzzle() {
     buildFilmPuzzleTop();
+    filmAnswerOptions.querySelectorAll(".film-puzzle-answer-video").forEach(stopAnswerVideo);
     filmAnswerOptions.innerHTML = "";
 
-    intention01.answers.forEach((answer, index) => {
+    activeLevel.answers.forEach((answer, index) => {
         const option = document.createElement("button");
         option.type = "button";
         option.className = "film-puzzle-option";
@@ -297,6 +351,8 @@ function renderFilmPuzzle() {
         option.setAttribute("aria-pressed", "false");
         option.disabled = answerSubmitting;
         option.appendChild(makePuzzleAnswerCard(answer, index));
+        option.addEventListener("pointerenter", () => syncAnswerVideo(option));
+        option.addEventListener("pointerleave", () => syncAnswerVideo(option));
 
         option.addEventListener("click", () => {
             if (answerSubmitting || !phaseIs("answer")) return;
@@ -325,10 +381,10 @@ function renderAnswers() {
 }
 
 async function preloadLevelAssets() {
-    if (assetsReady) return;
+    if (assetsReadyFor === activeLevel) return;
     const sources = [
-        ...intention01.keyframes,
-        ...intention01.answers.map(answer => answer.image),
+        ...activeLevel.keyframes,
+        ...activeLevel.answers.map(answer => answer.image),
         filmPuzzleAssets.keyframeStrip,
         filmPuzzleAssets.answerFrame,
         filmPuzzleAssets.answerSlot
@@ -339,7 +395,7 @@ async function preloadLevelAssets() {
         image.onerror = () => reject(new Error(t("level.assetLoadError")));
         image.src = src;
     })));
-    assetsReady = true;
+    assetsReadyFor = activeLevel;
 }
 
 async function prepareLevel() {
@@ -395,7 +451,7 @@ function resetVideoElement() {
 
 async function playFilm(token) {
     const sequence = ++videoSequence;
-    video.src = intention01.animation;
+    video.src = activeLevel.animation;
     video.muted = localStorage.getItem("mutedVideo") === "true";
     video.load();
     console.log("State video muted", video.muted);
@@ -462,10 +518,11 @@ function updateDebugControls() {
     skipVideoButton.hidden = !(isDebugMode() && phaseIs("video"));
 }
 
-export async function openLevel(rollNumber) {
+export async function openLevel(level, rollNumber) {
     if (modal.classList.contains("is-open")) return;
 
     const token = ++runToken;
+    activeLevel = level;
     activeRollNumber = rollNumber;
     selectedAnswerIndex = 0;
     answerInteractionCount = 0;
@@ -547,6 +604,8 @@ micButton.addEventListener("click", async () => {
         }
 
         const localChunks = [];
+        const levelId = activeLevel.id;
+        const rollNumber = activeRollNumber;
         const attemptIndex = ++reflectionAttemptCount;
         const attemptId = crypto.randomUUID();
         const format = MediaRecorder.isTypeSupported("audio/webm;codecs=opus") ? "audio/webm;codecs=opus" : "";
@@ -564,8 +623,8 @@ micButton.addEventListener("click", async () => {
             const ext = capture.mimeType.includes("mp4") ? "mp4" : "webm";
             form.append("metadata", JSON.stringify({
                 userId: getActiveUserId(),
-                questionId: `${intention01.id}-${activeRollNumber || "roll"}`,
-                roll: activeRollNumber,
+                questionId: levelId,
+                roll: rollNumber,
                 attemptId,
                 attemptIndex,
                 language: getLanguage(),
@@ -609,14 +668,14 @@ continueButton.addEventListener("click", async () => {
 
 previousAnswer.addEventListener("click", () => {
     if (answerSubmitting || !phaseIs("answer")) return;
-    selectedAnswerIndex = (selectedAnswerIndex - 1 + intention01.answers.length) % intention01.answers.length;
+    selectedAnswerIndex = (selectedAnswerIndex - 1 + activeLevel.answers.length) % activeLevel.answers.length;
     answerInteractionCount += 1;
     renderAnswers();
 });
 
 nextAnswer.addEventListener("click", () => {
     if (answerSubmitting || !phaseIs("answer")) return;
-    selectedAnswerIndex = (selectedAnswerIndex + 1) % intention01.answers.length;
+    selectedAnswerIndex = (selectedAnswerIndex + 1) % activeLevel.answers.length;
     answerInteractionCount += 1;
     renderAnswers();
 });
@@ -681,7 +740,24 @@ async function animateFilmPuzzleSelection() {
     }
 
     filmAnswerSlot.classList.add("is-filled");
-    await wait(FILM_INSERT_HOLD_MS);
+    const clip = flyer.querySelector(".film-puzzle-answer-video");
+    if (clip) {
+        const ended = new Promise((resolve, reject) => {
+            clip.addEventListener("ended", resolve, { once: true });
+            clip.addEventListener("error", reject, { once: true });
+        });
+        try {
+            clip.currentTime = 0;
+            await clip.play();
+            clip.classList.add("is-playing");
+            await ended;
+            await wait(FILM_ANSWER_END_HOLD_MS);
+        } catch {
+            await wait(FILM_INSERT_HOLD_MS);
+        }
+    } else {
+        await wait(FILM_INSERT_HOLD_MS);
+    }
     flyer.remove();
 }
 
@@ -692,14 +768,14 @@ async function submitSelectedAnswer() {
     renderAnswers();
     progressBar?.stop?.();
 
-    const selectedAnswer = intention01.answers[selectedAnswerIndex];
+    const selectedAnswer = activeLevel.answers[selectedAnswerIndex];
 
-    const correctAnswerObj = intention01.answers.find(ans => ans.correct === true);
+    const correctAnswerObj = activeLevel.answers.find(ans => ans.correct === true);
 
-    const levelCategory = intention01.category || "Cognitive";
+    const levelCategory = activeLevel.category || "Cognitive";
     const result = {
         userId: getActiveUserId(),
-        levelId: intention01.id,
+        levelId: activeLevel.id,
         category: levelCategory,
         finalAnswer: selectedAnswer.id,
         correctAnswer: correctAnswerObj ? correctAnswerObj.id : null,
@@ -748,6 +824,7 @@ function closeLevel() {
     document.body.classList.remove("level-open");
     answerSubmitting = false;
     activeRollNumber = null;
+    activeLevel = null;
 
     const mainTextElement = document.getElementById('tutorial-selection-text'); 
     
@@ -778,9 +855,11 @@ onSettingsChange(() => {
 });
 
 onLanguageChange(() => {
-    buildKeyframes();
-    buildFilmPuzzleTop();
-    if (phaseIs("answer") && !answerSubmitting) renderAnswers();
+    if (activeLevel) {
+        buildKeyframes();
+        buildFilmPuzzleTop();
+        if (phaseIs("answer") && !answerSubmitting) renderAnswers();
+    }
     setMicrophoneState(microphoneStateKey);
     if (videoMessageState) setVideoMessage(videoMessageState.key, videoMessageState.params);
 });
