@@ -50,28 +50,40 @@
     <script type="module" src="./scripts/ui-settings.js"></script>
     <script src="./scripts/scene-manager.js" defer></script>
     <script src="./scripts/audio.js" defer></script>
-    <script type="module" src="./scripts/ui-settings.js"></script>
     <script type="module" src="./scripts/tutorial.js"></script>
     <title></title>
 
 </head>
-<body class="standard-page home-page" data-i18n-document-title="meta.homeTitle">
+<body class="standard-page home-page" data-i18n-document-title="meta.tutorialTitle">
     
-    <main class="home-content">
-    <audio id="voice-over-1">
-        <source src="./assets/sounds/cat_dropped_box.mp3">
-        Your browser does not support the audio element.
-    </audio>
+    <main class="story-video-screen">
+
+            <video id="tutorial-video" playsinline preload="metadata" data-i18n-aria-label="tutorial.videoAria">
+                <source src="./assets/sounds/cat_box_beginning.mp4" type="video/mp4">
+                Your browser does not support the video element.
+            </video>
+            <button id="tutorial-video-start" class="primary-button video-start-button" type="button" data-icon="▶" data-i18n="video.start" data-i18n-aria-label="video.start"></button>
+        <audio id="voice-over-1">
+            <source src="./assets/sounds/voice_over/ne/tutorial_intro_1.mp3">
+            Your browser does not support the audio element.
+        </audio>
         <audio id="voice-over-2">
-        <source src="./assets/sounds/repair_and_clean.mp3">
-        Your browser does not support the audio element.
-    </audio>
+            <source src="./assets/sounds/voice_over/ne/tutorial_intro_2.mp3">
+            Your browser does not support the audio element.
+        </audio>
         <audio id="voice-over-3">
-        <source src="./assets/sounds/start_couch.mp3">
-        Your browser does not support the audio element.
-    </audio>
-        <p id="tutorial-intro-1" class="tutorial-text" data-i18n="tutorial.intro1"></p>
-        <button id = "next-button" class="primary-button" type="button" data-icon="&rarr;" data-i18n="tutorial.continue" data-i18n-aria-label="tutorial.continue"></button>
+            <source src="./assets/sounds/voice_over/ne/tutorial_intro_3.mp3">
+            Your browser does not support the audio element.
+        </audio>
+                <audio id="voice-over-4">
+            <source src="./assets/sounds/voice_over/ne/tutorial_intro_4.mp3">
+            Your browser does not support the audio element.
+        </audio>
+
+        <section class="tutorial-card" hidden>
+            <p id="tutorial-intro-1" class="tutorial-text" data-i18n="tutorial.intro1"></p>
+            <button id="next-button" class="primary-button" type="button" data-icon="→" data-i18n="tutorial.continue" data-i18n-aria-label="tutorial.continue" disabled></button>
+        </section>
 
     </main>
 </body>

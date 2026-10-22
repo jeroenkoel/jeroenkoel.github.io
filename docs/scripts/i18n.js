@@ -50,7 +50,8 @@ export function applyTranslations(root = document) {
     const translatedAttributes = [
         ["i18nAriaLabel", "aria-label"],
         ["i18nTitle", "title"],
-        ["i18nPlaceholder", "placeholder"]
+        ["i18nPlaceholder", "placeholder"],
+        ["i18nConfirm", "data-confirm-exit"]
     ];
 
     for (const [datasetKey, attribute] of translatedAttributes) {

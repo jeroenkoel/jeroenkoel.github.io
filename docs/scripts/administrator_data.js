@@ -141,7 +141,7 @@ async function saveParticipantData() {
         pNumber: String(participant.participantNumber),
         age: Number(participant.age),
         gender: participant.gender,
-        eduScale: participant.educationLevel
+        eduScale: participant.educationLevel ? Number(participant.educationLevel) : null
     };
 
     try {
@@ -189,6 +189,7 @@ function allowNumbersOnly(input, errorElement) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    populateEducationDropdown();
 
     const saveButton =
         document.getElementById("saveParticipantData");
@@ -230,3 +231,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+/* ========================================
+   EDUCATION LEVEL CONFIGURATION (MODULAR)
+======================================== */
+
+const EDUCATION_LEVELS = {
+    1: "Minder dan zes klassen lager onderwijs (ZMLK)",
+    2: "Zes klassen lager onderwijs (LOM/MLK)",
+    3: "Meer dan zes klassen lager onderwijs zonder voltooide vervolgopleiding (VMBO/VGLO)",
+    4: "Gediplomeerde schoolopleiding lager dan MULO (LTS (A/B), LEAO, LHNO, Land-en tuinbouwschool, VMBO-b, beroepsgerichte opleiding, MBO1/2)",
+    5: "MULO(MAVO, HAVO, MBO 3/4, VMBO-t, LTS, LHNO, BOL)",
+    6: "VHMO (HAVO, VWO, HBO, WO propedeuse)",
+    7: "Wetenschappelijk onderwijs (bachelor, master, doctoraal, technische hogeschool, landbouwhogeschool)"
+};
+
+function populateEducationDropdown() {
+    const select = document.getElementById("educationLevel");
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Select education level</option>';
+
+    for (const [key, value] of Object.entries(EDUCATION_LEVELS)) {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = value;
+        select.appendChild(option);
+    }
+}

@@ -17,6 +17,7 @@
     <script src="./scripts/audio.js"></script>
     <script type="module" src="./scripts/ui-settings.js"></script>
     <script src="./scripts/scene-manager.js" defer></script>
+    <script src="./scripts/administrator.js" defer></script>
 
     <title>Administrator View</title>
 </head>
@@ -39,7 +40,7 @@
                 data-i18n-aria-label="common.backHome">
             </button>
         
-            <h1>Administrator view</h1>
+            <h1 data-i18n="administrator.view" data-i18n-aria-label="administrator.view">Administrator view</h1>
         </header>
 
 
@@ -49,24 +50,28 @@
         <aside class="sidebar">
 
             <button
-                class="sidebar-button active"
-                onclick="showSection('score', this)">
+                class="secondary-button sidebar-button active"
+                onclick="showSection('score', this)" data-i18n="administrator.score" data-icon="▤">
                 Score
             </button>
 
             <button
-                class="sidebar-button"
-                onclick="showSection('audio', this)">
+                class="secondary-button sidebar-button"
+                onclick="showSection('audio', this)"
+                data-icon="♫" data-i18n="administrator.audio"
+                data-i18n-aria-label="administrator.audio">
                 Audio
             </button>
 
             <button
-                class="sidebar-button"
-                onclick="showSection('data', this)">
+                class="secondary-button sidebar-button"
+                onclick="showSection('data', this)"
+                data-icon="✎" data-i18n="administrator.data"
+                data-i18n-aria-label="administrator.data">
                 Insert data
             </button>
-            <button class="sidebar-button"
-                onclick="showSection('download', this)">
+            <button class="secondary-button sidebar-button"
+                onclick="showSection('download', this)" data-i18n="administrator.download" data-icon="↓">
                 Download
             </button>
 
@@ -84,22 +89,21 @@
                 <h2 class="section-title">Score</h2>
 
                 <!-- Search for Participant -->
-                 <div class="participant-search-bar" style="margin-bottom: 1.5rem; display: flex; gap: 0.5rem; align-items: center;">
+                 <div class="participant-search-bar">
                     <input
                         type="text"
                         id="scoreParticipantInput"
-                        placeholder="Enter Participant Number"
-                        style="padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #ccc; max-width: 300px;"
+                        data-i18n-placeholder="administrator.ScorePlaceholder"
                     >
-                    <button type="button" class="primary-button" id="searchParticipantBtn">
+                    <button type="button" class="primary-button" id="searchParticipantBtn" data-icon="⌕" data-i18n="administrator.LoadScore" data-i18n-aria-label="administrator.LoadScore">
                         Load Score Data
                     </button>
-                    <button type="button" class="primary-button" id="searchParticipantBtn">
+                    <button type="button" class="primary-button" id="downloadParticipant" data-icon="↓" data-i18n="administrator.downloadPdf">
                         Download PDF
                     </button>
                 </div>
             
-                <p class="input-error" id="scoreSearchError" style="color: red; margin-bottom: 1rem;"></p>
+                <p class="input-error" id="scoreSearchError"></p>
                 
                 <!-- Participant information + total score -->
                 <div class="score-summary">
@@ -181,13 +185,13 @@
 
             <section id="data" class="admin-section">
 
-                <h2 class="section-title">Edit participant data</h2>
+                <h2 class="section-title" data-i18n="administrator.edit" data-i18n-aria-label="administrator.edit">Edit participant data</h2>
             
                 <div class="data-form">
             
                     <!-- Participant number -->
                     <div class="form-group">
-                        <label for="participantNumber">
+                        <label for="participantNumber" data-i18n="administrator.participantNumber" data-i18n-aria-label="administrator.participantNumber">
                             Participant number
                         </label>
                     
@@ -196,7 +200,7 @@
                             inputmode="numeric"
                             id="participantNumber"
                             name="participantNumber"
-                            placeholder="Participant number"
+                            data-i18n-placeholder="administrator.participantNumber"
                         >
                     
                         <p class="input-error" id="participantNumberError"></p>
@@ -205,7 +209,7 @@
             
                     <!-- Age -->
                     <div class="form-group">
-                        <label for="participantAge">
+                        <label for="participantAge" data-i18n="administrator.age" data-i18n-aria-label="administrator.age">
                             Age
                         </label>
                     
@@ -214,7 +218,7 @@
                             inputmode="numeric"
                             id="participantAge"
                             name="participantAge"
-                            placeholder="Age"
+                            data-i18n-placeholder="administrator.age"
                         >
                     
                         <p class="input-error" id="participantAgeError"></p>
@@ -224,7 +228,7 @@
                     <!-- Gender -->
                     <div class="form-group">
             
-                        <label>Gender</label>
+                        <label data-i18n="administrator.gender" data-i18n-aria-label="administrator.gender">Gender</label>
             
                         <div class="gender-selector">
             
@@ -234,7 +238,7 @@
                                 name="participantGender"
                                 value="male"
                             >
-                            <label for="genderMale">
+                            <label for="genderMale" data-i18n="administrator.male" data-i18n-aria-label="administrator.male">
                                 Male
                             </label>
             
@@ -245,7 +249,7 @@
                                 name="participantGender"
                                 value="female"
                             >
-                            <label for="genderFemale">
+                            <label for="genderFemale" data-i18n="administrator.female" data-i18n-aria-label="administrator.female">
                                 Female
                             </label>
             
@@ -256,7 +260,7 @@
                                 name="participantGender"
                                 value="nvt"
                             >
-                            <label for="genderNvt">
+                            <label for="genderNvt" data-i18n="administrator.na" data-i18n-aria-label="administrator.na">
                                 NVT
                             </label>
             
@@ -268,37 +272,13 @@
                     <!-- Education level -->
                     <div class="form-group">
             
-                        <label for="educationLevel">
+                        <label for="educationLevel" data-i18n="administrator.education" data-i18n-aria-label="administrator.education">
                             Education level
                         </label>
             
-                        <select
-                            id="educationLevel"
-                            name="educationLevel"
-                        >
-                            <option value="">
-                                Select education level
-                            </option>
-            
-                            <!-- TODO:
-                                REPLACE THESE WITH YOUR
-                                ACTUAL EDUCATION LEVELS
-                            -->
-            
-                            <option value="level1">
-                                Education level 1
-                            </option>
-            
-                            <option value="level2">
-                                Education level 2
-                            </option>
-            
-                            <option value="level3">
-                                Education level 3
-                            </option>
-            
+                        <select id="educationLevel" name="educationLevel">
+                            <option value="">Select education level</option>
                         </select>
-            
                     </div>
             
             
@@ -307,7 +287,9 @@
                         type="button"
                         
                         class="primary-button "
-                        id="saveParticipantData"
+                        id="saveParticipantData" data-icon="✓"
+                        data-i18n="administrator.save"
+                        data-i18n-aria-label="administrator.save"
                     >
                         Save
                     </button>
@@ -327,60 +309,13 @@
         <section id="download" class="admin-section">
             <h2 class="section-title">Download</h2>
         
-            <button class="primary-button" id="downloadExcelBtn">
-                Download Excel
+            <button class="primary-button" id="downloadCsvBtn" data-icon="↓" data-i18n="administrator.downloadCsv">
+                Download CSV
             </button>
         </section>
 
         </main>
 
     </div>
-
-
-
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
-
-    <script>
-
-        function showSection(sectionId, clickedButton) {
-
-            // Get all content sections
-            const sections =
-                document.querySelectorAll(".admin-section");
-
-
-
-            // Hide all sections
-            sections.forEach(section => {
-                section.classList.remove("active-section");
-            });
-
-
-            // Show the selected section
-            document
-                .getElementById(sectionId)
-                .classList.add("active-section");
-
-
-            // Get all sidebar buttons
-            const buttons =
-                document.querySelectorAll(".sidebar-button");
-
-
-            // Remove highlight from all buttons
-            buttons.forEach(button => {
-                button.classList.remove("active");
-            });
-
-
-            // Highlight clicked button
-            clickedButton.classList.add("active");
-
-        }
-
-    </script>
-
 </body>
 </html>

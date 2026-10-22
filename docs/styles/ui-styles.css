@@ -1,0 +1,27 @@
+.permanent-controls {
+    z-index: 2147483647 !important;
+    position: fixed !important;
+}
+
+.utility-dock {
+    z-index: 2147483647 !important;
+    position: fixed !important;
+}
+
+body.level-open:has(.utility-dock) .level-modal {
+    padding-bottom: 60px;
+}
+
+body.level-open:has(.utility-dock) .level-window {
+    max-height: calc(100vh - 76px);
+}
+
+@media (max-width: 760px) {
+    body.level-open:has(.utility-dock) .level-modal {
+        padding-bottom: 90px;
+    }
+
+    body.level-open:has(.utility-dock) .level-window {
+        max-height: calc(100vh - 106px);
+    }
+}

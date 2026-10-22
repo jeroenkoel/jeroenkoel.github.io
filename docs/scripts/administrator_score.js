@@ -15,6 +15,28 @@ function formatAnswerLabel(answerId) {
     return answerId.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
 }
 
+const EDUCATION_LEVELS = {
+    1: "Minder dan zes klassen lager onderwijs (ZMLK)",
+    2: "Zes klassen lager onderwijs (LOM/MLK)",
+    3: "Meer dan zes klassen lager onderwijs zonder voltooide vervolgopleiding (VMBO/VGLO)",
+    4: "Gediplomeerde schoolopleiding lager dan MULO (LTS (A/B), LEAO, LHNO, Land-en tuinbouwschool, VMBO-b, beroepsgerichte opleiding, MBO1/2)",
+    5: "MULO(MAVO, HAVO, MBO 3/4, VMBO-t, LTS, LHNO, BOL)",
+    6: "VHMO (HAVO, VWO, HBO, WO propedeuse)",
+    7: "Wetenschappelijk onderwijs (bachelor, master, doctoraal, technische hogeschool, landbouwhogeschool)"
+};
+
+function formatEducationLevel(eduValue) {
+    return EDUCATION_LEVELS[eduValue] || eduValue || "N/A";
+}
+
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
 /* =========================================
    SCORE CALCULATIONS
 ========================================= */
@@ -74,6 +96,8 @@ function renderParticipant(participant) {
 
     const container = document.getElementById("participantInfo");
 
+    const eduText = formatEducationLevel(participant.educationLevel)
+
     container.innerHTML = `
         <span class="summary-label">Participant</span>
 
@@ -82,7 +106,7 @@ function renderParticipant(participant) {
         <div class="participant-details">
             <p>Age: ${participant.age}</p>
             <p>Gender: ${participant.gender}</p>
-            <p>Education level: ${participant.educationLevel}</p>
+            <p>Education level: ${eduText}</p>
         </div>
     `;
 }
@@ -144,7 +168,7 @@ function renderTotalScore(categories) {
 
 function createScoreCategory(category) {
 
-const card = document.createElement("div");
+    const card = document.createElement("div");
     card.classList.add("score-category");
 
     /* Calculate category score */
@@ -153,46 +177,42 @@ const card = document.createElement("div");
     /* Create all scenario rows */
     const answerRows = category.answers
         .map((answer, index) => {
-
             const isCorrect = answer.isCorrect || answer.givenAnswer === answer.correctAnswer;
             const givenText = formatAnswerLabel(answer.givenAnswer);
             const correctText = formatAnswerLabel(answer.correctAnswer);
-            const timeStr = answer.timeTakenMs !== undefined
+            const timeStr = answer.timeTakenMs !== undefined 
                 ? (answer.timeTakenMs / 1000).toFixed(1) + "s"
-                : "—";
+                : "-";
 
-            /* -------------------------
-               CORRECT ANSWER
-               Columns: [Number] [Given Answer] [✓] [Empty Spacer] [Time]
-            ------------------------- */
-            if (isCorrect) {
+            const statusIcon = isCorrect
+                /* -------------------------
+                CORRECT ANSWER
+                Columns: [Number] [Given Answer] [✓] [Empty Spacer] [Time]
+                ------------------------- */
+                ? `<span class="correct">✓</span><span class="correct-answer"></span>`
+                /* -------------------------
+                WRONG ANSWER
+                Columns: [Number] [Given Answer] [✕] [→ Correct Answer] [Time]
+                ------------------------- */
+                : `<span class="wrong">✕</span><span class="correct-answer">→ ${correctText}</span>`;
+
+
+                const transcriptionHtml = answer.transcription
+                    ? `<div class="scenario-transcript"><strong>Transcript:</strong> "${escapeHtml(answer.transcription)}"</div>` 
+                    : `<div class="scenario-transcript muted"><strong>Transcript:</strong> No audio recording</div>`;
+ 
                 return `
-                    <div class="scenario-row">
-                        <span class="scenario-number">${index + 1}.</span>
-                        <span class="given-answer">${givenText}</span>
-                        <span class="correct">✓</span>
-                        <span class="correct-answer"></span>
-                        <span class="answer-time">${timeStr}</span>
+                    <div class="scenario-item">
+                        <div class="scenario-row">
+                            <span class="scenario-number">${index + 1}.</span>
+                            <span class="given-answer">${givenText}</span>
+                            ${statusIcon}
+                            <span class"answer-time">${timeStr}</span>
+                        </div>
+                        ${transcriptionHtml}
                     </div>
-                `;
-            }
-
-            /* -------------------------
-               WRONG ANSWER
-               Columns: [Number] [Given Answer] [✕] [→ Correct Answer] [Time]
-            ------------------------- */
-            return `
-                <div class="scenario-row">
-                    <span class="scenario-number">${index + 1}.</span>
-                    <span class="given-answer">${givenText}</span>
-                    <span class="wrong">✕</span>
-                    <span class="correct-answer">→ ${correctText}</span>
-                    <span class="answer-time">${timeStr}</span>
-                </div>
-            `;
-
-        })
-        .join("");
+                `;                    
+        }).join("");
 
 
     /* Create the category card */
@@ -265,12 +285,14 @@ async function loadParticipantScore(userId) {
 
     try {
         const response = await fetch(`/api/users/${encodeURIComponent(userId)}/score-details`);   
+        
         const result = await response.json();
         
         if(response.ok && result.status === "success") {
             renderParticipant(result.data.participant);
             renderTotalScore(result.data.categories);
             renderScoreCategories(result.data.categories);
+            document.getElementById("scoreParticipantInput").value = "";
         } else {
             const errorMsg = result.message || "user not found.";
             if (searchError) searchError.textContent = errorMsg;
@@ -293,8 +315,9 @@ async function loadParticipantScore(userId) {
 document.addEventListener("DOMContentLoaded", () => {
     const searchBtn = document.getElementById("searchParticipantBtn");
     const searchInput = document.getElementById("scoreParticipantInput");
+    const printPDF = document.getElementById("downloadParticipant");
 
-    if (searchBtn && searchInput) {
+    if (searchBtn && searchInput && printPDF) {
         searchBtn.addEventListener("click", () => {
             loadParticipantScore(searchInput.value.trim());
         });
@@ -304,6 +327,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadParticipantScore(searchInput.value.trim());
             }
         });
+
+        printPDF.addEventListener("click", () => {
+            window.print();
+        })
     }
 
 });

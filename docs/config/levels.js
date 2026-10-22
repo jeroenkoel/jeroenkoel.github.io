@@ -1,36 +1,274 @@
-const paintingAssets = {
-    animation: "/assets/levels/intention-04/intention-04-animation.mp4",
+
+export const tutorialLevel = {
+    id: "tutorial",
+    animation: "/assets/levels/tutorial/tutorial-animation.mp4",
     keyframes: [
-        "/assets/levels/intention-04/intention-04-keyframe-1.png",
-        "/assets/levels/intention-04/intention-04-keyframe-2.png",
-        "/assets/levels/intention-04/intention-04-keyframe-3.png"
+        "/assets/levels/tutorial/tutorial-keyframe-1.png",
+        "/assets/levels/tutorial/tutorial-keyframe-2.png",
+        "/assets/levels/tutorial/tutorial-keyframe-3.png"
     ],
     answers: [
-        { id: "sit-on-chair", image: "/assets/levels/intention-04/intention-04-answer-1.png", animation: "/assets/levels/intention-04/intention-04-answer-1.mp4", altKey: "answer.sitting", correct: false },
-        { id: "hang-painting", image: "/assets/levels/intention-04/intention-04-answer-2.png", animation: "/assets/levels/intention-04/intention-04-answer-2.mp4", altKey: "answer.hanging", correct: true },
-        { id: "sweep-floor", image: "/assets/levels/intention-04/intention-04-answer-3.png", animation: "/assets/levels/intention-04/intention-04-answer-3.mp4", altKey: "answer.sweeping", correct: false }
+        { id: "ball-in-triangle", image: "/assets/levels/tutorial/tutorial-answer-1.png", altKey: "tutorial.ontop", correct: false },
+        { id: "balls-scattered", image: "/assets/levels/tutorial/tutorial-answer-2.png", altKey: "tutorial.scattered", correct: true },
+        { id: "ball-past-triangle", image: "/assets/levels/tutorial/tutorial-answer-3.png", altKey: "tutorial.past", correct: false }
     ]
 };
 
-export const tutorialLevel = { id: "tutorial", ...paintingAssets };
-
 export const normalLevels = [
-    { id: "intention-01", ...paintingAssets },
-    { id: "intention-02", ...paintingAssets },
-    { id: "intention-03", ...paintingAssets },
-    { id: "intention-04", ...paintingAssets },
-    { id: "intention-05", ...paintingAssets },
-    { id: "intention-06", ...paintingAssets },
-    { id: "emotion-01", ...paintingAssets },
-    { id: "emotion-02", ...paintingAssets },
-    { id: "emotion-03", ...paintingAssets },
-    { id: "emotion-04", ...paintingAssets },
-    { id: "emotion-05", ...paintingAssets },
-    { id: "emotion-06", ...paintingAssets },
-    { id: "causal-01", ...paintingAssets },
-    { id: "causal-02", ...paintingAssets },
-    { id: "causal-03", ...paintingAssets },
-    { id: "causal-04", ...paintingAssets },
-    { id: "causal-05", ...paintingAssets },
-    { id: "causal-06", ...paintingAssets }
+    {
+        id: "intention-01",
+        animation: "/assets/levels/intention-01/intention-01-animation.mp4",
+        keyframes: [
+            "/assets/levels/intention-01/intention-01-keyframe-1.png",
+            "/assets/levels/intention-01/intention-01-keyframe-2.png",
+            "/assets/levels/intention-01/intention-01-keyframe-3.png"
+        ],
+        answers: [
+            { id: "put-newspaper-back", image: "/assets/levels/intention-01/intention-01-answer-1.png", altKey: "answer.flyPutBack", correct: false },
+            { id: "read-newspaper", image: "/assets/levels/intention-01/intention-01-answer-2.png", altKey: "answer.flyRead", correct: false },
+            { id: "swat-fly", image: "/assets/levels/intention-01/intention-01-answer-3.png", altKey: "answer.flySwat", correct: true }
+        ]
+    },
+    {
+        id: "intention-02",
+        animation: "/assets/levels/intention-02/intention-02-animation.mp4",
+        keyframes: [
+            "/assets/levels/intention-02/intention-02-keyframe-1.png",
+            "/assets/levels/intention-02/intention-02-keyframe-2.png",
+            "/assets/levels/intention-02/intention-02-keyframe-3.png"
+        ],
+        answers: [
+            { id: "sit-by-river", image: "/assets/levels/intention-02/intention-02-answer-1.png", altKey: "answer.riverSit", correct: false },
+            { id: "cross-on-log", image: "/assets/levels/intention-02/intention-02-answer-2.png", altKey: "answer.riverCross", correct: true },
+            { id: "turn-back", image: "/assets/levels/intention-02/intention-02-answer-3.png", altKey: "answer.riverReturn", correct: false }
+        ]
+    },
+    {
+        id: "intention-03",
+        animation: "/assets/levels/intention-03/intention-03-animation.mp4",
+        keyframes: [
+            "/assets/levels/intention-03/intention-03-keyframe-1.png",
+            "/assets/levels/intention-03/intention-03-keyframe-2.png",
+            "/assets/levels/intention-03/intention-03-keyframe-3.png"
+        ],
+        answers: [
+            { id: "enter-pink-shop", image: "/assets/levels/intention-03/intention-03-answer-1.png", altKey: "answer.shopPink", correct: false },
+            { id: "enter-kite-shop", image: "/assets/levels/intention-03/intention-03-answer-2.png", altKey: "answer.shopKite", correct: true },
+            { id: "walk-away", image: "/assets/levels/intention-03/intention-03-answer-3.png", altKey: "answer.shopLeave", correct: false }
+        ]
+    },
+    {
+        id: "intention-04",
+        animation: "/assets/levels/intention-04/intention-04-animation.mp4",
+        keyframes: [
+            "/assets/levels/intention-04/intention-04-keyframe-1.png",
+            "/assets/levels/intention-04/intention-04-keyframe-2.png",
+            "/assets/levels/intention-04/intention-04-keyframe-3.png"
+        ],
+        answers: [
+            { id: "sit-on-chair", image: "/assets/levels/intention-04/intention-04-answer-1.png", altKey: "answer.sitting", correct: false },
+            { id: "hang-painting", image: "/assets/levels/intention-04/intention-04-answer-2.png", altKey: "answer.hanging", correct: true },
+            { id: "sweep-floor", image: "/assets/levels/intention-04/intention-04-answer-3.png", altKey: "answer.sweeping", correct: false }
+        ]
+    },
+    {
+        id: "intention-05",
+        animation: "/assets/levels/intention-05/intention-05-animation.mp4",
+        keyframes: [
+            "/assets/levels/intention-05/intention-05-keyframe-1.png",
+            "/assets/levels/intention-05/intention-05-keyframe-2.png",
+            "/assets/levels/intention-05/intention-05-keyframe-3.png"
+        ],
+        answers: [
+            { id: "tie-sheets", image: "/assets/levels/intention-05/intention-05-answer-1.png", altKey: "answer.prisonRope", correct: true },
+            { id: "call-for-help", image: "/assets/levels/intention-05/intention-05-answer-2.png", altKey: "answer.prisonCall", correct: false },
+            { id: "sleep-in-bed", image: "/assets/levels/intention-05/intention-05-answer-3.png", altKey: "answer.prisonSleep", correct: false }
+        ]
+    },
+    {
+        id: "intention-06",
+        animation: "/assets/levels/intention-06/intention-06-animation.mp4",
+        keyframes: [
+            "/assets/levels/intention-06/intention-06-keyframe-1.png",
+            "/assets/levels/intention-06/intention-06-keyframe-2.png",
+            "/assets/levels/intention-06/intention-06-keyframe-3.png"
+        ],
+        answers: [
+            { id: "leave-door", image: "/assets/levels/intention-06/intention-06-answer-1.png", altKey: "answer.doorLeave", correct: false },
+            { id: "reach-door-handle", image: "/assets/levels/intention-06/intention-06-answer-2.png", altKey: "answer.doorReach", correct: true },
+            { id: "open-umbrella", image: "/assets/levels/intention-06/intention-06-answer-3.png", altKey: "answer.doorUmbrella", correct: false }
+        ]
+    },
+    // Until new assets are supplied, levels 7–18 use the painting scene as a placeholder.
+    {
+        id: "causal-01",
+        animation: "/assets/levels/causal-01/causal-01-animation.mp4",
+        keyframes: [
+            "/assets/levels/causal-01/causal-01-keyframe-1.png",
+            "/assets/levels/causal-01/causal-01-keyframe-2.png",
+            "/assets/levels/causal-01/causal-01-keyframe-3.png"
+        ],
+        answers: [
+            { id: "puddle-wet", image: "/assets/levels/causal-01/causal-01-answer-1.png", altKey: "answer.puddleWet", correct: true },
+            { id: "car-splash-dry", image: "/assets/levels/causal-01/causal-01-answer-2.png", altKey: "answer.puddleDry", correct: false },
+            { id: "puddle-car-coming", image: "/assets/levels/causal-01/causal-01-answer-3.png", altKey: "answer.puddleCarComing", correct: false }
+        ]
+    },
+    {
+        id: "causal-02",
+        animation: "/assets/levels/causal-02/causal-02-animation.mp4",
+        keyframes: [
+            "/assets/levels/causal-02/causal-02-keyframe-1.png",
+            "/assets/levels/causal-02/causal-02-keyframe-2.png",
+            "/assets/levels/causal-02/causal-02-keyframe-3.png"
+        ],
+        answers: [
+            { id: "stand-by-chair", image: "/assets/levels/causal-02/causal-02-answer-1.png", altKey: "answer.rockStand", correct: false },
+            { id: "lie-on-chair", image: "/assets/levels/causal-02/causal-02-answer-2.png", altKey: "answer.rockLie", correct: false },
+            { id: "fall-with-chair", image: "/assets/levels/causal-02/causal-02-answer-3.png", altKey: "answer.rockFall", correct: true }
+        ]
+    },
+    {
+        id: "causal-03",
+        animation: "/assets/levels/causal-03/causal-03-animation.mp4",
+        keyframes: [
+            "/assets/levels/causal-03/causal-03-keyframe-1.png",
+            "/assets/levels/causal-03/causal-03-keyframe-2.png",
+            "/assets/levels/causal-03/causal-03-keyframe-3.png"
+        ],
+        answers: [
+            { id: "hat-with-wind", image: "/assets/levels/causal-03/causal-03-answer-1.png", altKey: "answer.hatWithWind", correct: true },
+            { id: "hat-against-wind", image: "/assets/levels/causal-03/causal-03-answer-2.png", altKey: "answer.hatAgainstWind", correct: false },
+            { id: "top-hat", image: "/assets/levels/causal-03/causal-03-answer-3.png", altKey: "answer.hatTop", correct: false }
+        ]
+    },
+    {
+        id: "causal-04",
+        animation: "/assets/levels/causal-04/causal-04-animation.mp4",
+        keyframes: [
+            "/assets/levels/causal-04/causal-04-keyframe-1.png",
+            "/assets/levels/causal-04/causal-04-keyframe-2.png",
+            "/assets/levels/causal-04/causal-04-keyframe-3.png"
+        ],
+        answers: [
+            { id: "ball-hits-head", image: "/assets/levels/causal-04/causal-04-answer-1.png", altKey: "answer.ballHead", correct: true },
+            { id: "ball-at-feet", image: "/assets/levels/causal-04/causal-04-answer-2.png", altKey: "answer.ballFeet", correct: false },
+            { id: "ball-on-slide", image: "/assets/levels/causal-04/causal-04-answer-3.png", altKey: "answer.ballSlide", correct: false }
+        ]
+    },
+    {
+        id: "causal-05",
+        animation: "/assets/levels/causal-05/causal-05-animation.mp4",
+        keyframes: [
+            "/assets/levels/causal-05/causal-05-keyframe-1.png",
+            "/assets/levels/causal-05/causal-05-keyframe-2.png",
+            "/assets/levels/causal-05/causal-05-keyframe-3.png"
+        ],
+        answers: [
+            { id: "short-skirt", image: "/assets/levels/causal-05/causal-05-answer-1.png", altKey: "answer.threadSkirt", correct: true },
+            { id: "short-hair", image: "/assets/levels/causal-05/causal-05-answer-2.png", altKey: "answer.threadHair", correct: false },
+            { id: "short-top", image: "/assets/levels/causal-05/causal-05-answer-3.png", altKey: "answer.threadTop", correct: false }
+        ]
+    },
+    {
+        id: "causal-06",
+        animation: "/assets/levels/causal-06/causal-06-animation.mp4",
+        keyframes: [
+            "/assets/levels/causal-06/causal-06-keyframe-1.png",
+            "/assets/levels/causal-06/causal-06-keyframe-2.png",
+            "/assets/levels/causal-06/causal-06-keyframe-3.png"
+        ],
+        answers: [
+            { id: "faucet", image: "/assets/levels/causal-06/causal-06-answer-1.jpeg", altKey: "answer.faucet", correct: false },
+            { id: "dishes", image: "/assets/levels/causal-06/causal-06-answer-2.jpeg", altKey: "answer.dishes", correct: false },
+            { id: "necklace", image: "/assets/levels/causal-06/causal-06-answer-3.png", altKey: "answer.necklace", correct: true }
+        ]
+        
+    },
+    {
+        id: "emotion-01",
+        animation: "/assets/levels/emotion-01/emotion-01-animation.mp4",
+        keyframes: [
+            "/assets/levels/emotion-01/emotion-01-keyframe-1.jpeg",
+            "/assets/levels/emotion-01/emotion-01-keyframe-2.png",
+            "/assets/levels/emotion-01/emotion-01-keyframe-3.png"
+        ],
+        answers: [
+            { id: "x", image: "/assets/levels/emotion-01/emotion-01-answer-1.jpeg", altKey: "answer.sitting", correct: false },
+            { id: "y", image: "/assets/levels/emotion-01/emotion-01-answer-2.png", altKey: "answer.hanging", correct: false },
+            { id: "z", image: "/assets/levels/emotion-01/emotion-01-answer-3.png", altKey: "answer.sweeping", correct: true }
+        ]
+    },
+    {
+        id: "emotion-02",
+        animation: "/assets/levels/emotion-02/emotion-02-animation.mp4",
+        keyframes: [
+            "/assets/levels/emotion-02/emotion-02-keyframe-1.jpeg",
+            "/assets/levels/emotion-02/emotion-02-keyframe-2.png",
+            "/assets/levels/emotion-02/emotion-02-keyframe-3.png"
+        ],
+        answers: [
+            { id: "x", image: "/assets/levels/emotion-02/emotion-02-answer-1.png", altKey: "answer.sitting", correct: false },
+            { id: "y", image: "/assets/levels/emotion-02/emotion-02-answer-2.png", altKey: "answer.hanging", correct: false },
+            { id: "z", image: "/assets/levels/emotion-02/emotion-02-answer-3.png", altKey: "answer.sweeping", correct: true }
+        ]
+    },
+    {
+        id: "emotion-03",
+        animation: "/assets/levels/emotion-03/emotion-03-animation.mp4",
+        keyframes: [
+            "/assets/levels/emotion-03/emotion-03-keyframe-1.png",
+            "/assets/levels/emotion-03/emotion-03-keyframe-2.png",
+            "/assets/levels/emotion-03/emotion-03-keyframe-3.png"
+        ],
+        answers: [
+            { id: "x", image: "/assets/levels/emotion-03/emotion-03-answer-1.png", altKey: "answer.sitting", correct: true },
+            { id: "y", image: "/assets/levels/emotion-03/emotion-03-answer-2.png", altKey: "answer.hanging", correct: false },
+            { id: "z", image: "/assets/levels/emotion-03/emotion-03-answer-3.png", altKey: "answer.sweeping", correct: false }
+        ]
+    },
+    {
+        id: "emotion-04",
+        animation: "/assets/levels/emotion-04/emotion-04-animation.mp4",
+        keyframes: [
+            "/assets/levels/emotion-04/emotion-04-keyframe-1.jpeg",
+            "/assets/levels/emotion-04/emotion-04-keyframe-2.png",
+            "/assets/levels/emotion-04/emotion-04-keyframe-3.png"
+        ],
+        answers: [
+            { id: "x", image: "/assets/levels/emotion-04/emotion-04-answer-1.jpeg", altKey: "answer.sitting", correct: false },
+            { id: "y", image: "/assets/levels/emotion-04/emotion-04-answer-2.jpeg", altKey: "answer.hanging", correct: true },
+            { id: "z", image: "/assets/levels/emotion-04/emotion-04-answer-3.jpeg", altKey: "answer.sweeping", correct: false }
+        ]
+    },
+    {
+        id: "emotion-05",
+        animation: "/assets/levels/emotion-05/emotion-05-animation.mp4",
+        keyframes: [
+            "/assets/levels/emotion-05/emotion-05-keyframe-1.png",
+            "/assets/levels/emotion-05/emotion-05-keyframe-2.png",
+            "/assets/levels/emotion-05/emotion-05-keyframe-3.png"
+        ],
+        answers: [
+            { id: "x", image: "/assets/levels/emotion-05/emotion-05-answer-1.png", altKey: "answer.sitting", correct: false },
+            { id: "y", image: "/assets/levels/emotion-05/emotion-05-answer-2.png", altKey: "answer.hanging", correct: true },
+            { id: "z", image: "/assets/levels/emotion-05/emotion-05-answer-3.png", altKey: "answer.sweeping", correct: false }
+        ]
+    },
+    {
+        id: "emotion-06",
+        animation: "/assets/levels/emotion-06/emotion-06-animation.mp4",
+        keyframes: [
+            "/assets/levels/emotion-06/emotion-06-keyframe-1.png",
+            "/assets/levels/emotion-06/emotion-06-keyframe-2.png",
+            "/assets/levels/emotion-06/emotion-06-keyframe-3.png"
+        ],
+        answers: [
+            { id: "x", image: "/assets/levels/emotion-06/emotion-06-answer-1.png", altKey: "answer.sitting", correct: true },
+            { id: "y", image: "/assets/levels/emotion-06/emotion-06-answer-2.png", altKey: "answer.hanging", correct: false },
+            { id: "z", image: "/assets/levels/emotion-06/emotion-06-answer-3.png", altKey: "answer.sweeping", correct: false }
+        ]
+    }
+    
+
 ];

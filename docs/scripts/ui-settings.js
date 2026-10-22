@@ -1,4 +1,5 @@
 import { initI18n, onLanguageChange, t, toggleLanguage } from "/scripts/i18n.js";
+import { tutorialLevel, normalLevels } from "/config/levels.js";
 
 const DEBUG_KEY = "filmBoxDebugMode";
 const settingsListeners = new Set();
@@ -26,7 +27,7 @@ export function onSettingsChange(listener) {
 
 
 function notifySettingsChange() {
-    for (const listener of settingsListeners) listener({ debugMode, answerMode });
+    for (const listener of settingsListeners) listener({ debugMode });
     updateControls();
 }
 
@@ -51,9 +52,26 @@ function makeSwitch(id, checked, ariaLabel) {
 }
 
 function updateControls() {
+    for (const [id, storage, mutedKey, soundKey] of [
+        ["musicSwitch", "mutedVideo", "settings.unmuteVideo", "settings.muteVideo"],
+        ["audioSwitch", "mutedButton", "settings.unmuteButtons", "settings.muteButtons"]
+    ]) {
+        const button = document.getElementById(id);
+        if (!button) continue;
+        const label = t(localStorage.getItem(storage) === "true" ? mutedKey : soundKey);
+        button.setAttribute("aria-label", label);
+        button.title = label;
+    }
     const languageButton = document.getElementById("languageSwitch");
     if (languageButton) {
-        languageButton.textContent = t("settings.languageFlag");
+        languageButton.innerHTML = "";
+        const flagImg = document.createElement("img");
+        flagImg.src = t("settings.languageFlag");
+        flagImg.alt = "";
+        flagImg.className = "language-flag-icon";
+        flagImg.width = "28";
+
+        languageButton.appendChild(flagImg);
         languageButton.setAttribute("aria-label", t("settings.switchLanguage"));
         languageButton.title = t("settings.switchLanguage");
     }
@@ -66,6 +84,8 @@ function updateControls() {
         debugInput.checked = debugMode;
         debugInput.setAttribute("aria-label", t("settings.debugDescription"));
     }
+    const levelShortcuts = document.getElementById("debugLevels");
+    if (levelShortcuts) levelShortcuts.hidden = !debugMode;
 
     const answerLabel = document.querySelector("[data-utility-label='answer-mode']");
     if (answerLabel) answerLabel.textContent = t("settings.answerMode");
@@ -83,6 +103,16 @@ function updateControls() {
 async function mountPersistentControls() {
     if (mounted) return;
     mounted = true;
+
+    // Inject styling sheet for UI elements
+    if (!document.getElementById("ui-layer-style")) {
+        const link = document.createElement("link");
+        link.id = "ui-layer-style";
+        link.rel = "stylesheet";
+        link.href = "/styles/ui-styles.css";
+        document.head.appendChild(link);
+    }
+
     await initI18n();
 
     //make one container that has all controls
@@ -101,6 +131,7 @@ async function mountPersistentControls() {
     musicButton.type = "button";
     musicButton.addEventListener("click", () => {
         window.toggleMuteVideo();
+        updateControls();
     });
 
     const audioButton = document.createElement("button");
@@ -109,13 +140,16 @@ async function mountPersistentControls() {
     audioButton.type = "button";
     audioButton.addEventListener("click", () => {
         window.toggleMuteButton();
+        updateControls();
     });
 
-    permanentControls.append(
-        audioButton,
-        musicButton,
-        languageButton
-    );
+    const hintButton = document.getElementById("rollHintButton");
+    if (hintButton) {
+        hintButton.classList.replace("secondary-button", "permanent-control-button");
+    }
+
+    if (hintButton) permanentControls.appendChild(hintButton);
+    permanentControls.append(audioButton, musicButton, languageButton);
     document.body.appendChild(permanentControls);
     window.updateAudioUI();
 
@@ -123,6 +157,27 @@ async function mountPersistentControls() {
         const dock = document.createElement("div");
         dock.className = "utility-dock";
         dock.setAttribute("role", "group");
+
+        const levelShortcuts = document.createElement("div");
+        levelShortcuts.id = "debugLevels";
+        levelShortcuts.className = "debug-levels";
+        [tutorialLevel, ...normalLevels].forEach(level => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "debug-level-button";
+            button.textContent = level.id === "tutorial" ? "T" : `${level.id[0].toUpperCase()}${Number(level.id.split("-")[1])}`;
+            button.title = level.id;
+            button.addEventListener("click", () => {
+                if (!debugMode) return;
+                if (document.querySelector("level-popup")) {
+                    document.dispatchEvent(new CustomEvent("preview-level", { detail: { level } }));
+                } else {
+                    window.location.href = `/level-selection.html?preview=${level.id}`;
+                }
+            });
+            levelShortcuts.appendChild(button);
+        });
+        dock.appendChild(levelShortcuts);
 
         const debugGroup = document.createElement("div");
         debugGroup.className = "utility-control";

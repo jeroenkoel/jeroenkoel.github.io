@@ -98,32 +98,32 @@
 }
 
 .window-room-stage .layer-basket-back {
-    left: 58.6%;
-    top: 77.8%;
-    width: 19.8%;
+    left: 66.5%;
+    top: 78%;
+    width: 17.6%;
     z-index: 4;
 }
 
 .window-room-stage .layer-basket-front {
-    left: 58%;
+    left: 63%;
     top: 78%;
     width: 21%;
     z-index: 6;
 }
 
 .window-room-stage .roll-1 {
-    left: 20.5%;
-    top: 5.9%;
-    width: 14.4%;
+    left: 19%;
+    top: 6.5%;
+    width: 13%;
     --tail-clip: polygon(47% 45%, 100% 45%, 100% 100%, 0 100%, 0 67%, 57% 67%);
 }
 
 .window-room-stage .roll-2 {
-    left: 72.2%;
-    top: 15.6%;
+    left: 72.3%;
+    top: 13%;
     width: 10%;
     height: 18%;
-    --tail-clip: polygon(47% 42%, 100% 42%, 100% 100%, 0 100%, 0 64%, 54% 64%);
+    --tail-clip: polygon(50% 1%, 80% 42%, 100% 100%, 0 100%, 0 64%, 58% 85%);
 }
 
 .window-room-stage .roll-3 {
@@ -146,22 +146,23 @@
 }
 
 .window-room-stage .roll-5 {
-    left: 39.8%;
-    top: 83%;
+    left: 48%;
+    top: 85%;
     width: 13.3%;
-    z-index: 5;
+    z-index: 4;
 }
 
 .window-room-stage .roll-6 {
-    left: 63.8%;
-    top: 75.4%;
+    left: 65.5%;
+    top: 78.5%;
     width: 12%;
-    --tail-clip: polygon(35% 42%, 60% 42%, 60% 58%, 50% 78%, 28% 100%, 0 100%, 0 87%, 30% 78%);
+    --tail-clip: polygon(36% 42%, 60% 42%, 60% 40%, 51% 83%, 28% 100%, 0 100%, 0 30%, 24% 80%);
 }
 
-.window-room-stage .film-box {
-    left: 43%;
+.window-room-stage .layer-film-box {
+    left: 4%;
     right: auto;
-    top: 70%;
-    width: 17%;
+    bottom: 4.2%;
+    width: 45%;
+    z-index: 9;
 }

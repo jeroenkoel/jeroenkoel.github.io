@@ -19,6 +19,20 @@
     font-size: clamp(1.25rem, 2.2vw, 2rem);
 }
 
+.roll-hint-button {
+    font-weight: 800;
+}
+
+.roll-hint-button:disabled {
+    opacity: .48;
+    cursor: default;
+}
+
+.room-header .roll-hint-button,
+.roll-hint-button[hidden] {
+    display: none;
+}
+
 .room-stage {
     --room-ratio: 1.37236534;
     position: relative;
@@ -125,7 +139,16 @@
     right: -5%;
     bottom: -2%;
     width: 60%;
+    aspect-ratio: 1400 / 1087;
     z-index: 5;
+}
+
+.couch-room-stage .layer-carpet-back {
+    right: -3.4%;
+}
+
+.couch-room-stage .layer-carpet-front {
+    z-index: 7;
 }
 
 .film-roll {
@@ -138,14 +161,8 @@
     padding: 0;
     background: transparent;
     cursor: pointer;
-    transition: transform .18s ease, filter .18s ease;
 }
 
-/* .film-roll:hover,
-.film-roll:focus-visible {
-    transform: scale(1.12);
-    filter: drop-shadow(0 4px 8px rgb(0 0 0 / 25%));
-} */
 .film-roll:disabled {
     cursor: default; 
 }
@@ -155,6 +172,27 @@
     display: block;
     object-fit: contain;
     pointer-events: none;
+    transition: transform .2s ease, filter .2s ease;
+}
+
+.film-roll > img:first-child {
+    position: relative;
+    z-index: 1;
+}
+
+.film-roll:not(:disabled):is(:hover, :focus-visible) > img {
+    transform: scale(1.16);
+    filter: drop-shadow(0 4px 8px rgb(0 0 0 / 25%));
+}
+
+.film-roll.hinting > img {
+    animation: roll-hint-bounce 1.4s ease-in-out 3;
+}
+
+@keyframes roll-hint-bounce {
+    0%, 100% { transform: translateY(0) scale(1); filter: none; }
+    42% { transform: translateY(-20%) scale(1.13); filter: brightness(1.2) drop-shadow(0 0 5px #ffe047) drop-shadow(0 0 12px #ffd12f); }
+    65% { transform: translateY(-12%) scale(1.13); filter: brightness(1.2) drop-shadow(0 0 5px #ffe047) drop-shadow(0 0 12px #ffd12f); }
 }
 
 .film-roll.completed {
@@ -174,22 +212,18 @@
     clip-path: var(--tail-clip);
 }
 
-.split-roll:hover,
-.split-roll:focus-visible {
-    z-index: 20;
-}
 
 .couch-room-stage .roll-1 {
-    left: 10%;
-    top: 46.5%;
-    width: 13%;
+    left: 8.5%;
+    top: 51%;
+    width: 14.5%;
     z-index: 4;
 }
 
 .couch-room-stage .roll-2 {
-    left: 35%;
-    top: 47%;
-    width: 11.5%;
+    left: 34%;
+    top: 50.5%;
+    width: 13%;
     z-index: 5;
 }
 
@@ -199,102 +233,115 @@
     width: 9%;
     z-index: 4;
 }
+
 .couch-room-stage .roll-4 {
-    left: 25%;
-    top: 74.5%;
-    width: 11%;
+    left: 23%;
+    top: 74%;
+    width: 13%;
     z-index: 3;
 }
+
 .couch-room-stage .roll-5 {
-    left: 54.7%;
-    top: 83.4%;
-    width: 12%;
+    left: 55.3%;
+    top: 80.5%;
+    width: 13.5%;
     z-index: 6;
 }
+
 .couch-room-stage .roll-6 {
-    left: 84.2%;
-    top: 72.7%;
-    width: 10%;
-    z-index: 7;
+    left: 82%;
+    top: 76%;
+    width: 13.5%;
+    z-index: 9;
+}
+
+.roll-tut {
+    left: 64.5%;
+    top: 64.5%;
+    width: 13%;
+    z-index: 5;
+}
+
+.couch-room-stage .layer-film-box {
+    right: -12.3%;
+    bottom: 27%;
+    width: 41%;
+    z-index: 8;
 }
 
 .film-box {
-    position: absolute;
-    right: 3.2%;
-    top: 5.2%;
-    width: 18%;
-    height: 15%;
-    z-index: 30;
+    aspect-ratio: 1448 / 456;
     pointer-events: none;
 }
 
-.film-box-back {
+.film-box img {
     position: absolute;
-    left: 7%;
-    right: 7%;
-    top: 18%;
-    height: 55%;
-    z-index: 1;
-    border: 2px solid #432817;
-    background: #8f592f;
-    box-shadow: inset 0 0 0 3px #aa7041;
-}
-
-.film-box-front {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 32%;
-    z-index: 4;
-    border: 2px solid #432817;
-    background: #a96d3d;
-    box-shadow: inset 0 0 0 3px #bc7c49;
-}
-
-.film-box-label {
-    position: absolute;
-    left: 50%;
-    bottom: 13%;
-    z-index: 6;
-    transform: translateX(-50%);
-    border: 1px solid #4a3020;
-    padding: 2% 9%;
-    background: #ead8b8;
-    color: #332116;
-    font: 700 clamp(8px, .8vw, 14px)/1 sans-serif;
-}
-
-.stored-rolls {
-    position: absolute;
-    left: 9%;
-    right: 9%;
-    top: -25%;
-    height: 94%;
-    z-index: 5;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    overflow: visible;
-}
-
-.stored-roll {
+    top: -71.7%;
     width: 100%;
-    height: 100%;
-    min-height: 0;
-    margin: 0;
-    object-fit: contain;
-    filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 30%));
+    display: block;
+    /* Clip the shared white matte without altering the supplied artwork. */
+    clip-path: polygon(13.4% 30.2%, 86.6% 30.2%, 88.1% 37.7%, 94.1% 34%, 99.5% 46.5%, 92.5% 52.3%, 94.7% 56.5%, 94.4% 57.3%, 92.4% 57.4%, 92% 71.7%, 8.1% 71.7%, 7.7% 57.4%, 5.6% 57.3%, 5.3% 56.5%, 7.5% 52.3%, .5% 46.5%, 5.6% 34%, 11.9% 37.7%);
 }
 
-.stored-roll:nth-child(-n+6) {
-    grid-row: 3;
+.tutorial-room-stage .layer-film-box {
+    left: 26%;
+    right: auto;
+    top: 58.4%;
+    bottom: auto;
+    width: 36%;
+    z-index: 6;
 }
 
-.stored-roll:nth-child(n+7):nth-child(-n+12) {
-    grid-row: 2;
+.film-box.is-empty img {
+    filter: invert(1) brightness(.34) invert(1);
 }
 
-.stored-roll:nth-child(n+13) {
-    grid-row: 1;
+.room-sparkles {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+}
+
+.room-sparkle {
+    position: absolute;
+    width: clamp(26px, 3.8vw, 44px);
+    aspect-ratio: 1;
+    opacity: 0;
+    color: #fff8d8;
+    filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 9px #ffeaa0);
+    animation: room-sparkle 1.25s ease-in-out both;
+}
+
+.room-sparkle svg {
+    display: block;
+    fill: currentColor;
+}
+
+@keyframes room-sparkle {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(.3) rotate(-12deg); }
+    40% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(0); }
+    65% { opacity: .9; transform: translate(-50%, -50%) scale(.95) rotate(8deg); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(18deg); }
+}
+
+.film-box.is-collecting {
+    animation: film-box-collect .8s ease-in-out;
+}
+
+@keyframes film-box-collect {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    28% { transform: translateY(-14%) rotate(-3deg); }
+    48% { transform: translateY(-12%) rotate(3deg); }
+    66% { transform: translateY(-5%) rotate(-2deg); }
+    82% { transform: translateY(0) rotate(1deg); }
+}
+
+.tutorial-room-stage .layer-film-box {
+    left: 22%;
+    right: auto;
+    top: 55%;
+    bottom: auto;
+    width: 43%;
+    z-index: 6;
 }
