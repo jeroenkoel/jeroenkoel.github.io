@@ -3,7 +3,7 @@ import { tutorialLevel, normalLevels } from "/config/levels.js";
 
 const DEBUG_KEY = "filmBoxDebugMode";
 const settingsListeners = new Set();
-const SHOW_DEBUG_UI = Boolean(window.__FILM_BOX_CONFIG__?.showDebugUi);
+const SHOW_DEBUG_UI = true;
 
 let debugMode = SHOW_DEBUG_UI && localStorage.getItem(DEBUG_KEY) === "true";
 let mounted = false;
