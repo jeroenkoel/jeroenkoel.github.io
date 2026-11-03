@@ -154,6 +154,20 @@ button[data-icon]::before {
     line-height: 1;
 }
 
+button[data-icon="←"]::before {
+    content: "";
+    width: 1.5rem;
+    height: 1.5rem;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M20%2012H4m0%200%207-7m-7%207%207%207%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M20%2012H4m0%200%207-7m-7%207%207%207%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+
+.compact-button[data-icon="🏠"] {
+    width: 44px;
+    padding: 0;
+}
+
 .compact-button {
     min-height: 34px;
     padding: 5px 10px;
@@ -209,6 +223,7 @@ button[data-icon]::before {
 .instruction-list li + li {
     margin-top: .65rem;
 }
+
 pre {
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -242,6 +257,14 @@ pre {
     background: linear-gradient(rgb(247 244 234 / 34%), rgb(247 244 234 / 68%));
 }
 
+.home-page:not(.ending-page)::before {
+    transform: translateY(-3%) scale(1.1);
+}
+
+.home-page[data-i18n-document-title="meta.homeTitle"]::before {
+    transform: translate(min(-2.63vw, -4.68vh), -4.5%) scale(1.1);
+}
+
 .home-content {
     position: relative;
     z-index: 1;
@@ -254,8 +277,9 @@ pre {
     background: rgb(255 254 250 / 76%);
     box-shadow: var(--shadow);
     backdrop-filter: blur(5px);
-    
+
 }
+
 .tutorial-video-container {
     position: relative;
     width: min(100%, 640px);
@@ -300,7 +324,9 @@ pre {
     box-shadow: var(--shadow);
 
     z-index: 100001;
+    white-space: pre-line;
 }
+
 /* .tutorial-card.hidden {
     display: none;
 } */
@@ -404,6 +430,7 @@ pre {
     height: 20px;
     background: var(--border);
 }
+
 .utility-switch {
     position: relative;
     display: inline-flex;
@@ -521,20 +548,25 @@ pre {
 .inputDiv {
     display: flex;
     gap: 0.75rem;
-    align-items: center; 
-    justify-content: center; 
-    margin-bottom: 1.5rem; 
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 1.5rem;
     flex-wrap: wrap;
 }
 
+#participantInput {
+    min-height: clamp(52px, 6.4vh, 66px);
+}
+
 .participantInput {
-    padding: 0.75rem 1rem; 
-    border-radius: 8px; 
-    border: 1px solid #ccc; 
-    font-size: 1rem; 
-    text-align: center; 
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    text-align: center;
     min-width: 240px;
 }
+
 .ending-video {
     width: min(640px, 100%);
     height: auto;
@@ -591,8 +623,96 @@ pre {
     bottom: auto;
 }
 
+
 .tutorial-room-instructions {
     position: absolute;
     top: 16px;
     z-index: 1;
+}
+
+.admin-entry-button {
+    position: fixed;
+    top: 14px;
+    left: 16px;
+    z-index: 3;
+    min-height: 40px;
+    padding: 7px 12px;
+    font-size: .9rem;
+    background: rgb(255 254 250 / 94%);
+}
+
+.admin-login-dialog {
+    width: min(400px, calc(100% - 32px));
+    max-width: none;
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    padding: 24px;
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+
+.admin-login-dialog::backdrop {
+    background: rgb(20 20 20 / 50%);
+}
+
+.admin-login-dialog form {
+    display: grid;
+    gap: 12px;
+}
+
+.admin-login-dialog h2 {
+    margin: 0 0 6px;
+}
+
+.admin-login-dialog label {
+    font-weight: 650;
+}
+
+.admin-login-dialog input {
+    width: 100%;
+}
+
+.admin-login-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.admin-login-actions button {
+    min-height: 44px;
+    padding: 8px 15px;
+}
+
+.admin-login-error {
+    color: var(--danger);
+    margin: 0;
+}
+
+#participantInput.invalid, .form-group .invalid, .gender-selector.invalid {
+    border: 2px solid #bb3535;
+    outline-color: #bb3535;
+}
+
+.home-input-error {
+    margin: -16px 0 0;
+    min-height: 20px;
+    color: #aa2525;
+    font-weight: 600;
+    text-align: center;
+}
+
+.participant-field {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+}
+
+.participant-field .home-input-error {
+    margin: 0;
+    min-height: 20px;
+    max-width: 340px;
+    font-size: 14px;
 }

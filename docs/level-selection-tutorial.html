@@ -18,30 +18,35 @@
 <body class="room-page" data-i18n-document-title="meta.levelSelectionTitle">
     <timer-progress-bar id="topBar"></timer-progress-bar>
     <header class="room-header">
-        <button class="secondary-button" type="button" onclick="if(confirm(this.dataset.confirmExit)) { switchScene('index.html'); }" data-i18n-confirm="common.confirmExit" data-icon="🏠" data-i18n-aria-label="common.backHome"></button>
-        <h1 data-i18n="selection.title"></h1>
+        <button class="secondary-button compact-button" type="button" onclick="if(confirm(this.dataset.confirmExit)) { switchScene('index.html'); }" data-i18n-confirm="common.confirmExitGame" data-icon="🏠" data-i18n-aria-label="common.backHome"></button>
         <button id="rollHintButton" class="secondary-button roll-hint-button" type="button" data-i18n-aria-label="selection.hintAria" data-i18n-title="selection.hintAria"><span aria-hidden="true">?</span></button>
     </header>
 
-    <main class="room-stage tutorial-room-stage" data-i18n-aria-label="selection.roomAria">
+    <main class="room-stage tutorial-room-stage tutorial-overview-stage" data-i18n-aria-label="selection.roomAria">
+        <audio id="voice-over-scattered" src="./assets/sounds/voice_over/ne/step3.mp3"></audio>
+        <audio id="voice-over-torn" src="./assets/sounds/voice_over/ne/step4.mp3"></audio>
+        <audio id="voice-over-repair" src="./assets/sounds/voice_over/ne/tutorial_intro_3.mp3"></audio>
+        <audio id="voice-over-practice" src="./assets/sounds/voice_over/ne/intro-3b.mp3"></audio>
+        <audio id="voice-over-table" src="./assets/sounds/voice_over/ne/tutorial_intro_4.mp3"></audio>
         <audio id="voice-over-5">
             <source src="./assets/sounds/voice_over/ne/tutorial_selectionRoll.mp3">
             Your browser does not support the audio element.
         </audio>
 
         <audio id="voice-over-succes">
-            <source src="./assets/sounds/voice_over/ne/tutorial_success.mp3">
+            <source src="./assets/sounds/voice_over/ne/step18.mp3">
             Your browser does not support the audio element.
         </audio>
         <section class="room-scene" data-room="tutorial">
-            <img class="room-background" style="opacity: .34;" src="./assets/rooms/table/table-empty.png" alt="" aria-hidden="true">
+            <img class="room-background" src="./assets/rooms/whole-room.png" alt="" aria-hidden="true">
             <div class="room-layer layer-film-box film-box is-empty" role="img">
                 <img src="./assets/film-box/film-box-00.png" alt="">
             </div>
-            <button class="film-roll roll-tut" data-roll-number="2"><img src="./assets/rooms/couch-room/trimmed/roll-7.png" alt=""></button>
+            <button class="film-roll roll-tut" data-roll-number="2" disabled><img src="./assets/rooms/couch-room/trimmed/roll-7.png" alt=""></button>
         </section>
         <div class="tutorial-card tutorial-room-instructions">
-            <p id="tutorial-selection-text" class="tutorial-text" data-i18n = "tutorial.selectionRoll"></p>
+            <p id="tutorial-selection-text" class="tutorial-text" data-i18n="tutorial.rollsScattered"></p>
+            <button id="tutorial-next" class="primary-button" type="button" data-icon="→" data-i18n="tutorial.continue" data-i18n-aria-label="tutorial.continue" disabled></button>
             <button id="start-game" class="primary-button" style="display:none" type="button" onclick="switchScene('level-selection.html')" data-icon="→" data-i18n="tutorial.continue" data-i18n-aria-label="tutorial.continue"></button>
         </div>
     </main>

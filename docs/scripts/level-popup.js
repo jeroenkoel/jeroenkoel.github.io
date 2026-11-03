@@ -39,8 +39,12 @@ const submitButton = $("submitAnswer");
 const cancelButton = $("cancelChoice");
 const exitButton = $("levelExitButton");
 const levelPopup = document.querySelector("level-popup");
-const tutorialVoiceBusy = () => levelPopup.isTutorialLevel() && isVoiceOverPlaying();
-const tutorialAnswerStep = () => levelPopup.isTutorialLevel() ? (levelPopup.dialogue.currentIndex ?? 0) : 2;
+const tutorialVoiceBusy = () => levelPopup.isTutorialLevel() && !isDebugMode() && isVoiceOverPlaying();
+const tutorialAnswerStep = () => {
+    if (!levelPopup.isTutorialLevel()) return 2;
+    if (!levelPopup.dialogue?.hidden) return 0;
+    return answerSelectionMade ? 2 : 1;
+};
 
 function getActiveUserId() {
     return sessionStorage.getItem("filmBoxUserId") || "guest_user";
@@ -79,6 +83,9 @@ let cancelRequested = false;
 let currentFilmAnimation = null;
 let cancelAnimationWait = null;
 let answerSelectionMade = false;
+let tutorialAnswer3Played = false;
+let tutorialFirstAnswerIndex = null;
+let tutorialHasChangedAnswer = false;
 let replayInProgress = false;
 let replayReturnPhase = null;
 let hasReplayed = false;
@@ -127,7 +134,11 @@ function updateFilmPuzzleScale() {
     const widthBased = (width - horizontalSafety * 2 - topJoinGap) /
         (keyStripAspect + answerFrameAspect - tornBoundsOverlap);
     windowElement.style.setProperty("--film-puzzle-top-gap", `${topJoinGap.toFixed(2)}px`);
-    const heightBased = (height - 6) / 2.72;
+    const instructionHeight = levelPopup.isTutorialLevel()
+        ? Math.ceil(windowElement.querySelector(".tutorial-instruction-measure").getBoundingClientRect().height) + 24
+        : 0;
+    windowElement.style.setProperty("--tutorial-instruction-height", `${instructionHeight}px`);
+    const heightBased = (height - instructionHeight - 6) / 2.72;
     const frameHeight = Math.max(50, Math.min(340, widthBased, heightBased));
 
     windowElement.style.setProperty("--film-puzzle-frame-height", `${frameHeight.toFixed(2)}px`);
@@ -144,7 +155,9 @@ function updateFilmSelectedScale() {
     const widthFactor = Math.min(1, width / 1450);
     const heightFactor = Math.min(1, height / 880);
     const roomFactor = Math.min(widthFactor, heightFactor);
-    const scale = Math.max(1.15, Math.min(1.24, 1.15 + roomFactor * 0.09));
+    const scale = levelPopup.isTutorialLevel()
+        ? 1.35
+        : Math.max(1.475, Math.min(1.65, 1.475 + roomFactor * 0.175));
 
     filmAnswerOptions.querySelectorAll(".film-puzzle-option").forEach(option => {
         option.style.setProperty("--film-selected-scale", scale.toFixed(3));
@@ -162,9 +175,17 @@ function updateReflectionContinueVisibility() {
     updateReplayAvailability();
 }
 
-function updateReplayAvailability() {
+export function updateReplayAvailability() {
     windowElement.querySelectorAll(".replay-fragment-button").forEach(button => {
-        button.disabled = hasReplayed || answerSubmitting || reflectionFinishing || tutorialVoiceBusy();
+        const tutorialLocked = button.classList.contains("tutorial-replay-locked");
+        const tutorialReady = button.classList.contains("tutorial-replay-ready");
+        if (tutorialLocked) {
+            button.disabled = true;
+        } else if (tutorialReady) {
+            button.disabled = hasReplayed || replayInProgress || answerSubmitting || reflectionFinishing;
+        } else {
+            button.disabled = hasReplayed || answerSubmitting || reflectionFinishing || tutorialVoiceBusy();
+        }
     });
 }
 
@@ -243,13 +264,15 @@ function makePuzzleAnswerCard(answer, index) {
 
 
 async function replayFragment() {
+    const tutorialReplayReady = levelPopup.isTutorialLevel() && phaseIs("reflection") &&
+        Boolean(windowElement.querySelector(".replay-reflection.tutorial-replay-ready"));
     if (
         hasReplayed ||
         replayInProgress ||
         !activeLevel ||
         answerSubmitting ||
         reflectionFinishing ||
-        tutorialVoiceBusy() ||
+        (tutorialVoiceBusy() && !tutorialReplayReady) ||
         (!phaseIs("reflection") && !phaseIs("answer"))
     ) return;
 
@@ -273,6 +296,18 @@ async function replayFragment() {
     try {
         // Reuse the existing 3-2-1 countdown and video
         await playFilm(token, replayReturnPhase);
+        if (token !== runToken || !activeLevel) return;
+        
+        if (replayReturnPhase === "reflection" && phaseIs("reflection") && levelPopup.isTutorialLevel()) {
+            reflectionFilmPreview.classList.remove("is-whitened");
+            const reflectionContent = document.getElementById("reflectionContent");
+
+            if (reflectionContent) {
+                reflectionContent.hidden = false;
+            }
+
+            playVoiceOver("../assets/sounds/voice_over/ne/step13.mp3");
+        }
     } catch (error) {
         console.error("Replay failed:", error);
 
@@ -349,8 +384,15 @@ function buildFilmPuzzleTopInto(keyframeContainer, slotContainer, interactiveSlo
     replayButton.type = "button";
     replayButton.className = "primary-button replay-fragment-button";
     replayButton.classList.add(replayClass);
+    replayButton.id = "replayButton";
     updateReplayButton(replayButton, hasReplayed);
-    replayButton.addEventListener("click", replayFragment);
+    replayButton.addEventListener("click", function() {
+        replayFragment();
+        replayButton.classList.remove("tutorial-highlight");
+    });
+    if (levelPopup.isTutorialLevel() && replayClass == "replay-reflection") {
+        replayButton.hidden = true;
+    } 
     windowElement.appendChild(replayButton);
 
 }
@@ -382,15 +424,53 @@ function updateFilmSelection() {
 
 function updateSubmitAvailability() {
     const needsSelection = !answerSelectionMade;
-    submitButton.hidden = answerSubmitting || tutorialAnswerStep() < 2;
-    submitButton.disabled = answerSubmitting || needsSelection || tutorialVoiceBusy() || tutorialAnswerStep() < 2;
+
+
+    const tutorialNotReady =
+    levelPopup.isTutorialLevel() &&
+    (
+        !isDebugMode() && (!tutorialAnswer3Played || !tutorialHasChangedAnswer)
+    );
+    submitButton.hidden =
+        answerSubmitting ||
+        needsSelection ||
+        tutorialAnswerStep() < 2 ||
+        tutorialNotReady;
+
+    submitButton.disabled =
+        answerSubmitting ||
+        needsSelection ||
+        tutorialVoiceBusy() ||
+        tutorialAnswerStep() < 2 ||
+        tutorialNotReady;
 }
 
 function renderFilmPuzzle() {
     buildFilmPuzzleTop();
+
+    const instructionVisible = document.getElementById("tutorial-answer-instruction")?.classList.contains("is-visible");
+    document.getElementById("tutorial-answer-instruction")?.remove();
+
     filmAnswerOptions.innerHTML = "";
 
-    [0, 2, 1].forEach(index => {
+    if (levelPopup.isTutorialLevel()) {
+        const instruction = document.createElement("p");
+        instruction.id = "tutorial-answer-instruction";
+        instruction.className = "tutorial-text";
+        instruction.classList.toggle("is-visible", Boolean(instructionVisible));
+    
+        instruction.dataset.i18n =
+            tutorialHasChangedAnswer
+                ? "helper.answer4"
+                : answerSelectionMade
+                    ? "helper.answer3"
+                    : "helper.answer2";
+    
+        instruction.textContent = t(instruction.dataset.i18n);
+        filmPuzzleView.appendChild(instruction);
+    }
+
+    [0, 1, 2].forEach(index => {
         const answer = activeLevel.answers[index];
         const option = document.createElement("button");
         option.type = "button";
@@ -402,17 +482,83 @@ function renderFilmPuzzle() {
         option.appendChild(makePuzzleAnswerCard(answer, index));
 
         option.addEventListener("click", () => {
-            if (answerSubmitting || tutorialVoiceBusy() || tutorialAnswerStep() < 1 || !phaseIs("answer")) return;
-            selectedAnswerIndex = index;
-            answerSelectionMade = true;
-            answerInteractionCount += 1;
+            if (
+                answerSubmitting ||
+                tutorialVoiceBusy() ||
+                tutorialAnswerStep() < 1 ||
+                !phaseIs("answer")
+            ) return;
+        
+            const isTutorial = levelPopup.isTutorialLevel();
+            const instruction = document.getElementById("tutorial-answer-instruction");
+        
+            // First selection
+            if (isTutorial && tutorialFirstAnswerIndex === null) {
+                tutorialFirstAnswerIndex = index;
+        
+                selectedAnswerIndex = index;
+                answerSelectionMade = true;
+                answerInteractionCount++;
+        
+                if (instruction) {
+                    instruction.dataset.i18n = "helper.answer3";
+                    instruction.textContent = t("helper.answer3");
+                }
+        
+                playVoiceOver("../assets/sounds/voice_over/ne/step16.mp3");
+            } else {
+                // Ignore clicking the currently selected answer again
+                if (answerSelectionMade && index === selectedAnswerIndex) return;
+            
+                // First time changing to a different answer
+                if (isTutorial && !tutorialHasChangedAnswer) {
+                    tutorialHasChangedAnswer = true;
+            
+                    // Play helper.answer4 audio only once
+                    playVoiceOver("../assets/sounds/voice_over/ne/step17.mp3");
+                }
+            
+                selectedAnswerIndex = index;
+                answerSelectionMade = true;
+                answerInteractionCount++;
+            
+                // Display helper.answer4 on the screen
+                if (isTutorial && instruction) {
+                    instruction.dataset.i18n = "helper.answer4";
+                    instruction.textContent = t("helper.answer4");
+                }
+            }
+        
             updateFilmSelection();
             updateSubmitAvailability();
         });
+
+    
         filmAnswerOptions.appendChild(option);
     });
 
     updateFilmSelection();
+
+        // Deselect answer when clicking the empty white area
+    filmPuzzleView.addEventListener("click", (event) => {
+        // Ignore clicks on answer options and other buttons
+        if (event.target.closest(".film-puzzle-option, button")) return;
+
+        // Only allow deselection during the answer phase
+        if (
+            !phaseIs("answer") ||
+            answerSubmitting ||
+            tutorialVoiceBusy() ||
+            !answerSelectionMade
+        ) return;
+
+        // Deselect the current answer
+        answerSelectionMade = false;
+
+        // Update the appearance and Confirm button
+        updateFilmSelection();
+        updateSubmitAvailability();
+    });
 }
 
 function renderAnswers() {
@@ -619,7 +765,10 @@ function showReflection(token) {
     ++videoSequence;
     resetVideoElement();
     setPhase("reflection");
+    
     showStageDialogue("showReflectionTutorial");
+    document.querySelector("#levelDialogue")?.classList.add("reflection-active");
+
     reflectionStart = performance.now();
     microphoneFallback = false;
     setMicrophoneState("microphone.starting");
@@ -666,10 +815,11 @@ export async function openLevel(level, rollNumber, { preview = false } = {}) {
     selectedAnswerIndex = 0;
     answerInteractionCount = 0;
     answerStartedAt = null;
-    // answerSubmitting = false;
-    // answerSelectionMade = false;
     answerSubmitting = false;
     answerSelectionMade = false;
+    tutorialAnswer3Played = false;
+    tutorialFirstAnswerIndex = null;
+    tutorialHasChangedAnswer = false;
     cancelRequested = false;
     currentFilmAnimation = null;
     cancelAnimationWait = null;
@@ -770,6 +920,7 @@ async function startRecording(token) {
             const ext = capture.mimeType.includes("mp4") ? "mp4" : "webm";
             form.append("metadata", JSON.stringify({
                 userId,
+                sessionToken: sessionStorage.getItem("filmBoxSessionToken"),
                 sessionStartedAt,
                 questionId: levelId,
                 roll: rollNumber,
@@ -810,7 +961,23 @@ function showAnswers() {
     reflectionFinishing = false;
     reflectionStage.classList.remove("is-finishing");
     setPhase("answer");
+
     showStageDialogue("showAnswerTutorial");
+
+    if (levelPopup.isTutorialLevel()) {
+        levelPopup.dialogue.onComplete = () => {
+            const instruction = document.getElementById("tutorial-answer-instruction");
+        
+            if (instruction) {
+                instruction.classList.add("is-visible");
+                playVoiceOver("../assets/sounds/voice_over/ne/step15.mp3");
+            }
+        
+            updateFilmSelection();
+            updateSubmitAvailability();
+        };
+    }
+
     answerStartedAt = performance.now();
     renderAnswers();
     updateReplayAvailability();
@@ -874,7 +1041,6 @@ cancelButton.addEventListener("click", () => {
     // Restore the answer selection screen
     answerSubmitting = false;
     answerSelectionMade = false;
-
     cancelButton.hidden = true;
     submitButton.hidden = false;
 
@@ -985,7 +1151,19 @@ async function animateFilmPuzzleSelection() {
 }
 
 async function submitSelectedAnswer() {
-    if (answerSubmitting || tutorialVoiceBusy() || tutorialAnswerStep() < 2 || !phaseIs("answer")) return;
+    if (
+        answerSubmitting ||
+        tutorialVoiceBusy() ||
+        tutorialAnswerStep() < 2 ||
+        (
+            levelPopup.isTutorialLevel() &&
+            (
+                !isDebugMode() && (!tutorialAnswer3Played || !tutorialHasChangedAnswer)
+            )
+        ) ||
+        !phaseIs("answer")
+        
+    ) return;
 
     answerSubmitting = true;
     cancelRequested = false;
@@ -1022,6 +1200,7 @@ async function submitSelectedAnswer() {
 
     const result = {
         userId: getActiveUserId(),
+        sessionToken: sessionStorage.getItem("filmBoxSessionToken"),
         levelId: level.id,
         finalAnswer: selectedAnswer.id,
         correctAnswer: correctAnswerObj ? correctAnswerObj.id : null,
@@ -1035,15 +1214,21 @@ async function submitSelectedAnswer() {
 
     if (!preview) {
         levelStatus.textContent = t("answer.saved");
-        debugOutput.textContent = JSON.stringify(result, null, 2);
+        debugOutput.textContent = JSON.stringify({...result, sessionToken: undefined}, null, 2);
         const form = new FormData();
         form.append("metadata", JSON.stringify(result));
 
-        fetch("/api/submit-question", { method: "POST", body: form })
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            })
-            .catch(error => console.warn("Failed to submit question", error));
+        try {
+            const response = await fetch("/api/submit-question", {method: "POST", body: form});
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        } catch (error) {
+            console.warn("Failed to submit question", error);
+            levelStatus.textContent = t("answer.saveFailed");
+            answerSubmitting = false;
+            filmAnswerSlot.classList.remove("is-filled", "is-receiving");
+            renderAnswers();
+            return;
+        }
 
         modal.dispatchEvent(new CustomEvent("level-complete", {
             detail: { rollNumber, result }
@@ -1092,9 +1277,22 @@ function closeLevel({ completed = false } = {}) {
 skipVideoButton.addEventListener("click", skipCurrentVideo);
 
 onVoiceOverChange(() => {
+    if (
+        levelPopup.isTutorialLevel() &&
+        phaseIs("answer") &&
+        answerSelectionMade &&
+        !isVoiceOverPlaying()
+    ) {
+        tutorialAnswer3Played = true;
+    }
+
     filmStartButton.disabled = tutorialVoiceBusy();
+
+    // Update all buttons when voice-over starts or finishes
     updateDebugControls();
     updateReflectionContinueVisibility();
+    updateReplayAvailability();
+
     if (activeLevel) {
         updateSubmitAvailability();
         updateFilmSelection();
@@ -1106,7 +1304,7 @@ onSettingsChange(() => {
     updateDebugControls();
     if (phaseIs("reflection")) {
         updateReflectionContinueVisibility();
-        buildFilmPuzzleTop();
+        if (!levelPopup.isTutorialLevel()) buildFilmPuzzleTop();
     }
     if (phaseIs("answer") && !answerSubmitting) renderAnswers();
     requestAnimationFrame(updateFilmPuzzleScale);
@@ -1115,7 +1313,15 @@ onSettingsChange(() => {
 onLanguageChange(() => {
     if (activeLevel) {
         buildKeyframes();
-        buildFilmPuzzleTop();
+        for (const container of [filmKeyframeStrip, reflectionFilmKeyframeStrip]) {
+            container.querySelectorAll(".film-puzzle-keyframe-image").forEach((image, index) => {
+                image.alt = t("level.keyframeAlt", { number: index + 1 });
+            });
+        }
+        windowElement.querySelectorAll(".replay-fragment-button").forEach(button => {
+            updateReplayButton(button, hasReplayed);
+        });
+        updateReplayAvailability();
         if (phaseIs("answer") && !answerSubmitting) renderAnswers();
     }
     setMicrophoneState(microphoneStateKey);
@@ -1129,7 +1335,7 @@ export function initLevelPopup() {
     updateDebugControls();
 
     exitButton.addEventListener("click", () => {
-        if (confirm(t("common.confirmExit"))) {
+        if (confirm(t("common.confirmExitFilmroll"))) {
             closeLevel();
         }
     });

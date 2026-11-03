@@ -70,9 +70,17 @@
     z-index: 2;
 }
 
-.film-puzzle-keyframe-1 { left: 6.38%; }
-.film-puzzle-keyframe-2 { left: 36.38%; }
-.film-puzzle-keyframe-3 { left: 66.38%; }
+.film-puzzle-keyframe-1 {
+    left: 6.38%;
+}
+
+.film-puzzle-keyframe-2 {
+    left: 36.38%;
+}
+
+.film-puzzle-keyframe-3 {
+    left: 66.38%;
+}
 
 .film-puzzle-answer-slot,
 .film-puzzle-answer-card {
@@ -151,10 +159,7 @@
 .film-puzzle-option.is-selected {
     z-index: 4;
     transform: translateY(-4px) scale(1.075);
-    filter:
-        drop-shadow(0 0 4px rgb(101 154 81 / 88%))
-        drop-shadow(0 0 9px rgb(101 154 81 / 70%))
-        drop-shadow(0 9px 11px rgb(0 0 0 / 20%));
+    filter: drop-shadow(0 0 4px rgb(101 154 81 / 88%)) drop-shadow(0 0 9px rgb(101 154 81 / 70%)) drop-shadow(0 9px 11px rgb(0 0 0 / 20%));
 }
 
 .film-puzzle-option.is-dimmed {
@@ -169,6 +174,7 @@
 .film-puzzle-option:disabled {
     cursor: default;
 }
+
 
 .film-puzzle-answer-image {
     left: 36%;
@@ -442,7 +448,7 @@
     padding: 0;
     background: transparent;
     cursor: pointer;
-    transition: transform .24s cubic-bezier(.22,.78,.18,1), opacity .18s ease;
+    transition: transform .24s cubic-bezier(.22, .78, .18, 1), opacity .18s ease;
     backface-visibility: hidden;
     transform: translateZ(0);
     filter: none !important;
@@ -528,9 +534,17 @@
     pointer-events: none;
 }
 
-.film-puzzle-answer-label-1 { background: #c95c54; }
-.film-puzzle-answer-label-2 { background: #4e7fb8; }
-.film-puzzle-answer-label-3 { background: #b88b32; }
+.film-puzzle-answer-label-1 {
+    background: #c95c54;
+}
+
+.film-puzzle-answer-label-2 {
+    background: #4e7fb8;
+}
+
+.film-puzzle-answer-label-3 {
+    background: #b88b32;
+}
 
 .answer-mode-film .answer-confirm-row {
     min-height: 52px;
@@ -599,10 +613,10 @@
     height: clamp(16px, 2.1vh, 20px);
     opacity: 1;
     background: repeating-linear-gradient(
-        90deg,
-        transparent 0 14px,
-        #fff 14px 46px,
-        transparent 46px 62px
+            90deg,
+            transparent 0 14px,
+            #fff 14px 46px,
+            transparent 46px 62px
     );
 }
 
@@ -616,7 +630,7 @@
 
 .reflection-stage h2 {
     width: min(100%, 1100px);
-    white-space: normal;
+    white-space: pre-line;
     font-size: clamp(1.35rem, 2.4vw, 2.15rem);
 }
 
@@ -653,9 +667,17 @@
     width: 22.30%;
 }
 
-.film-puzzle-keyframe-1 { left: 5.80%; }
-.film-puzzle-keyframe-2 { left: 35.80%; }
-.film-puzzle-keyframe-3 { left: 65.80%; }
+.film-puzzle-keyframe-1 {
+    left: 5.80%;
+}
+
+.film-puzzle-keyframe-2 {
+    left: 35.80%;
+}
+
+.film-puzzle-keyframe-3 {
+    left: 65.80%;
+}
 
 .film-puzzle-answer-image {
     left: 31.70%;
@@ -747,9 +769,17 @@
     width: 24.55%;
 }
 
-.film-puzzle-keyframe-1 { left: 4.90%; }
-.film-puzzle-keyframe-2 { left: 34.85%; }
-.film-puzzle-keyframe-3 { left: 64.80%; }
+.film-puzzle-keyframe-1 {
+    left: 4.90%;
+}
+
+.film-puzzle-keyframe-2 {
+    left: 34.85%;
+}
+
+.film-puzzle-keyframe-3 {
+    left: 64.80%;
+}
 
 .film-puzzle-answer-image {
     left: 30.55%;
@@ -819,12 +849,6 @@
     transform-origin: center center;
 }
 
-.film-puzzle-option:hover:not(:disabled):not(.is-selected) .film-puzzle-answer-card,
-.film-puzzle-option:focus-visible:not(:disabled):not(.is-selected) .film-puzzle-answer-card {
-    box-shadow: 0 0 0 3px rgb(230 184 67 / 78%);
-    outline: 3px solid rgb(230 184 67 / 88%);
-    outline-offset: 1px;
-}
 
 .film-puzzle-option.is-locking,
 .film-puzzle-option.is-selected.is-locking {
@@ -842,15 +866,41 @@
         background-size: clamp(22px, 5vw, 30px) 100%;
     }
 
-    .film-puzzle-option:nth-child(1) { left: 4px; }
-    .film-puzzle-option:nth-child(2) { right: 4px; }
+    .film-puzzle-option:nth-child(1) {
+        left: 4px;
+    }
+
+    .film-puzzle-option:nth-child(2) {
+        right: 4px;
+    }
 }
+
+level-popup[data-is-tutorial="true"] .video-stage {
+    padding: calc(clamp(8px, 1.2vh, 12px) + clamp(15px, 1.9vh, 19px)) 0;
+}
+
+level-popup[data-is-tutorial="true"] .video-frame {
+    flex: 1 1 0;
+    width: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+}
+
+level-popup[data-is-tutorial="true"] .video-frame video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: contain;
+}
+
 .video-stage .film-holes {
     background-image: linear-gradient(
-        90deg,
-        transparent 0 17%,
-        #fff 17% 79%,
-        transparent 79% 100%
+            90deg,
+            transparent 0 17%,
+            #fff 17% 79%,
+            transparent 79% 100%
     );
     background-size: var(--video-hole-cell-width, 5.55556%) 100%;
     background-repeat: repeat-x;
@@ -874,9 +924,17 @@
     width: 25.15%;
 }
 
-.film-puzzle-keyframe-1 { left: 4.60%; }
-.film-puzzle-keyframe-2 { left: 34.55%; }
-.film-puzzle-keyframe-3 { left: 64.50%; }
+.film-puzzle-keyframe-1 {
+    left: 4.60%;
+}
+
+.film-puzzle-keyframe-2 {
+    left: 34.55%;
+}
+
+.film-puzzle-keyframe-3 {
+    left: 64.50%;
+}
 
 .film-puzzle-answer-image {
     left: 29.95%;
@@ -902,9 +960,23 @@
     top: calc(var(--film-puzzle-frame-height) * .54);
 }
 
-.film-puzzle-option:nth-child(1) { --answer-accent: #c95c54; }
-.film-puzzle-option:nth-child(2) { --answer-accent: #4e7fb8; }
-.film-puzzle-option:nth-child(3) { --answer-accent: #b88b32; }
+.film-puzzle-option:nth-child(1) {
+    --answer-accent: #c95c54;
+}
+
+.film-puzzle-option:nth-child(2) {
+    --answer-accent: #4e7fb8;
+}
+
+.film-puzzle-option:nth-child(3) {
+    --answer-accent: #b88b32;
+}
+
+.film-puzzle-option:hover:not(:disabled):not(.is-selected) .film-puzzle-answer-card,
+.film-puzzle-option:focus-visible:not(:disabled):not(.is-selected) .film-puzzle-answer-card {
+    box-shadow: none;
+    outline: none;
+}
 
 .film-puzzle-option:hover:not(:disabled):not(.is-selected) .film-puzzle-answer-card,
 .film-puzzle-option:focus-visible:not(:disabled):not(.is-selected) .film-puzzle-answer-card {
@@ -913,16 +985,15 @@
     outline-offset: 1px;
 }
 
-.film-puzzle-option.is-selected .film-puzzle-answer-card {
-    box-shadow: 0 0 0 4px var(--answer-accent),
-                0 9px 22px rgb(0 0 0 / 18%);
-    outline: 4px solid var(--answer-accent);
-    outline-offset: 1px;
-}
 
 @media (max-width: 760px) {
-    .film-puzzle-option:nth-child(1) { left: clamp(4px, 8vw, 58px); }
-    .film-puzzle-option:nth-child(2) { right: clamp(4px, 8vw, 58px); }
+    .film-puzzle-option:nth-child(1) {
+        left: clamp(4px, 8vw, 58px);
+    }
+
+    .film-puzzle-option:nth-child(2) {
+        right: clamp(4px, 8vw, 58px);
+    }
 }
 
 .film-puzzle-top-row {
@@ -960,9 +1031,17 @@
     width: 25.42%;
 }
 
-.film-puzzle-keyframe-1 { left: 4.47%; }
-.film-puzzle-keyframe-2 { left: 34.42%; }
-.film-puzzle-keyframe-3 { left: 64.37%; }
+.film-puzzle-keyframe-1 {
+    left: 4.47%;
+}
+
+.film-puzzle-keyframe-2 {
+    left: 34.42%;
+}
+
+.film-puzzle-keyframe-3 {
+    left: 64.37%;
+}
 
 .film-puzzle-answer-image {
     left: 29.70%;
@@ -983,8 +1062,13 @@
 }
 
 @media (max-width: 760px) {
-    .film-puzzle-option:nth-child(1) { left: 2px; }
-    .film-puzzle-option:nth-child(2) { right: 2px; }
+    .film-puzzle-option:nth-child(1) {
+        left: 2px;
+    }
+
+    .film-puzzle-option:nth-child(2) {
+        right: 2px;
+    }
 
     .answer-mode-film .answer-confirm-row .primary-button {
         min-width: clamp(138px, 27vw, 172px);
@@ -1021,9 +1105,17 @@
     width: 25.00%;
 }
 
-.film-puzzle-keyframe-1 { left: 4.68%; }
-.film-puzzle-keyframe-2 { left: 34.63%; }
-.film-puzzle-keyframe-3 { left: 64.58%; }
+.film-puzzle-keyframe-1 {
+    left: 4.68%;
+}
+
+.film-puzzle-keyframe-2 {
+    left: 34.63%;
+}
+
+.film-puzzle-keyframe-3 {
+    left: 64.58%;
+}
 
 .film-puzzle-answer-image {
     left: 29.00%;
@@ -1036,17 +1128,6 @@
     flex-basis: calc(var(--film-puzzle-frame-height) * 1.72);
 }
 
-.film-puzzle-option:nth-child(1) {
-    left: clamp(8px, .7vw, 12px);
-}
-
-.film-puzzle-option:nth-child(2) {
-    right: clamp(8px, .7vw, 12px);
-}
-
-.film-puzzle-option:nth-child(3) {
-    top: calc(var(--film-puzzle-frame-height) * .72);
-}
 
 .film-puzzle-option:nth-child(1).is-selected {
     transform-origin: left top;
@@ -1080,8 +1161,13 @@
 }
 
 @media (max-width: 760px) {
-    .film-puzzle-option:nth-child(1) { left: 6px; }
-    .film-puzzle-option:nth-child(2) { right: 6px; }
+    .film-puzzle-option:nth-child(1) {
+        left: 6px;
+    }
+
+    .film-puzzle-option:nth-child(2) {
+        right: 6px;
+    }
 }
 
 .film-puzzle-top-row {
@@ -1107,7 +1193,7 @@
    REPLAY BUTTON - GENERAL STYLING
    ========================================= */
 
-   #levelWindow {
+#levelWindow {
     position: relative;
 }
 
@@ -1222,4 +1308,453 @@
     height: 2px;
     background: currentColor;
     transform: rotate(-45deg);
+}
+
+/* Selected answers stay normal size */
+.film-puzzle-option.is-selected:not(:hover):not(.is-locking) {
+    transform: none !important;
+}
+
+/* Tutorial only */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:hover:not(:disabled):not(.is-locking) {
+    z-index: 50 !important;
+    transform: scale(1.40) !important;
+}
+
+/* Disabled replay button: soft light yellow */
+#levelWindow .replay-fragment-button:disabled {
+    opacity: 1 !important;
+    background: #FFF4CC !important;
+    color: #A39575 !important;
+    border-color: #E6D9AD !important;
+    cursor: not-allowed;
+}
+
+/* Disabled Replay button: very light yellow */
+#levelWindow .replay-fragment-button:disabled {
+    opacity: 1 !important;
+    background: #FFFAEB !important;
+    color: #B8AD91 !important;
+    border-color: #F0E8D2 !important;
+    cursor: not-allowed;
+}
+
+/* Disabled Confirm button: very light green */
+#levelWindow .answer-confirm-row .primary-button:disabled {
+    opacity: 1 !important;
+    background: #F3FAF0 !important;
+    color: #A5B9A0 !important;
+    border-color: #E0ECDD !important;
+    cursor: not-allowed;
+}
+
+#tutorial-selection-text {
+    white-space: pre-line;
+}
+
+/* Instruction at the top of the tutorial */
+#tutorial-answer-instruction {
+    position: absolute;
+    top: -30px;
+    /* top: -5px;  */
+    /* 8px; */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+
+    text-align: center;
+    color: var(--text);
+
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Move the story film strip down during tutorial */
+#filmPuzzleView:has(#tutorial-answer-instruction) .film-puzzle-top-row {
+    margin-top: 65px;
+}
+
+/* =========================================
+   TUTORIAL ONLY - ANSWER LAYOUT
+   A top-left, C top-right, B bottom-center
+   ========================================= */
+
+/* A: top-left */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:nth-child(1) {
+    top: 0;
+    left: clamp(8px, .7vw, 12px);
+    right: auto;
+    margin: 0;
+    /* transform-origin: top left !important; */
+    transform-origin: 0% -10% !important;
+}
+
+/* B: bottom-center */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:nth-child(2) {
+    top: calc(var(--film-puzzle-frame-height) * .40);
+    left: 0;
+    right: 0;
+    width: max-content;
+    margin-inline: auto;
+    /* transform-origin: center bottom !important; */
+    transform-origin: 50% 110% !important;
+}
+
+/* C: top-right */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:nth-child(3) {
+    top: 0;
+    left: auto;
+    right: clamp(8px, .7vw, 12px);
+    margin: 0;
+    /* transform-origin: top right !important; */
+    transform-origin: 100% -10% !important;
+}
+
+/* Tutorial only: larger enlargement */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:hover:not(:disabled):not(.is-locking) {
+    transform: scale(1.40) !important;
+    z-index: 50 !important;
+}
+
+/* Tutorial only */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option.is-selected:not(:hover):not(.is-locking) {
+    transform: none !important;
+}
+
+
+#tutorial-answer-instruction {
+    display: none;
+}
+
+#tutorial-answer-instruction.is-visible {
+    display: block;
+}
+
+/* Normal size, including after selecting */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:not(:hover):not(.is-locking) {
+    transform: none !important;
+}
+
+/* Same enlargement for A, B and C */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:hover:not(:disabled):not(.is-locking) {
+    transform: scale(1.35) !important;
+    z-index: 50 !important;
+}
+
+/* TUTORIAL ONLY: same size for hover and selection */
+
+/* Default size */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:not(:hover):not(.is-selected):not(.is-locking) {
+    transform: none !important;
+}
+
+/* Hovered OR selected: exactly the same size */
+#filmPuzzleView:has(#tutorial-answer-instruction)
+.film-puzzle-option:is(:hover:not(:disabled), .is-selected):not(.is-locking) {
+    transform: scale(1.35) !important;
+    z-index: 50 !important;
+}
+
+/* NON-TUTORIAL ONLY: colored border on hover */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:hover:not(:disabled):not(.is-locking)
+.film-puzzle-answer-card {
+    box-shadow: 0 0 0 4px var(--answer-accent) !important;
+}
+
+/* NON-TUTORIAL: fixed positions for A, B and C */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(1),
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(2) {
+    top: calc(var(--film-puzzle-frame-height) * .035);
+}
+
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(3) {
+    top: calc(var(--film-puzzle-frame-height) * .70);
+}
+
+Selection enlarges without moving
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option.is-selected {
+    transform: scale(var(--film-selected-scale, 1.24)) !important;
+    transform-origin: center center !important;
+}
+
+/* NON-TUTORIAL ONLY: same size when hovered or selected */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:is(:hover, .is-selected):not(.is-locking) {
+    transform: scale(1.35) !important;
+    /* transform-origin: center center !important; */
+    z-index: 50 !important;
+}
+
+/* =========================================
+   NON-TUTORIAL ONLY: FINAL ANSWER POSITIONS
+   A = top-left
+   B = bottom-center
+   C = top-right
+   ========================================= */
+
+/* A: top-left, slightly lower */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(1) {
+    top: calc(var(--film-puzzle-frame-height) * .10);
+    left: clamp(8px, .7vw, 12px);
+    right: auto;
+}
+
+/* B: bottom-center, slightly higher */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(2) {
+    top: calc(var(--film-puzzle-frame-height) * .58);
+    left: 0;
+    right: 0;
+    width: max-content;
+    margin-inline: auto;
+}
+
+/* C: top-right, slightly lower */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(3) {
+    top: calc(var(--film-puzzle-frame-height) * .10);
+    left: auto;
+    right: clamp(8px, .7vw, 12px);
+    width: max-content;
+    margin: 0;
+}
+
+/* non tutrotial/ */
+/* Keep hover and selection at the same size */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:is(:hover, .is-selected):not(.is-locking) {
+    transform: scale(1.35) !important;
+    /* transform-origin: center center !important; */
+    z-index: 50 !important;
+}
+
+/* NON-TUTORIAL ONLY: enlargement directions */
+
+/* A: enlarge downward and right */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(1) {
+    /* transform-origin: top left !important; */
+    transform-origin: left 15% !important;
+
+}
+
+/* B: enlarge mostly upward, slightly downward */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(2) {
+    transform-origin: center 85% !important;
+}
+
+/* C: enlarge downward and left */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:nth-child(3) {
+    /* transform-origin: top right !important; */
+    transform-origin: right 15% !important;
+
+}
+
+/* NON-TUTORIAL ONLY: same enlargement on hover and selection */
+#filmPuzzleView:not(:has(#tutorial-answer-instruction))
+.film-puzzle-option:is(:hover, .is-selected):not(.is-locking) {
+    transform: scale(1.60) !important;
+    z-index: 50 !important;
+}
+
+/* Measure the longest translated instruction before any tutorial phase opens. */
+.tutorial-instruction-measure {
+    display: none;
+}
+
+level-popup[data-is-tutorial="true"] .tutorial-instruction-measure {
+    position: absolute;
+    top: 0;
+    left: 5%;
+    width: 90%;
+    display: grid;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.tutorial-instruction-measure > p {
+    grid-area: 1 / 1;
+    overflow-wrap: anywhere;
+}
+
+level-popup[data-is-tutorial="true"] .level-window {
+    --tutorial-instruction-height: 120px;
+}
+
+level-popup[data-is-tutorial="true"] .phase-reflection.answer-mode-film .reflection-stage,
+level-popup[data-is-tutorial="true"] .phase-answer.answer-mode-film .answer-stage {
+    padding: var(--tutorial-instruction-height) 0 6px;
+}
+
+#filmPuzzleView:has(#tutorial-answer-instruction) .film-puzzle-top-row {
+    margin-top: 0;
+}
+
+#tutorial-answer-instruction {
+    top: calc(12px - var(--tutorial-instruction-height));
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.reflection-film-preview.is-whitened .film-puzzle-keyframe-strip,
+.reflection-film-preview.is-whitened .film-puzzle-answer-slot {
+    opacity: .14;
+    filter: grayscale(1) brightness(1.65);
+}
+
+
+/* =========================================
+   FILM BORDER STYLE SETTINGS
+   Rectangle = original borders
+   Polygon = diagonal borders
+   ========================================= */
+
+
+/* =========================================
+   1. HIDE ORIGINAL RECTANGULAR BORDERS
+   ========================================= */
+
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option .film-puzzle-answer-card {
+       outline: none !important;
+       box-shadow: none !important;
+   }
+
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option {
+       outline: none !important;
+       box-shadow: none !important;
+   }
+
+   /* Override stronger non-tutorial hover rule */
+   html.film-border-polygon #levelWindow
+   #filmPuzzleView .film-puzzle-option:hover:not(:disabled)
+   .film-puzzle-answer-card {
+       outline: none !important;
+       box-shadow: none !important;
+   }
+
+
+   /* =========================================
+      2. BASE POLYGON BORDER
+      ========================================= */
+
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option:hover:not(:disabled)::after {
+       content: "";
+       position: absolute;
+       inset: 0;
+       z-index: 20;
+       pointer-events: none;
+
+       background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M 1.5 1.5 L 98.5 1.5 L 98.5 98.5 L 30.5 98.5 Z' fill='none' stroke='%23c95e55' stroke-width='5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+   }
+
+
+   /* =========================================
+      3. HOVER COLORS
+      ========================================= */
+
+   /* A - Red */
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option:nth-child(1):hover:not(:disabled)::after {
+       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M 1.5 1.5 L 98.5 1.5 L 98.5 98.5 L 30.5 98.5 Z' fill='none' stroke='%23c95e55' stroke-width='5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+   }
+
+   /* B - Blue */
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option:nth-child(2):hover:not(:disabled)::after {
+       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M 1.5 1.5 L 98.5 1.5 L 98.5 98.5 L 30.5 98.5 Z' fill='none' stroke='%235b88bb' stroke-width='5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+   }
+
+   /* C - Gold */
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option:nth-child(3):hover:not(:disabled)::after {
+       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M 1.5 1.5 L 98.5 1.5 L 98.5 98.5 L 30.5 98.5 Z' fill='none' stroke='%23c69a38' stroke-width='5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+   }
+
+
+   /* =========================================
+      4. GREEN SELECTED BORDER
+      ========================================= */
+
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option.is-selected::after,
+
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option.is-selected:hover::after {
+       content: "";
+       position: absolute;
+       inset: 0;
+       z-index: 20;
+       pointer-events: none;
+
+       background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M 1.5 1.5 L 98.5 1.5 L 98.5 98.5 L 30.5 98.5 Z' fill='none' stroke='%23578b46' stroke-width='5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat !important;
+   }
+
+
+   /* =========================================
+      5. CLICKABLE POLYGON AREA
+      ========================================= */
+
+   /*
+      The white triangle outside the diagonal
+      is not part of the clickable answer.
+      Clicking there can deselect the answer.
+   */
+
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option {
+       clip-path: polygon(
+           1% 1%,
+           99% 1%,
+           99% 99%,
+           30% 99%
+       );
+   }
+
+
+   /* =========================================
+      6. GAP BETWEEN BORDER AND FILM STRIP
+      ========================================= */
+
+   /*
+      Creates space between the colored border
+      and the black film strip.
+
+      Keep the right edge at 100% so the black
+      vertical film-strip border stays visible.
+   */
+
+   html.film-border-polygon #levelWindow
+   .film-puzzle-option .film-puzzle-answer-card {
+       clip-path: polygon(
+           4.5% 4.5%,
+           100% 4.5%,
+           100% 95.5%,
+           34.5% 95.5%
+       );
+   }
+
+   /* Increase right gap without cutting off black border */
+html.film-border-polygon #levelWindow
+.film-puzzle-option .film-puzzle-answer-card {
+    width: calc(100% - 10px);
 }

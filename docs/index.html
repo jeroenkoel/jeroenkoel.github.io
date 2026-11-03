@@ -13,32 +13,42 @@
     <script src="./scripts/audio.js" defer></script>
     <script type="module" src="./scripts/ui-settings.js"></script>
     <script type="module" src="./scripts/index.js"></script>
+    <script type="module" src="./scripts/admin-login.js"></script>
     <title></title>
 </head>
 <body class="standard-page home-page" data-i18n-document-title="meta.homeTitle">
+    <button class="secondary-button admin-entry-button" type="button" id="adminLoginBtn"
+        data-icon="⚙" data-i18n="common.administrator" data-i18n-aria-label="common.administrator">
+        Administrator
+    </button>
+
     <main class="home-content">
         <p class="title-text" data-i18n="home.title"></p>
 
         <div class="inputDiv">
-            <input 
-                type="text" 
-                id="participantInput" 
-                data-i18n-placeholder="common.placeholder" 
-            >
-            <button 
-                class="primary-button home-start" 
-                type="button" 
-                id="startGameBtn"
-                data-icon="▶" 
-                data-i18n="common.start" 
-                data-i18n-aria-label="common.start"
-            >
-                Play Game
-            </button>
+            <div class="participant-field">
+                <input type="text" id="participantInput" inputmode="numeric"
+                    aria-describedby="participantInputError" data-i18n-placeholder="common.placeholder">
+                <p class="home-input-error" id="participantInputError" role="alert"></p>
+            </div>
+            <button class="primary-button home-start" type="button" id="startGameBtn"
+                data-icon="▶" data-i18n="common.start" data-i18n-aria-label="common.start">Start</button>
+            <p style="color:red">This frontend deployment version has no backend connection so most admin related content will not work!</p>
         </div>
 
-        <button class="primary-button home-start" type="button" onclick="switchScene('administrator.html')" data-icon="⚙" data-i18n="common.administrator" data-i18n-aria-label="common.administrator"></button>
-        <p style="color:red">This frontend deployment version has no backend connection so most admin related content will not work!</p>
     </main>
+
+    <dialog class="admin-login-dialog" id="adminLoginDialog" aria-labelledby="adminLoginTitle">
+        <form id="adminLoginForm">
+            <h2 id="adminLoginTitle" data-i18n="administrator.loginTitle">Beheerder aanmelden</h2>
+            <label for="adminPassword" data-i18n="administrator.password">Wachtwoord</label>
+            <input id="adminPassword" type="password" autocomplete="current-password" required>
+            <p class="admin-login-error" id="adminLoginError" role="alert" hidden></p>
+            <div class="admin-login-actions">
+                <button type="button" class="secondary-button" id="adminLoginCancel" data-i18n="administrator.cancel">Annuleren</button>
+                <button type="submit" class="primary-button" id="adminLoginSubmit" data-i18n="administrator.login">Inloggen</button>
+            </div>
+        </form>
+    </dialog>
 </body>
 </html>

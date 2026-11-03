@@ -164,8 +164,9 @@
 }
 
 .film-roll:disabled {
-    cursor: default; 
+    cursor: default;
 }
+
 .film-roll img {
     width: 100%;
     height: auto;
@@ -190,9 +191,18 @@
 }
 
 @keyframes roll-hint-bounce {
-    0%, 100% { transform: translateY(0) scale(1); filter: none; }
-    42% { transform: translateY(-20%) scale(1.13); filter: brightness(1.2) drop-shadow(0 0 5px #ffe047) drop-shadow(0 0 12px #ffd12f); }
-    65% { transform: translateY(-12%) scale(1.13); filter: brightness(1.2) drop-shadow(0 0 5px #ffe047) drop-shadow(0 0 12px #ffd12f); }
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        filter: none;
+    }
+    42% {
+        transform: translateY(-20%) scale(1.13);
+        filter: brightness(1.2) drop-shadow(0 0 5px #ffe047) drop-shadow(0 0 12px #ffd12f);
+    }
+    65% {
+        transform: translateY(-12%) scale(1.13);
+        filter: brightness(1.2) drop-shadow(0 0 5px #ffe047) drop-shadow(0 0 12px #ffd12f);
+    }
 }
 
 .film-roll.completed {
@@ -319,10 +329,22 @@
 }
 
 @keyframes room-sparkle {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(.3) rotate(-12deg); }
-    40% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(0); }
-    65% { opacity: .9; transform: translate(-50%, -50%) scale(.95) rotate(8deg); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(18deg); }
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.3) rotate(-12deg);
+    }
+    40% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15) rotate(0);
+    }
+    65% {
+        opacity: .9;
+        transform: translate(-50%, -50%) scale(.95) rotate(8deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.35) rotate(18deg);
+    }
 }
 
 .film-box.is-collecting {
@@ -330,11 +352,21 @@
 }
 
 @keyframes film-box-collect {
-    0%, 100% { transform: translateY(0) rotate(0); }
-    28% { transform: translateY(-14%) rotate(-3deg); }
-    48% { transform: translateY(-12%) rotate(3deg); }
-    66% { transform: translateY(-5%) rotate(-2deg); }
-    82% { transform: translateY(0) rotate(1deg); }
+    0%, 100% {
+        transform: translateY(0) rotate(0);
+    }
+    28% {
+        transform: translateY(-14%) rotate(-3deg);
+    }
+    48% {
+        transform: translateY(-12%) rotate(3deg);
+    }
+    66% {
+        transform: translateY(-5%) rotate(-2deg);
+    }
+    82% {
+        transform: translateY(0) rotate(1deg);
+    }
 }
 
 .tutorial-room-stage .layer-film-box {
@@ -344,4 +376,108 @@
     bottom: auto;
     width: 43%;
     z-index: 6;
+}
+
+.tutorial-overview-stage {
+    --room-ratio: 1.77683316;
+    background: white;
+}
+
+.tutorial-overview-stage .room-scene {
+    transform: translateX(-2.4%) scale(1.05);
+    transform-origin: 52.4% 50%;
+    transition: transform 1s ease, transform-origin 1s ease;
+}
+
+.tutorial-overview-stage.is-table-focused .room-scene {
+    transform: translateX(-2.4%) scale(2.3);
+    transform-origin: 52.4% 86%;
+}
+
+.tutorial-overview-stage .layer-film-box {
+    left: 37.5%;
+    top: 64.3%;
+    width: 24%;
+}
+
+.tutorial-overview-stage .film-box.is-empty img {
+    filter: none;
+}
+
+.tutorial-overview-stage .roll-tut {
+    left: 60.8%;
+    top: 71.4%;
+    width: 6.5%;
+}
+
+.tutorial-overview-stage.is-table-focused .room-scene::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    background: rgb(255 255 255 / 85%);
+    pointer-events: none;
+}
+
+.tutorial-overview-stage.is-table-focused:not(.is-roll-focused) .film-box,
+.tutorial-overview-stage.is-table-focused:not(.is-roll-focused) .roll-tut {
+    z-index: 8;
+}
+
+.tutorial-overview-stage.is-roll-focused .roll-tut {
+    z-index: 8;
+}
+
+.tutorial-overview-stage .tutorial-text {
+    white-space: pre-line;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tutorial-overview-stage .room-scene {
+        transition: none;
+    }
+}
+
+/* Styling for pop-up of room section transition */
+/* Room transition popup */
+/* Room transition popup */
+
+#room-transition-popup:not([hidden]) {
+    display: grid;
+    place-items: center;
+    z-index: 2000;
+}
+
+.room-transition-window {
+    position: relative;
+    z-index: 1;
+
+    width: min(650px, 90vw);
+    padding: clamp(30px, 5vw, 55px);
+
+    border: 1px solid #d8d2c4;
+    border-radius: 18px;
+
+    background: var(--game-background-soft);
+    box-shadow: 0 22px 70px rgb(0 0 0 / 35%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+
+    text-align: center;
+}
+
+.room-transition-window h2 {
+    margin: 0;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    line-height: 1.4;
+    white-space: pre-line;
+    text-align: center;
+}
+
+.room-transition-window {
+    width: min(1100px, 95vw);
 }

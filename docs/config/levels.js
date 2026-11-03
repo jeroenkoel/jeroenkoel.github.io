@@ -66,8 +66,8 @@ export const normalLevels = [
             "/assets/levels/intention-04/intention-04-keyframe-3.png"
         ],
         answers: [
-            { id: "sit-on-chair", image: "/assets/levels/intention-04/intention-04-answer-1.png", altKey: "answer.sitting", correct: false },
-            { id: "hang-painting", image: "/assets/levels/intention-04/intention-04-answer-2.png", altKey: "answer.hanging", correct: true },
+            { id: "hang-painting", image: "/assets/levels/intention-04/intention-04-answer-1.png", altKey: "answer.hanging", correct: true },
+            { id: "sit-on-chair", image: "/assets/levels/intention-04/intention-04-answer-2.png", altKey: "answer.sitting", correct: false },
             { id: "sweep-floor", image: "/assets/levels/intention-04/intention-04-answer-3.png", altKey: "answer.sweeping", correct: false }
         ]
     },
@@ -137,8 +137,8 @@ export const normalLevels = [
             "/assets/levels/causal-03/causal-03-keyframe-3.png"
         ],
         answers: [
-            { id: "hat-with-wind", image: "/assets/levels/causal-03/causal-03-answer-1.png", altKey: "answer.hatWithWind", correct: true },
-            { id: "hat-against-wind", image: "/assets/levels/causal-03/causal-03-answer-2.png", altKey: "answer.hatAgainstWind", correct: false },
+            { id: "hat-against-wind", image: "/assets/levels/causal-03/causal-03-answer-1.png", altKey: "answer.hatAgainstWind", correct: false },
+            { id: "hat-with-wind", image: "/assets/levels/causal-03/causal-03-answer-2.png", altKey: "answer.hatWithWind", correct: true },
             { id: "top-hat", image: "/assets/levels/causal-03/causal-03-answer-3.png", altKey: "answer.hatTop", correct: false }
         ]
     },
@@ -151,8 +151,8 @@ export const normalLevels = [
             "/assets/levels/causal-04/causal-04-keyframe-3.png"
         ],
         answers: [
-            { id: "ball-hits-head", image: "/assets/levels/causal-04/causal-04-answer-1.png", altKey: "answer.ballHead", correct: true },
-            { id: "ball-at-feet", image: "/assets/levels/causal-04/causal-04-answer-2.png", altKey: "answer.ballFeet", correct: false },
+            { id: "ball-at-feet", image: "/assets/levels/causal-04/causal-04-answer-1.png", altKey: "answer.ballFeet", correct: false },
+            { id: "ball-hits-head", image: "/assets/levels/causal-04/causal-04-answer-2.png", altKey: "answer.ballHead", correct: true },
             { id: "ball-on-slide", image: "/assets/levels/causal-04/causal-04-answer-3.png", altKey: "answer.ballSlide", correct: false }
         ]
     },
@@ -179,8 +179,8 @@ export const normalLevels = [
             "/assets/levels/causal-06/causal-06-keyframe-3.png"
         ],
         answers: [
-            { id: "faucet", image: "/assets/levels/causal-06/causal-06-answer-1.jpeg", altKey: "answer.faucet", correct: false },
-            { id: "dishes", image: "/assets/levels/causal-06/causal-06-answer-2.jpeg", altKey: "answer.dishes", correct: false },
+            { id: "faucet", image: "/assets/levels/causal-06/causal-06-answer-1.png", altKey: "answer.faucet", correct: false },
+            { id: "dishes", image: "/assets/levels/causal-06/causal-06-answer-2.png", altKey: "answer.dishes", correct: false },
             { id: "necklace", image: "/assets/levels/causal-06/causal-06-answer-3.png", altKey: "answer.necklace", correct: true }
         ]
         
@@ -194,9 +194,9 @@ export const normalLevels = [
             "/assets/levels/emotion-01/emotion-01-keyframe-3.png"
         ],
         answers: [
-            { id: "x", image: "/assets/levels/emotion-01/emotion-01-answer-1.jpeg", altKey: "answer.sitting", correct: false },
-            { id: "y", image: "/assets/levels/emotion-01/emotion-01-answer-2.png", altKey: "answer.hanging", correct: false },
-            { id: "z", image: "/assets/levels/emotion-01/emotion-01-answer-3.png", altKey: "answer.sweeping", correct: true }
+            { id: "happy", image: "/assets/levels/emotion-01/emotion-01-answer-1.jpeg", altKey: "answer.happy", correct: false },
+            { id: "eating-cake", image: "/assets/levels/emotion-01/emotion-01-answer-2.png", altKey: "answer.eating-cake", correct: false },
+            { id: "crying", image: "/assets/levels/emotion-01/emotion-01-answer-3.png", altKey: "answer.crying", correct: true }
         ]
     },
     {
@@ -208,9 +208,9 @@ export const normalLevels = [
             "/assets/levels/emotion-02/emotion-02-keyframe-3.png"
         ],
         answers: [
-            { id: "x", image: "/assets/levels/emotion-02/emotion-02-answer-1.png", altKey: "answer.sitting", correct: false },
-            { id: "y", image: "/assets/levels/emotion-02/emotion-02-answer-2.png", altKey: "answer.hanging", correct: false },
-            { id: "z", image: "/assets/levels/emotion-02/emotion-02-answer-3.png", altKey: "answer.sweeping", correct: true }
+            { id: "no-reaction", image: "/assets/levels/emotion-02/emotion-02-answer-1.png", altKey: "answer.no-reaction", correct: false },
+            { id: "drinking", image: "/assets/levels/emotion-02/emotion-02-answer-2.png", altKey: "answer.drinking", correct: false },
+            { id: "terrified", image: "/assets/levels/emotion-02/emotion-02-answer-3.png", altKey: "answer.terrified", correct: true }
         ]
     },
     {
@@ -222,9 +222,9 @@ export const normalLevels = [
             "/assets/levels/emotion-03/emotion-03-keyframe-3.png"
         ],
         answers: [
-            { id: "x", image: "/assets/levels/emotion-03/emotion-03-answer-1.png", altKey: "answer.sitting", correct: true },
-            { id: "y", image: "/assets/levels/emotion-03/emotion-03-answer-2.png", altKey: "answer.hanging", correct: false },
-            { id: "z", image: "/assets/levels/emotion-03/emotion-03-answer-3.png", altKey: "answer.sweeping", correct: false }
+            { id: "angry", image: "/assets/levels/emotion-03/emotion-03-answer-1.png", altKey: "answer.angry-car-gone", correct: true },
+            { id: "happy", image: "/assets/levels/emotion-03/emotion-03-answer-2.png", altKey: "answer.happy-car-gone", correct: false },
+            { id: "eating-apple", image: "/assets/levels/emotion-03/emotion-03-answer-3.png", altKey: "answer.eating-apple", correct: false }
         ]
     },
     {
@@ -236,9 +236,9 @@ export const normalLevels = [
             "/assets/levels/emotion-04/emotion-04-keyframe-3.png"
         ],
         answers: [
-            { id: "x", image: "/assets/levels/emotion-04/emotion-04-answer-1.jpeg", altKey: "answer.sitting", correct: false },
-            { id: "y", image: "/assets/levels/emotion-04/emotion-04-answer-2.jpeg", altKey: "answer.hanging", correct: true },
-            { id: "z", image: "/assets/levels/emotion-04/emotion-04-answer-3.jpeg", altKey: "answer.sweeping", correct: false }
+            { id: "keep-eating", image: "/assets/levels/emotion-04/emotion-04-answer-1.jpeg", altKey: "answer.keep-eating", correct: false },
+            { id: "throw-away", image: "/assets/levels/emotion-04/emotion-04-answer-2.jpeg", altKey: "answer.throw-away", correct: true },
+            { id: "put-in-bag", image: "/assets/levels/emotion-04/emotion-04-answer-3.png", altKey: "answer.put-in-bag", correct: false }
         ]
     },
     {
@@ -250,9 +250,9 @@ export const normalLevels = [
             "/assets/levels/emotion-05/emotion-05-keyframe-3.png"
         ],
         answers: [
-            { id: "x", image: "/assets/levels/emotion-05/emotion-05-answer-1.png", altKey: "answer.sitting", correct: false },
-            { id: "y", image: "/assets/levels/emotion-05/emotion-05-answer-2.png", altKey: "answer.hanging", correct: true },
-            { id: "z", image: "/assets/levels/emotion-05/emotion-05-answer-3.png", altKey: "answer.sweeping", correct: false }
+            { id: "angry-by-win", image: "/assets/levels/emotion-05/emotion-05-answer-1.png", altKey: "answer.angry-by-win", correct: false },
+            { id: "happy-with-win", image: "/assets/levels/emotion-05/emotion-05-answer-2.png", altKey: "answer.happy-with-win", correct: true },
+            { id: "tapping-foot", image: "/assets/levels/emotion-05/emotion-05-answer-3.png", altKey: "answer.tapping-foot", correct: false }
         ]
     },
     {
@@ -264,9 +264,9 @@ export const normalLevels = [
             "/assets/levels/emotion-06/emotion-06-keyframe-3.png"
         ],
         answers: [
-            { id: "x", image: "/assets/levels/emotion-06/emotion-06-answer-1.png", altKey: "answer.sitting", correct: true },
-            { id: "y", image: "/assets/levels/emotion-06/emotion-06-answer-2.png", altKey: "answer.hanging", correct: false },
-            { id: "z", image: "/assets/levels/emotion-06/emotion-06-answer-3.png", altKey: "answer.sweeping", correct: false }
+            { id: "surprised-by-dog", image: "/assets/levels/emotion-06/emotion-06-answer-1.png", altKey: "answer.surprised-by-dog", correct: true },
+            { id: "unphased-by-dog", image: "/assets/levels/emotion-06/emotion-06-answer-2.png", altKey: "answer.unphased-by-dog", correct: false },
+            { id: "rejects-dog", image: "/assets/levels/emotion-06/emotion-06-answer-3.png", altKey: "answer.rejects-dog", correct: false }
         ]
     }
     

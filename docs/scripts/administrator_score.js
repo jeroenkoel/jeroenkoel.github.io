@@ -1,9 +1,4 @@
-/* =========================================
-   TEMPORARY TEST DATA
-
-   Later this can be replaced with data
-   fetched from your API/database.
-========================================= */
+import {initI18n, t, onLanguageChange} from "/scripts/i18n.js";
 
 
 /* =========================================
@@ -11,22 +6,12 @@
 ========================================= */
 
 function formatAnswerLabel(answerId) {
-    if (!answerId || answerId === "N/A") return "N/A";
+    if (!answerId || answerId === "N/A") return t('administrator.notAvailable');
     return answerId.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
 }
 
-const EDUCATION_LEVELS = {
-    1: "Minder dan zes klassen lager onderwijs (ZMLK)",
-    2: "Zes klassen lager onderwijs (LOM/MLK)",
-    3: "Meer dan zes klassen lager onderwijs zonder voltooide vervolgopleiding (VMBO/VGLO)",
-    4: "Gediplomeerde schoolopleiding lager dan MULO (LTS (A/B), LEAO, LHNO, Land-en tuinbouwschool, VMBO-b, beroepsgerichte opleiding, MBO1/2)",
-    5: "MULO(MAVO, HAVO, MBO 3/4, VMBO-t, LTS, LHNO, BOL)",
-    6: "VHMO (HAVO, VWO, HBO, WO propedeuse)",
-    7: "Wetenschappelijk onderwijs (bachelor, master, doctoraal, technische hogeschool, landbouwhogeschool)"
-};
-
-function formatEducationLevel(eduValue) {
-    return EDUCATION_LEVELS[eduValue] || eduValue || "N/A";
+function formatEducationLevel(value) {
+    return value >= 1 && value <= 7 ? t(`administrator.educationLevel${value}`) : t('administrator.notAvailable');
 }
 
 function escapeHtml(str) {
@@ -96,17 +81,18 @@ function renderParticipant(participant) {
 
     const container = document.getElementById("participantInfo");
 
-    const eduText = formatEducationLevel(participant.educationLevel)
+    const eduText = formatEducationLevel(participant.educationLevel);
+    const genderKey = {male: 'administrator.male', female: 'administrator.female', nvt: 'administrator.na'}[participant.gender];
 
     container.innerHTML = `
-        <span class="summary-label">Participant</span>
+        <span class="summary-label">${t('administrator.participant')}</span>
 
-        <h3>${participant.id}</h3>
+        <h3>${escapeHtml(participant.id)}</h3>
 
         <div class="participant-details">
-            <p>Age: ${participant.age}</p>
-            <p>Gender: ${participant.gender}</p>
-            <p>Education level: ${eduText}</p>
+            <p>${t('administrator.age')}: ${escapeHtml(participant.age === 'N/A' ? t('administrator.notAvailable') : participant.age)}</p>
+            <p>${t('administrator.gender')}: ${escapeHtml(genderKey ? t(genderKey) : t('administrator.notAvailable'))}</p>
+            <p>${t('administrator.education')}: ${escapeHtml(eduText)}</p>
         </div>
     `;
 }
@@ -125,7 +111,7 @@ function renderTotalScore(categories) {
         calculateTotalScore(categories);
 
     const total =
-        calculateTotalQuestions(categories);
+        18;
 
 
     // Prevent division by zero
@@ -138,7 +124,7 @@ function renderTotalScore(categories) {
 
     container.innerHTML = `
         <span class="summary-label">
-            Total score
+            ${t('administrator.totalScore')}
         </span>
 
         <div class="total-score-number">
@@ -194,20 +180,20 @@ function createScoreCategory(category) {
                 WRONG ANSWER
                 Columns: [Number] [Given Answer] [✕] [→ Correct Answer] [Time]
                 ------------------------- */
-                : `<span class="wrong">✕</span><span class="correct-answer">→ ${correctText}</span>`;
+                : `<span class="wrong">✕</span><span class="correct-answer">→ ${escapeHtml(correctText)}</span>`;
 
 
                 const transcriptionHtml = answer.transcription
-                    ? `<div class="scenario-transcript"><strong>Transcript:</strong> "${escapeHtml(answer.transcription)}"</div>` 
-                    : `<div class="scenario-transcript muted"><strong>Transcript:</strong> No audio recording</div>`;
+                    ? `<div class="scenario-transcript"><strong>${t('administrator.transcript')}:</strong> "${escapeHtml(answer.transcription)}"</div>` 
+                    : `<div class="scenario-transcript muted"><strong>${t('administrator.transcript')}:</strong> ${t('administrator.noAudioRecording')}</div>`;
  
                 return `
                     <div class="scenario-item">
                         <div class="scenario-row">
                             <span class="scenario-number">${index + 1}.</span>
-                            <span class="given-answer">${givenText}</span>
+                            <span class="given-answer">${escapeHtml(givenText)}</span>
                             ${statusIcon}
-                            <span class"answer-time">${timeStr}</span>
+                            <span class="answer-time">${timeStr}</span>
                         </div>
                         ${transcriptionHtml}
                     </div>
@@ -217,16 +203,16 @@ function createScoreCategory(category) {
 
     /* Create the category card */
     card.innerHTML = `
-        <h3>${category.name}</h3>
+        <h3>${escapeHtml(t(`administrator.category${category.name}`))}</h3>
 
         <p class="scenario-count">
             ${category.answers.length}
-            ${category.answers.length === 1 ? "scenario" : "scenarios"}
+            ${t(category.answers.length === 1 ? 'administrator.scenario' : 'administrator.scenarios')}
         </p>
 
         <div class="scenario-list">
             <div class="scenario-list-header">
-                <span>Answer time</span>
+                <span>${t('administrator.answerTime')}</span>
             </div>
             ${answerRows}
         </div>
@@ -270,67 +256,133 @@ function renderScoreCategories(categories) {
 }
 
 
-/* =========================================
-   FETCH & RENDER COMPLETE SCORE PAGE
-========================================= */
+let selectedParticipantId = null;
 
-async function loadParticipantScore(userId) {
-    const searchError = document.getElementById("scoreSearchError");
-    if (searchError) searchError.textContent = "";
+function showParticipantsList() {
+    selectedParticipantId = null;
+    window.selectedAdminParticipant = null;
+    document.getElementById('participantResult').hidden = true;
+    document.getElementById('participantsListView').hidden = false;
+    searchParticipants();
+}
 
-    if (!userId) {
-        if (searchError) searchError.textContent = "Please enter a valid participant number";
-        return;
-    }
-
+async function searchParticipants() {
+    await initI18n();
+    const search = document.getElementById('scoreParticipantInput').value.trim();
+    const list = document.getElementById('participantsList');
+    const error = document.getElementById('scoreSearchError');
+    error.textContent = '';
     try {
-        const response = await fetch(`/api/users/${encodeURIComponent(userId)}/score-details`);   
-        
+        const response = await fetch(`/api/users?search=${encodeURIComponent(search)}`);
+        if (!response.ok) throw new Error(t('administrator.loadParticipantsFailed'));
         const result = await response.json();
-        
-        if(response.ok && result.status === "success") {
-            renderParticipant(result.data.participant);
-            renderTotalScore(result.data.categories);
-            renderScoreCategories(result.data.categories);
-            document.getElementById("scoreParticipantInput").value = "";
-        } else {
-            const errorMsg = result.message || "user not found.";
-            if (searchError) searchError.textContent = errorMsg;
-
-            document.getElementById("participantInfo").innerHTML = `<p style="color: red;">${errorMsg}</p>`;
-            document.getElementById("totalScore").innerHTML = "";
-            document.getElementById("scoreCategories").innerHTML = "";
+        list.replaceChildren();
+        if (!result.data.length) {
+            error.textContent = t('administrator.noParticipantsFound');
+            return;
+        }
+        for (const person of result.data) {
+            const row = document.createElement('tr');
+            row.tabIndex = 0;
+            row.setAttribute('aria-label', `${t('administrator.participant')} ${person.id}`);
+            const id = document.createElement('th');
+            id.scope = 'row';
+            id.textContent = person.id;
+            const status = document.createElement('td');
+            status.textContent = t(person.complete ? 'administrator.complete' : 'administrator.incomplete');
+            const progress = document.createElement('td');
+            progress.textContent = `${person.answered}/${person.expected}`;
+            row.append(id, status, progress);
+            row.addEventListener('click', () => loadParticipantScore(person.id));
+            row.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    loadParticipantScore(person.id);
+                }
+            });
+            list.appendChild(row);
         }
     } catch (err) {
-        console.error("Error fetching participant score data:", err);
-        if (searchError) searchError.textContent = "Server communication error.";
+        error.textContent = err.message;
     }
 }
 
-
-/* =========================================
-   INITIALISE
-========================================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-    const searchBtn = document.getElementById("searchParticipantBtn");
-    const searchInput = document.getElementById("scoreParticipantInput");
-    const printPDF = document.getElementById("downloadParticipant");
-
-    if (searchBtn && searchInput && printPDF) {
-        searchBtn.addEventListener("click", () => {
-            loadParticipantScore(searchInput.value.trim());
-        });
-
-        searchInput.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                loadParticipantScore(searchInput.value.trim());
-            }
-        });
-
-        printPDF.addEventListener("click", () => {
-            window.print();
-        })
+async function loadParticipantScore(userId) {
+    const error = document.getElementById(document.getElementById('participantsListView').hidden
+        ? 'participantDetailError' : 'scoreSearchError');
+    error.textContent = '';
+    try {
+        const response = await fetch(`/api/users/${encodeURIComponent(userId)}/score-details`);
+        const result = await response.json();
+        if (!response.ok) throw new Error(t('administrator.participantNotFound'));
+        selectedParticipantId = userId;
+        window.selectedAdminParticipant = result.data;
+        renderParticipant(result.data.participant);
+        renderTotalScore(result.data.categories);
+        renderScoreCategories(result.data.categories);
+        const folder = document.getElementById('sessionFolder');
+        folder.textContent = `${t('administrator.sessionFolder')}: ${result.data.session.folder} · ${t(result.data.session.complete ? 'administrator.complete' : 'administrator.incomplete')} (${result.data.session.answered}/${result.data.session.expected})`;
+        document.getElementById('participantsListView').hidden = true;
+        document.getElementById('participantResult').hidden = false;
+        document.dispatchEvent(new CustomEvent('admin-participant-loaded', {detail: result.data}));
+    } catch (err) {
+        error.textContent = err.message;
     }
+}
 
+async function downloadCsv(userId) {
+    try {
+        const query = userId === undefined ? '' : `?userId=${encodeURIComponent(userId)}`;
+        const response = await fetch(`/api/export-csv${query}`);
+        if (!response.ok) throw new Error(t('administrator.csvDownloadFailed'));
+        const url = URL.createObjectURL(await response.blob());
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = userId === undefined ? 'participant_data_export.csv' : `participant_${userId}.csv`;
+        anchor.click();
+        URL.revokeObjectURL(url);
+    } catch (err) {
+        document.getElementById(userId === undefined ? 'scoreSearchError' : 'participantDetailError').textContent = err.message;
+    }
+}
+
+window.reloadAdminParticipant = async () => {
+    if (selectedParticipantId) await loadParticipantScore(selectedParticipantId);
+    else await searchParticipants();
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('scoreParticipantInput');
+    document.getElementById('searchParticipantBtn').addEventListener('click', searchParticipants);
+    searchInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') searchParticipants();
+    });
+    document.getElementById('backToParticipantsBtn').addEventListener('click', showParticipantsList);
+    document.getElementById('downloadParticipant').addEventListener('click', () => window.print());
+    document.getElementById('downloadCsvBtn').addEventListener('click', () => {
+        if (selectedParticipantId) downloadCsv(selectedParticipantId);
+    });
+    document.getElementById('downloadAllCsvBtn').addEventListener('click', () => downloadCsv());
+    document.getElementById('deleteParticipantBtn').addEventListener('click', async () => {
+        if (!selectedParticipantId || !confirm(t('administrator.deleteConfirm', {id: selectedParticipantId}))) return;
+        try {
+            const response = await fetch(`/api/users/${encodeURIComponent(selectedParticipantId)}`, {method: 'DELETE'});
+            if (!response.ok) throw new Error(t('administrator.deleteFailed'));
+            showParticipantsList();
+        } catch (err) {
+            document.getElementById('participantDetailError').textContent = err.message;
+        }
+    });
+    searchParticipants();
+    onLanguageChange(() => {
+        const data = window.selectedAdminParticipant;
+        if (data) {
+            renderParticipant(data.participant);
+            renderTotalScore(data.categories);
+            renderScoreCategories(data.categories);
+            const session = data.session;
+            document.getElementById('sessionFolder').textContent = `${t('administrator.sessionFolder')}: ${session.folder} · ${t(session.complete ? 'administrator.complete' : 'administrator.incomplete')} (${session.answered}/${session.expected})`;
+        }
+        if (!document.getElementById('participantsListView').hidden) searchParticipants();
+    });
 });

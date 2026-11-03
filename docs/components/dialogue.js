@@ -1,4 +1,5 @@
 import { t } from "/scripts/i18n.js";
+import {isDebugMode, onSettingsChange} from "/scripts/ui-settings.js";
 import { isVoiceOverPlaying, onVoiceOverChange, playVoiceOver, stopVoiceOver } from "/scripts/voice-over.js";
 
 class DialogueCard extends HTMLElement {
@@ -13,9 +14,9 @@ class DialogueCard extends HTMLElement {
         this.dialogueText = this.querySelector(".dialogue-text");
         this.nextButton = this.querySelector(".dialogue-next");
         this.nextButton.addEventListener("click", () => this.next());
-        onVoiceOverChange(() => {
-            this.nextButton.disabled = isVoiceOverPlaying();
-        });
+        const updateNext = () => { this.nextButton.disabled = isVoiceOverPlaying() && !isDebugMode(); };
+        onVoiceOverChange(updateNext);
+        onSettingsChange(updateNext);
         this.hidden = true;
     }
 
@@ -31,12 +32,13 @@ class DialogueCard extends HTMLElement {
         const message = this.messages[this.currentIndex];
         this.dialogueText.dataset.i18n = message.key;
         this.dialogueText.textContent = t(message.key);
-        const last = this.currentIndex === this.messages.length - 1;
+        const last = this.currentIndex === this.messages.length - 1 && !message.continueButton;
         this.nextButton.dataset.i18n = last ? "common.close" : "tutorial.continue";
         this.nextButton.textContent = t(this.nextButton.dataset.i18n);
         this.nextButton.dataset.icon = last ? "✕" : "→";
         this.nextButton.classList.toggle("danger-button", last);
         this.nextButton.hidden = Boolean(message.noButton);
+        message.onShow?.();
         playVoiceOver(message.audio);
     }
 

@@ -1,6 +1,21 @@
 import { applyTranslations, initI18n } from "/scripts/i18n.js";
 import "./dialogue.js"
+import {updateReplayAvailability} from "/scripts/level-popup.js"
 import { playVoiceOver } from "/scripts/voice-over.js";
+const $ = id => document.getElementById(id);
+const windowElement = $("levelWindow");
+
+function applyFilmBorderStyle() {
+    const style = localStorage.getItem("filmBorderStyle") || "polygon";
+
+    document.documentElement.classList.toggle(
+        "film-border-polygon",
+        style === "polygon"
+    );
+}
+
+applyFilmBorderStyle();
+
 class LevelPopup extends HTMLElement {
     connectedCallback() {
         if (this.firstElementChild) return;
@@ -9,6 +24,11 @@ class LevelPopup extends HTMLElement {
             <div id="levelModal" class="level-modal" aria-hidden="true">
                 <div class="level-backdrop"></div>
                 <section id="levelWindow" class="level-window phase-video" role="dialog" aria-modal="true" data-i18n-aria-label="level.dialogAria">
+                    <div class="tutorial-instruction-measure" aria-hidden="true">
+                        <p class="tutorial-text" data-i18n="helper.answer2"></p>
+                        <p class="tutorial-text" data-i18n="helper.answer3"></p>
+                        <p class="tutorial-text" data-i18n="helper.answer4"></p>
+                    </div>
                     <div id="videoStage" class="video-stage" data-i18n-aria-label="level.videoStageAria">
                         <div class="film-holes film-holes-top" aria-hidden="true"></div>
                         <div class="video-frame">
@@ -32,26 +52,27 @@ class LevelPopup extends HTMLElement {
                             <div id="reflectionFilmKeyframeStrip" class="film-puzzle-keyframe-strip"></div>
                             <div id="reflectionFilmAnswerSlot" class="film-puzzle-answer-slot"></div>
                         </div>
-                        <h2 data-i18n="level.reflectionPrompt"></h2>
-                        <p class="reflection-instructions" data-i18n="level.reflectionInstructions"></p>
-                        <div class="reflection-bottom">
-                            <div class="reflection-microphone">
-                                <div id="microphoneIndicator" class="microphone-indicator" aria-hidden="true">
-                                    <svg class="microphone-completion-ring" viewBox="0 0 120 120">
-                                        <circle cx="60" cy="60" r="56" pathLength="1"></circle>
-                                    </svg>
-                                    <svg class="microphone-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-                                        <rect x="22" y="8" width="20" height="32" rx="10"></rect>
-                                        <path d="M16 31v3c0 9 7 16 16 16s16-7 16-16v-3"></path>
-                                        <path d="M32 50v8"></path>
-                                        <path d="M24 58h16"></path>
-                                    </svg>
+                        <div id="reflectionContent">
+                            <h2 style="white-space: pre-line;" data-i18n="level.reflectionPrompt"></h2>
+                            <div class="reflection-bottom">
+                                <div class="reflection-microphone">
+                                    <button id="stopRecording" class="primary-button stop-recording-button" type="button" hidden data-icon="■" data-i18n="microphone.stop" data-i18n-aria-label="microphone.stopAria"></button>
+                                    <div id="microphoneIndicator" class="microphone-indicator" aria-hidden="true">
+                                        <svg class="microphone-completion-ring" viewBox="0 0 120 120">
+                                            <circle cx="60" cy="60" r="56" pathLength="1"></circle>
+                                        </svg>
+                                        <svg class="microphone-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                                            <rect x="22" y="8" width="20" height="32" rx="10"></rect>
+                                            <path d="M16 31v3c0 9 7 16 16 16s16-7 16-16v-3"></path>
+                                            <path d="M32 50v8"></path>
+                                            <path d="M24 58h16"></path>
+                                        </svg>
+                                    </div>
+                                    <p id="microphoneStatus" role="status"></p>
                                 </div>
-                                <p id="microphoneStatus" role="status"></p>
-                                <button id="stopRecording" class="primary-button stop-recording-button" type="button" hidden data-icon="■" data-i18n="microphone.stop" data-i18n-aria-label="microphone.stopAria"></button>
-                            </div>
-                            <div class="reflection-next">
-                                <button id="continueToLevel" class="primary-button reflection-confirm-button" type="button" hidden data-icon="✓" data-i18n="common.confirmAndContinue" data-i18n-aria-label="common.confirmAndContinue"></button>
+                                <div class="reflection-next">
+                                    <button id="continueToLevel" class="primary-button reflection-confirm-button" type="button" hidden data-icon="✓" data-i18n="common.confirmAndContinue" data-i18n-aria-label="common.confirmAndContinue"></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -112,13 +133,7 @@ class LevelPopup extends HTMLElement {
             this.startTutorial();
         });
     }
-    // startTutorial() {
-    //     this.dialogue = this.querySelector("#levelDialogue");
 
-    //     if (this.isTutorialLevel()) {
-    //         this.showVideoTutorial();
-    //     }
-    // }
     startTutorial() {
         this.dialogue = this.querySelector("#levelDialogue");
     }
@@ -128,7 +143,7 @@ class LevelPopup extends HTMLElement {
             {
                 key: "helper.video",
                 noButton: true,
-                audio: "../assets/sounds/voice_over/ne/video.mp3"
+                audio: "../assets/sounds/voice_over/ne/step8.mp3"
 
             }
 
@@ -136,41 +151,105 @@ class LevelPopup extends HTMLElement {
     }
 
     showReflectionTutorial() {
-        playVoiceOver("/assets/sounds/voice_over/ne/recording.mp3");
+        const reflectionContent = document.getElementById("reflectionContent");
+        const replayButton = document.querySelector(".replay-reflection")
+        const reflectionPreview = document.getElementById("reflectionFilmPreview");
+
+        if (reflectionContent) {
+            reflectionContent.hidden = true;
+        }
+        reflectionPreview.classList.remove("is-whitened");
+
+        if (replayButton) {
+            replayButton.hidden = true;
+            replayButton.disabled = true;
+            replayButton.classList.add("tutorial-replay-locked");
+            replayButton.classList.remove("tutorial-replay-ready");
+
+            replayButton.addEventListener("click", () => {
+                this.dialogue.close();
+                replayButton.classList.remove(
+                    "tutorial-replay-locked",
+                    "tutorial-replay-ready"
+                );
+                if (reflectionContent) {
+                    reflectionContent.hidden = false;
+                }
+                updateReplayAvailability();
+            }, { once: true });
+        }
+        this.showDialogue([
+            {
+                key: "helper.reflection1",
+                audio: "../assets/sounds/voice_over/ne/step9.mp3",
+
+                onShow: () => {
+                    if (replayButton) {
+                        replayButton.hidden = true;
+                        replayButton.disabled = true;
+                        replayButton.classList.add("tutorial-replay-locked");
+                        replayButton.classList.remove("tutorial-replay-ready");
+                        updateReplayAvailability();
+                    }
+                }
+            },
+            {
+                key: "helper.reflection2",
+                audio: "../assets/sounds/voice_over/ne/step10.mp3",
+
+                onShow: () => {
+                    
+                    if (replayButton) {
+
+                        replayButton.hidden = false;
+                        replayButton.disabled = true;
+                        reflectionPreview.classList.add("is-whitened");
+                        reflectionPreview.hidden = false;
+                        replayButton.classList.add("tutorial-replay-locked");
+                        replayButton.classList.add("tutorial-highlight");
+                        replayButton.classList.remove("tutorial-replay-ready");
+                        // updateReplayAvailability();
+                    }
+                }
+            },
+            {
+                key: "helper.reflection3",
+                audio: "../assets/sounds/voice_over/ne/step11.mp3",
+                noButton: true,
+
+                onShow: () => {
+                    if (replayButton) {
+                        replayButton.hidden = false;
+                        replayButton.classList.remove("tutorial-replay-locked");
+                        replayButton.classList.add("tutorial-replay-ready");
+                        replayButton.classList.add("tutorial-highlight");
+                        // updateReplayAvailability();
+                        replayButton.disabled = false;
+                        reflectionPreview.classList.add("is-whitened");
+                        reflectionPreview.hidden = false;
+                        
+                    }
+                }
+            },
+        ]);
+        // playVoiceOver("/assets/sounds/voice_over/ne/recording.mp3");
     }
 
+ 
     showAnswerTutorial() {
         this.showDialogue([
             {
                 key: "helper.answer1",
-                audio: "../assets/sounds/voice_over/ne/answer1.mp3"
-            },
-            {
-                key: "helper.answer2",
-                audio: "../assets/sounds/voice_over/ne/answer2.mp3"
-            },
-            {
-                key: "helper.answer3",
-                audio: "../assets/sounds/voice_over/ne/answer3.mp3"
+                continueButton: true,
+                audio: "../assets/sounds/voice_over/ne/step14.mp3"
             }
         ]);
     }
+
     isTutorialLevel() {
         return this.dataset.isTutorial === "true";
     }
-    // showDialogue(messages, audioFile = null, onComplete = null) {
-    //     // Stop any previous voice-over
-    //     this.voiceOver?.pause();
 
-    //     this.dialogue.start(messages, onComplete);
-
-    //     if (audioFile) {
-    //         this.voiceOver = new Audio(audioFile);
-    //         this.voiceOver.play().catch(error => {
-    //             console.warn("Voice-over could not play:", error);
-    //         });
-    //     }
-    // }
     showDialogue(messages, onComplete = null) {
         this.dialogue.start(messages, onComplete);
     }

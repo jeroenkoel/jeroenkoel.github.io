@@ -763,6 +763,12 @@ body.level-open {
     text-align: center;
 }
 
+.tutorial-card.center-stage {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .reflection-bottom {
     width: 100%;
     min-height: 0;
@@ -837,6 +843,7 @@ body.level-open {
 }
 
 .stop-recording-button {
+    margin-top: 20px;
     --button-edge: #7c302c;
     min-height: clamp(52px, 6.4vh, 66px);
     padding: .72em 1.35em;
@@ -1002,4 +1009,37 @@ body.level-open {
 
 .phase-answer #levelDialogue .tutorial-card {
     top: calc(var(--film-puzzle-frame-height) + 20px);
+}
+
+#levelDialogue.reflection-active .tutorial-card {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.tutorial-highlight {
+    position: relative;
+    outline: 3px solid #578846;
+    outline-offset: 5px;
+}
+
+.tutorial-highlight::after {
+    content: "⬇";
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 200px;
+    color: #f3dfa0;
+    opacity: 1;
+    filter: none;
+    animation: arrowBounce 0.8s infinite alternate;
+}
+
+@keyframes arrowBounce {
+    from {
+        transform: translate(-50%, 0);
+    }
+    to {
+        transform: translate(-50%, -8px);
+    }
 }

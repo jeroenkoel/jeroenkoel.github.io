@@ -1,8 +1,8 @@
 import { initI18n, onLanguageChange, t } from "/scripts/i18n.js";
 import { initLevelPopup, openLevel } from "/scripts/level-popup.js";
 import { tutorialLevel, normalLevels } from "/config/levels.js";
-import { isDebugMode } from "/scripts/ui-settings.js";
-import { isVoiceOverPlaying, onVoiceOverChange, playVoiceOver } from "/scripts/voice-over.js";
+import { isDebugMode, onSettingsChange } from "/scripts/ui-settings.js";
+import { isVoiceOverPlaying, onVoiceOverChange, playVoiceOver, stopVoiceOver } from "/scripts/voice-over.js";
 
 await initI18n();
 
@@ -10,7 +10,6 @@ const rolls = document.querySelectorAll(".film-roll");
 const levelModal = document.getElementById("levelModal");
 const stage = document.querySelector(".room-stage");
 const scenes = [...document.querySelectorAll(".room-scene")];
-const title = document.querySelector(".room-header h1");
 const hintButton = document.getElementById("rollHintButton");
 const CLEAN_ROOM_ANIMATION_MS = 3000;
 const HINT_IDLE_MS = 15000;
@@ -18,13 +17,14 @@ const HINT_ANIMATION_MS = 2800;
 const isTutorial = Boolean(document.querySelector("level-popup[data-is-tutorial]"));
 const urlParams = new URLSearchParams(window.location.search);
 
-
 let sceneIndex = 0;
 let nextLevelIndex = 0;
+let collectedRolls = isTutorial ? 0 : 1;
+
 let idleTimer = null;
 let hintTimer = null;
 let hintedRoll = null;
-let collectedRolls = isTutorial ? 0 : 1;
+
 
 function updateFilmBox(animate = false) {
     const filmBox = (isTutorial ? stage : scenes[sceneIndex]).querySelector(".film-box");
@@ -88,13 +88,43 @@ function playHint() {
 
 
 if (isTutorial) {
-    onVoiceOverChange(() => {
-        const busy = isVoiceOverPlaying();
-        rolls.forEach(roll => { roll.disabled = busy; });
+    const steps = [
+        ["tutorial.rollsScattered", "voice-over-scattered"],
+        ["tutorial.intro2", "voice-over-torn"],
+        ["tutorial.intro3", "voice-over-repair"],
+        ["tutorial.intro3b", "voice-over-practice"],
+        ["tutorial.intro4", "voice-over-table"],
+        ["tutorial.selectionRoll", "voice-over-5"]
+    ];
+    const text = document.getElementById("tutorial-selection-text");
+    const next = document.getElementById("tutorial-next");
+    let step = 0;
+
+    function showTutorialStep() {
+        const [key, audioId] = steps[step];
+        text.dataset.i18n = key;
+        text.textContent = t(key);
+        stage.classList.toggle("is-table-focused", step >= 4);
+        stage.classList.toggle("is-roll-focused", step === 5);
+        next.hidden = step === 5;
+        playVoiceOver(document.getElementById(audioId));
+    }
+
+    const updateTutorialButtons = () => {
+        const busy = isVoiceOverPlaying() && !isDebugMode();
+        rolls.forEach(roll => { roll.disabled = step < 5 || busy; });
+        next.disabled = busy;
         document.getElementById("start-game").disabled = busy;
         scheduleIdleHint();
+    };
+    onVoiceOverChange(updateTutorialButtons);
+    onSettingsChange(updateTutorialButtons);
+    next.addEventListener("click", () => {
+        if (next.disabled || step >= 5) return;
+        step++;
+        showTutorialStep();
     });
-    if (urlParams.get("playAudio") === "true") playVoiceOver(document.getElementById("voice-over-5"));
+    showTutorialStep();
 }
 
 function showScene(index) {
@@ -106,14 +136,12 @@ function showScene(index) {
     });
     stage.className = `room-stage ${scenes[index].dataset.room}-room-stage`;
     stage.dataset.i18nAriaLabel = scenes[index].dataset.roomAria;
-    title.dataset.i18n = index === scenes.length - 1 ? "selection.endingTitle" : "selection.title";
     updateRollLabels();
     scheduleIdleHint();
 }
 
 function updateRollLabels() {
     stage.setAttribute("aria-label", t(stage.dataset.i18nAriaLabel));
-    title.textContent = t(title.dataset.i18n);
     rolls.forEach(roll => {
         roll.setAttribute("aria-label", t("selection.openRollAria", { number: roll.dataset.rollNumber }));
     });
@@ -125,6 +153,7 @@ function animateCleanRoom(scene, nextSceneIndex) {
     const sparkles = document.createElement("div");
     sparkles.className = "room-sparkles";
     sparkles.setAttribute("aria-hidden", "true");
+
     [[23, 34], [69, 25], [43, 57], [81, 65], [29, 79], [62, 82]].forEach(([left, top], index) => {
         const sparkle = document.createElement("span");
         sparkle.className = "room-sparkle";
@@ -134,15 +163,51 @@ function animateCleanRoom(scene, nextSceneIndex) {
         sparkle.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 0l3.2 8.8L24 12l-8.8 3.2L12 24l-3.2-8.8L0 12l8.8-3.2Z"/></svg>';
         sparkles.appendChild(sparkle);
     });
+
     scene.appendChild(sparkles);
+
     setTimeout(() => sparkles.remove(), CLEAN_ROOM_ANIMATION_MS);
+
+    // Show popup after cleaning animation
     setTimeout(() => {
-        if (nextLevelIndex >= normalLevels.length) {
+        const isLastRoom = nextLevelIndex >= normalLevels.length;
+    
+        // After the final room, continue to the ending
+        if (isLastRoom) {
             switchScene("ending.html");
             return;
         }
-        showScene(nextSceneIndex);
-    }, CLEAN_ROOM_ANIMATION_MS + 1000);
+    
+        const popup = document.getElementById("room-transition-popup");
+        const popupTitle = document.getElementById("room-transition-title");
+        const nextButton = document.getElementById("room-transition-next");
+
+        popupTitle.dataset.i18n = nextSceneIndex === 1
+            ? "section.transitionTitle1" : "section.transitionTitle2";
+        popupTitle.textContent = t(popupTitle.dataset.i18n);
+        nextButton.textContent = t("selection.transitionNextButton");
+        popup.hidden = false;
+
+        const updateNextButton = () => {
+            const blocked = isVoiceOverPlaying() && !isDebugMode();
+            nextButton.disabled = blocked;
+            if (!blocked) nextButton.focus();
+        };
+        const stopWatchingAudio = onVoiceOverChange(updateNextButton);
+        const stopWatchingSettings = onSettingsChange(updateNextButton);
+        const audioNumber = nextSceneIndex === 1 ? 2 : 3;
+        playVoiceOver(`/assets/sounds/voice_over/ne/introduce_room_section_${audioNumber}.mp3`);
+
+        nextButton.onclick = () => {
+            if (nextButton.disabled) return;
+            stopWatchingAudio();
+            stopWatchingSettings();
+            stopVoiceOver();
+            popup.hidden = true;
+            showScene(nextSceneIndex);
+        };
+    
+    }, CLEAN_ROOM_ANIMATION_MS);
 }
 
 function completeRoll(rollNumber) {
@@ -170,7 +235,6 @@ function completeRoll(rollNumber) {
     scheduleIdleHint();
 
     if (!scene.querySelector(".film-roll:not(.completed)")) {
-        title.dataset.i18n = "selection.cleanedTitle";
         stage.dataset.i18nAriaLabel = "selection.cleanedRoomAria";
         updateRollLabels();
         animateCleanRoom(scene, sceneIndex + 1);
@@ -182,6 +246,7 @@ rolls.forEach(roll => {
         if (roll.disabled || roll.classList.contains("completed")) return;
         clearTimeout(idleTimer);
         stopHint();
+        stage.classList.remove("is-roll-focused");
         playButtonSound();
         const level = isTutorial ? tutorialLevel : normalLevels[nextLevelIndex];
         if (level) openLevel(level, roll.dataset.rollNumber);
@@ -214,7 +279,8 @@ if (isTutorial) {
     updateRollLabels();
     scheduleIdleHint();
 }
-else showScene(0);
+else showScene(0)
+
 initLevelPopup();
 
 const previewLevel = [tutorialLevel, ...normalLevels].find(level => level.id === urlParams.get("preview"));

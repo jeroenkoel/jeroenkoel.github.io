@@ -1,261 +1,82 @@
-/* =========================================
-   PARTICIPANT DATA
-========================================= */
-function getParticipantFormData() {
+import {t} from '/scripts/i18n.js';
 
-    const participantNumber =
-        document.getElementById("participantNumber").value.trim();
-
-    const age =
-        document.getElementById("participantAge").value.trim();
-
-    const gender =
-        document.querySelector(
-            'input[name="participantGender"]:checked'
-        )?.value || "";
-
-    const educationLevel =
-        document.getElementById("educationLevel").value;
-
-
-    return {
-        participantNumber,
-        age,
-        gender,
-        educationLevel
-    };
-}
-
-function clearParticipantForm() {
-    document.getElementById("participantNumber").value = "";
-    document.getElementById("participantAge").value = "";
-
-    const checkedGender = document.querySelector('input[name="participantGender"]:checked');
-    if (checkedGender) {
-        checkedGender.checked = false;
-    }
-
-    document.getElementById("educationLevel").selectedIndex = 0;
-
-    const participantNumberError = document.getElementById("participantNumberError");
-    const participantAgeError = document.getElementById("participantAgeError");
-
-    if (participantNumberError) participantNumberError.textContent = "";
-    if (participantAgeError) participantAgeError.textContent = "";
-}
-
-/* =========================================
-   VALIDATE PARTICIPANT DATA
-========================================= */
-
-function validateParticipantData(participant) {
-
-    const errors = [];
-
-    // Participant number
-    if (participant.participantNumber === "") {
-        errors.push("Please enter a participant number.");
-    }
-    else if (!/^\d+$/.test(participant.participantNumber)) {
-        errors.push("Participant number must contain numbers only.");
-    }
-
-
-    // Age
-    if (participant.age === "") {
-        errors.push("Please enter an age.");
-    }
-    else if (!/^\d+$/.test(participant.age)) {
-        errors.push("Age must contain numbers only.");
-    }
-    else if (
-        Number(participant.age) < 0 ||
-        Number(participant.age) > 150
-    ) {
-        errors.push("Age must be between 0 and 150.");
-    }
-
-
-    // Gender
-    const allowedGenders = [
-        "male",
-        "female",
-        "nvt"
-    ];
-
-    if (!allowedGenders.includes(participant.gender)) {
-        errors.push("Please select a gender.");
-    }
-
-
-    // Education level
-    if (participant.educationLevel === "") {
-        errors.push("Please select an education level.");
-    }
-
-
-    return errors;
-}
-
-
-/* =========================================
-   SHOW SAVE MESSAGE
-========================================= */
-
-function showSaveMessage(message, type) {
-
-    const messageElement =
-        document.getElementById("saveMessage");
-
-    messageElement.textContent = message;
-
-    messageElement.classList.remove(
-        "success",
-        "error"
-    );
-
-    messageElement.classList.add(type);
-}
-
-
-/* =========================================
-   SAVE PARTICIPANT DATA
-========================================= */
-
-async function saveParticipantData() {
-
-    const participant = getParticipantFormData();
-
-    const errors = validateParticipantData(participant);
-
-    if (errors.length > 0) {
-
-        showSaveMessage(
-            errors.join("\n"),
-            "error"
-        );
-        return;
-    }
-
-    const payload = {
-        pNumber: String(participant.participantNumber),
-        age: Number(participant.age),
-        gender: participant.gender,
-        eduScale: participant.educationLevel ? Number(participant.educationLevel) : null
-    };
-
-    try {
-        const response = await fetch("/api/userData", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.status === 'success') {
-            showSaveMessage("Participant data successfully saved!", "success");
-            clearParticipantForm();
-        } else {
-            const serverMsg = result.message || "Failed to save particiapnt data.";
-            alert("Error: " + serverMsg);
-            showSaveMessage(serverMsg, "error");
-        }
-    } catch (err) {
-        console.error("Error submitting participant data:", err);
-        alert("An error occured while communicating with the server.");
-        showSaveMessage("Network error. Please try again.", "error");
-    }
-}
-
-function allowNumbersOnly(input, errorElement) {
-
-    const originalValue = input.value;
-
-    // Remove everything that is not a number
-    const numericalValue = originalValue.replace(/\D/g, "");
-
-    // Check if something invalid was entered
-    if (originalValue !== numericalValue) {
-        errorElement.textContent = "Please enter numbers only.";
-    } else {
-        errorElement.textContent = "";
-    }
-
-    // Put only the numerical value back into the input
-    input.value = numericalValue;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    populateEducationDropdown();
-
-    const saveButton =
-        document.getElementById("saveParticipantData");
-
-    const participantNumber =
-        document.getElementById("participantNumber");
-
-    const participantAge =
-        document.getElementById("participantAge");
-
-    const participantNumberError =
-        document.getElementById("participantNumberError");
-
-    const participantAgeError =
-        document.getElementById("participantAgeError");
-
-
-    participantNumber.addEventListener("input", () => {
-        allowNumbersOnly(
-            participantNumber,
-            participantNumberError
-        );
-    });
-
-
-    participantAge.addEventListener("input", () => {
-        allowNumbersOnly(
-            participantAge,
-            participantAgeError
-        );
-    });
-
-
-    if (saveButton) {
-        saveButton.addEventListener(
-            "click",
-            saveParticipantData
-        );
-    }
-
-});
-
-/* ========================================
-   EDUCATION LEVEL CONFIGURATION (MODULAR)
-======================================== */
-
-const EDUCATION_LEVELS = {
-    1: "Minder dan zes klassen lager onderwijs (ZMLK)",
-    2: "Zes klassen lager onderwijs (LOM/MLK)",
-    3: "Meer dan zes klassen lager onderwijs zonder voltooide vervolgopleiding (VMBO/VGLO)",
-    4: "Gediplomeerde schoolopleiding lager dan MULO (LTS (A/B), LEAO, LHNO, Land-en tuinbouwschool, VMBO-b, beroepsgerichte opleiding, MBO1/2)",
-    5: "MULO(MAVO, HAVO, MBO 3/4, VMBO-t, LTS, LHNO, BOL)",
-    6: "VHMO (HAVO, VWO, HBO, WO propedeuse)",
-    7: "Wetenschappelijk onderwijs (bachelor, master, doctoraal, technische hogeschool, landbouwhogeschool)"
+const formFields = {
+    participantNumber: 'participantNumberError',
+    participantAge: 'participantAgeError',
+    genderSelector: 'participantGenderError',
+    educationLevel: 'educationLevelError'
 };
 
-function populateEducationDropdown() {
-    const select = document.getElementById("educationLevel");
-    if (!select) return;
+function showFieldError(fieldId, message = '') {
+    const field = document.getElementById(fieldId);
+    field.classList.toggle('invalid', Boolean(message));
+    field.setAttribute('aria-invalid', String(Boolean(message)));
+    document.getElementById(formFields[fieldId]).textContent = message;
+}
 
-    select.innerHTML = '<option value="">Select education level</option>';
+function openParticipantEditor() {
+    const participant = window.selectedAdminParticipant?.participant;
+    if (!participant) return;
+    const dialog = document.getElementById('editParticipantDialog');
+    document.getElementById('participantNumber').value = participant.id;
+    document.getElementById('participantAge').value = participant.age === 'N/A' ? '' : participant.age;
+    document.querySelectorAll('[name="participantGender"]').forEach(radio => radio.checked = radio.value === participant.gender);
+    document.getElementById('educationLevel').value = participant.educationLevel === 'N/A' ? '' : participant.educationLevel;
+    document.getElementById('saveMessage').textContent = '';
+    Object.keys(formFields).forEach(field => showFieldError(field));
+    dialog.showModal();
+}
 
-    for (const [key, value] of Object.entries(EDUCATION_LEVELS)) {
-        const option = document.createElement("option");
-        option.value = key;
-        option.textContent = value;
-        select.appendChild(option);
+async function saveParticipantData(event) {
+    event.preventDefault();
+    const id = document.getElementById('participantNumber').value.trim();
+    const age = document.getElementById('participantAge').value.trim();
+    const gender = document.querySelector('[name="participantGender"]:checked')?.value;
+    const education = document.getElementById('educationLevel').value;
+    let valid = true;
+    const errors = {
+        participantNumber: /^\d{1,32}$/.test(id) ? '' : t('administrator.invalidParticipantNumber'),
+        participantAge: !age ? t('administrator.ageRequired') : !/^\d+$/.test(age) || Number(age) > 150 ? t('administrator.invalidAge') : '',
+        genderSelector: !gender ? t('administrator.genderRequired') : '',
+        educationLevel: !education ? t('administrator.educationRequired') : ''
+    };
+    for (const [field, message] of Object.entries(errors)) {
+        showFieldError(field, message);
+        if (message) valid = false;
+    }
+    if (!valid) return;
+    const save = document.getElementById('saveParticipantData');
+    save.disabled = true;
+    try {
+        const response = await fetch('/api/userData', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({pNumber: id, age: Number(age), gender, eduScale: Number(education)})
+        });
+        if (!response.ok) throw new Error(t('administrator.saveFailed'));
+        document.getElementById('editParticipantDialog').close();
+        await window.reloadAdminParticipant();
+    } catch (error) {
+        document.getElementById('saveMessage').textContent = error.message;
+        document.getElementById('saveMessage').className = 'save-message error';
+    } finally {
+        save.disabled = false;
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdown = document.getElementById('educationLevel');
+    for (let value = 1; value <= 7; value++) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.dataset.i18n = `administrator.educationLevel${value}`;
+        option.textContent = t(option.dataset.i18n);
+        dropdown.appendChild(option);
+    }
+    document.getElementById('editParticipantBtn').addEventListener('click', openParticipantEditor);
+    document.getElementById('cancelParticipantEdit').addEventListener('click', () => document.getElementById('editParticipantDialog').close());
+    document.getElementById('editParticipantForm').addEventListener('submit', saveParticipantData);
+    for (const field of Object.keys(formFields)) {
+        document.getElementById(field).addEventListener(field === 'genderSelector' || field === 'educationLevel' ? 'change' : 'input', () => showFieldError(field));
+    }
+});

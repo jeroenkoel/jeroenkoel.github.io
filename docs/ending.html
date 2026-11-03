@@ -13,11 +13,13 @@
 </head>
 <body class="standard-page home-page ending-page" data-i18n-document-title="meta.endingTitle">
     <main class="story-video-screen">
-        <video class="ending-video" playsinline preload="metadata" data-i18n-aria-label="ending.videoAria">
+        <audio id="voice-over-end" src="./assets/sounds/voice_over/ne/end.mp3"></audio>
+
+        <video class="ending-video" playsinline preload="auto" data-i18n-aria-label="ending.videoAria">
             <source src="./assets/sounds/end_video_full_box.mp4" type="video/mp4">
             Your browser does not support the video element.
         </video>
-        <button class="primary-button video-start-button" type="button" data-icon="▶" data-i18n="video.start" data-i18n-aria-label="video.start"></button>
+        <button class="primary-button video-start-button" type="button" hidden data-icon="▶" data-i18n="video.start" data-i18n-aria-label="video.start"></button>
         <section class="tutorial-card" hidden>
             <p class="tutorial-text" data-i18n="ending.message"></p>
             <button class="primary-button" type="button" onclick="switchScene('index.html')" data-icon="←" data-i18n="common.backHome" data-i18n-aria-label="common.backHome"></button>

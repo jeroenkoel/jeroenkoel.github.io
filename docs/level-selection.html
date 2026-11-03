@@ -20,8 +20,7 @@
 <body class="room-page" data-i18n-document-title="meta.levelSelectionTitle">
     <timer-progress-bar id="topBar"></timer-progress-bar>
     <header class="room-header">
-        <button class="secondary-button" type="button" onclick="if(confirm(this.dataset.confirmExit)) { switchScene('index.html'); }" data-i18n-confirm="common.confirmExit" data-icon="🏠" data-i18n-aria-label="common.backHome"></button>
-        <h1 data-i18n="selection.title"></h1>
+        <button class="secondary-button compact-button" type="button" onclick="if(confirm(this.dataset.confirmExit)) { switchScene('index.html'); }" data-i18n-confirm="common.confirmExitGame" data-icon="🏠" data-i18n-aria-label="common.backHome"></button>
         <button id="rollHintButton" class="secondary-button roll-hint-button" type="button" data-i18n-aria-label="selection.hintAria" data-i18n-title="selection.hintAria"><span aria-hidden="true">?</span></button>
     </header>
 
@@ -122,6 +121,27 @@
     </main>
     <button id="start-game" style="display:none" hidden data-keep-hidden></button>
 
+    <div id="room-transition-popup" class="level-modal" hidden>
+        <div class="level-backdrop"></div>
+    
+        <section class="room-transition-window"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="room-transition-title">
+    
+            <h2 id="room-transition-title"></h2>
+    
+            <button
+                id="room-transition-next"
+                class="primary-button"
+                type="button"
+                data-icon="→"
+                data-i18n="selection.transitionNextButton">
+                Volgende
+            </button>
+    
+        </section>
+    </div>
 
     <level-popup></level-popup>
 
