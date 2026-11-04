@@ -931,12 +931,12 @@ async function startRecording(token) {
             }));
             form.append("audio", blob, `reflection-${attemptIndex}.${ext}`);
 
-            try {
-                const response = await fetch("/api/submit-audio", { method: "POST", body: form });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            } catch (error) {
-                console.warn("Audio upload failed", error);
-            }
+            // try {
+            //     const response = await fetch("/api/submit-audio", { method: "POST", body: form });
+            //     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            // } catch (error) {
+            //     console.warn("Audio upload failed", error);
+            // }
         };
 
         microphoneFallback = false;
@@ -1218,17 +1218,17 @@ async function submitSelectedAnswer() {
         const form = new FormData();
         form.append("metadata", JSON.stringify(result));
 
-        try {
-            const response = await fetch("/api/submit-question", {method: "POST", body: form});
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        } catch (error) {
-            console.warn("Failed to submit question", error);
-            levelStatus.textContent = t("answer.saveFailed");
-            answerSubmitting = false;
-            filmAnswerSlot.classList.remove("is-filled", "is-receiving");
-            renderAnswers();
-            return;
-        }
+        // try {
+        //     const response = await fetch("/api/submit-question", {method: "POST", body: form});
+        //     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        // } catch (error) {
+        //     console.warn("Failed to submit question", error);
+        //     levelStatus.textContent = t("answer.saveFailed");
+        //     answerSubmitting = false;
+        //     filmAnswerSlot.classList.remove("is-filled", "is-receiving");
+        //     renderAnswers();
+        //     return;
+        // }
 
         modal.dispatchEvent(new CustomEvent("level-complete", {
             detail: { rollNumber, result }
