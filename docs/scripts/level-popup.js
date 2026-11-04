@@ -920,7 +920,7 @@ async function startRecording(token) {
             const ext = capture.mimeType.includes("mp4") ? "mp4" : "webm";
             form.append("metadata", JSON.stringify({
                 userId,
-                sessionToken: sessionStorage.getItem("filmBoxSessionToken"),
+                sessionToken: 1,
                 sessionStartedAt,
                 questionId: levelId,
                 roll: rollNumber,
@@ -1200,7 +1200,7 @@ async function submitSelectedAnswer() {
 
     const result = {
         userId: getActiveUserId(),
-        sessionToken: sessionStorage.getItem("filmBoxSessionToken"),
+        sessionToken: 1,
         levelId: level.id,
         finalAnswer: selectedAnswer.id,
         correctAnswer: correctAnswerObj ? correctAnswerObj.id : null,

@@ -49,7 +49,6 @@ function initializeHome() {
             //     return;
             // }
             sessionStorage.setItem("filmBoxUserId", userId);
-            sessionStorage.setItem("filmBoxSessionToken", 1);
             sessionStorage.setItem("filmBoxSessionStartedAt", new Date().toISOString());
             participantInput.value = "";
             window.location.href = "tutorial.html?playAudio=true";
