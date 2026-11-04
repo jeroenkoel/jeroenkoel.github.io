@@ -35,29 +35,29 @@ function initializeHome() {
         } catch (error) {
             console.warn("Audio initialization restricted:", error);
         }
-        try {
-            const response = await fetch("/api/sessions", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({userId})
-            });
-            const result = await response.json();
-            if (!response.ok) {
-                showError(result.code === "id_taken"
-                    ? (result.incomplete ? "common.playerIdIncomplete" : "common.playerIdTaken")
-                    : result.code === "invalid_id" ? "common.playerIdNumeric" : "common.sessionFailed");
-                return;
-            }
+        // try {
+            // const response = await fetch("/api/sessions", {
+            //     method: "POST",
+            //     headers: {"Content-Type": "application/json"},
+            //     body: JSON.stringify({userId})
+            // });
+            // const result = await response.json();
+            // if (!response.ok) {
+            //     showError(result.code === "id_taken"
+            //         ? (result.incomplete ? "common.playerIdIncomplete" : "common.playerIdTaken")
+            //         : result.code === "invalid_id" ? "common.playerIdNumeric" : "common.sessionFailed");
+            //     return;
+            // }
             sessionStorage.setItem("filmBoxUserId", userId);
             sessionStorage.setItem("filmBoxSessionToken", result.token);
             sessionStorage.setItem("filmBoxSessionStartedAt", new Date().toISOString());
             participantInput.value = "";
             window.location.href = "tutorial.html?playAudio=true";
-        } catch (error) {
-            showError("common.sessionFailed");
-        } finally {
-            startGameBtn.disabled = false;
-        }
+        // } catch (error) {
+        //     showError("common.sessionFailed");
+        // } finally {
+        //     startGameBtn.disabled = false;
+        // }
     });
 }
 
